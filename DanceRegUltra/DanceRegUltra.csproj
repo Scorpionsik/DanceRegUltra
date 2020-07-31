@@ -99,6 +99,14 @@
       <Project>{9ef180ca-78eb-4df4-96c7-0b9e9399fdb3}</Project>
       <Name>CoreWPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DbResult\DbResult\DbResult.csproj">
+      <Project>{00057e27-e925-4504-bb55-4982d9bf5432}</Project>
+      <Name>DbResult</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SqLiteDatabase\SqLiteDatabase\SqLiteDatabase.csproj">
+      <Project>{139b54ca-16b7-4b68-94d8-5aba3ea0b742}</Project>
+      <Name>SqLiteDatabase</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
