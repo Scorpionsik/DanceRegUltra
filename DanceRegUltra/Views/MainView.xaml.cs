@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CoreWPF.Windows;
+using DanceRegUltra.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +20,12 @@ namespace DanceRegUltra.Views
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainView : Window
+    public partial class MainView : WindowExt
     {
         public MainView()
         {
             InitializeComponent();
+            this.DataContext = new MainViewModel();
         }
     }
 }
