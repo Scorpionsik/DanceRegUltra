@@ -35,9 +35,10 @@ namespace DanceRegUltra
                 Environment.Exit(0);
             }
 
-            if (!Directory.Exists("database")) Directory.CreateDirectory("database");
+            if (!Directory.Exists("databases")) Directory.CreateDirectory("databases");
 
-            App.Database = new SqLiteDatabase.SqLiteDatabase("dancebase.sqlite3");
+            App.Database = new SqLiteDatabase.SqLiteDatabase("databases/dancebase.sqlite3");
+            App.Database.ExecuteNonQuery("create table if not exists 'Test' ('Id' integer primary key autoincrement not null unique, 'Name' varchar(150))");
         }
     }
 }
