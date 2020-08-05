@@ -28,9 +28,5 @@
         /// Номер участника в событии
         /// </summary>
         int MemberNum { get; set; }
-        int[] Scores { get; }
-
-        void SetScores(string jsonScores);
-        string GetScores();
     }
 }

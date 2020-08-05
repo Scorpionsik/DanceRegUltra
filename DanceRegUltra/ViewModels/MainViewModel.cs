@@ -1,10 +1,13 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
 using DanceRegUltra.Models;
+using DanceRegUltra.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DanceRegUltra.ViewModels
@@ -23,10 +26,19 @@ namespace DanceRegUltra.ViewModels
 
         private async void Initialize()
         {
-            await Task.Run(() =>
+            if (!DanceRegDatabase.IsExist())
             {
-                //загрузить события
-            });
+                await this.Status.SetAsync("Добро пожаловать! Инициализация первого запуска...", StatusString.Infinite);
+                //await Task.Run(() => Thread.Sleep(1000));
+                MatchCollection commands = DanceRegDatabase.DatabaseCommands;
+
+                foreach(Match command in commands)
+                {
+                    await DanceRegDatabase.Database.ExecuteNonQueryAsync(command.Value);
+                }
+            }
+
+            await this.Status.SetAsync("Готов к работе!", StatusString.LongTime);
         }
     }
 }

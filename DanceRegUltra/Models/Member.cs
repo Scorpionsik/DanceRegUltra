@@ -33,27 +33,10 @@ namespace DanceRegUltra.Models
             }
         }
 
-        private List<int> HideScores;
-
-        public int[] Scores { get => this.HideScores.ToArray(); }
-
         public Member(int eventId, int memberId) : base()
         {
             this.EventId = eventId;
             this.MemberId = memberId;
-            this.HideScores = new List<int>();
-        }
-
-        public string GetScores()
-        {
-            return JsonConvert.SerializeObject(this.HideScores);
-        }
-
-        public void SetScores(string jsonScores)
-        {
-            this.HideScores = JsonConvert.DeserializeObject<List<int>>(jsonScores);
-            this.OnPropertyChanged("Scores");
-            this.InvokeUpdate("Scores");
         }
 
         protected void InvokeUpdate(string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null)

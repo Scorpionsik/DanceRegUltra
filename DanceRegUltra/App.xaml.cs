@@ -12,7 +12,6 @@ namespace DanceRegUltra
     {
         public static string AppTitle = "Танцевальный менеджер";
 
-        public static SqLiteDatabase.SqLiteDatabase Database { get; private set; }
         /// Хранит именованный мьютекс, чтобы сохранить владение им до конца пробега программы
         private static Mutex InstanceCheckMutex;
 
@@ -34,11 +33,6 @@ namespace DanceRegUltra
                 MessageBox.Show("Программа уже запущена!", App.AppTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 Environment.Exit(0);
             }
-
-            if (!Directory.Exists("databases")) Directory.CreateDirectory("databases");
-
-            App.Database = new SqLiteDatabase.SqLiteDatabase("databases/dancebase.sqlite3");
-            App.Database.ExecuteNonQuery("create table if not exists 'Test' ('Id' integer primary key autoincrement not null unique, 'Name' varchar(150))");
         }
     }
 }
