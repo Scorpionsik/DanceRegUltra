@@ -90,11 +90,16 @@ namespace DanceRegUltra.ViewModels
         /// </summary>
         private static async void AddNewEvent()
         {
-            await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp') values ('test', " + 1596713141264 + ")");
+            await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp') values ('test', " + UnixTime.CurrentUnixTimestamp() + ")");
             DbResult new_event = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_event, Title, Start_timestamp, End_timestamp from events order by Id_event");
             DbRow current_row = new_event[new_event.RowsCount - 1];
-            DanceRegCollections.Events.Add(new DanceEvent(current_row["Id_event"].ToInt32(), current_row["Title"].ToString(), current_row["Start_timestamp"].ToDouble(), current_row["End_timestamp"].ToDouble()));
-            DanceRegCollections.Events.Sort();
+            DanceEvent newEvent = new DanceEvent(current_row["Id_event"].ToInt32(), current_row["Title"].ToString(), current_row["Start_timestamp"].ToDouble(), current_row["End_timestamp"].ToDouble());
+            int sort_id = 0;
+            while (sort_id < DanceRegCollections.Events.Count && DanceRegCollections.Events[sort_id].CompareTo(newEvent) <= 0) sort_id++;
+            DanceRegCollections.Events.Insert(sort_id, newEvent);
+
+
+            //DanceRegCollections.Events.Sort();
         }
 
         private static async void DeleteEvent(DanceEvent deleteEvent)
