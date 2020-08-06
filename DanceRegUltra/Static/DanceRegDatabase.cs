@@ -1,8 +1,10 @@
 ﻿using DanceRegUltra.Interfaces;
 using System;
+using System.Data.Common;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DanceRegUltra.Static
 {
@@ -10,7 +12,7 @@ namespace DanceRegUltra.Static
     {
         public static MatchCollection DatabaseCommands
         {
-            get => new Regex(@"(?=(create|insert))[^;]+").Matches(DanceRegUltra.Properties.Resources.dance);
+            get => new Regex(@"(?=(create|insert))[^;]+", RegexOptions.IgnoreCase).Matches(DanceRegUltra.Properties.Resources.dance);
         }
 
         private static string DatabaseName = "dancebase.sqlite3";
@@ -45,7 +47,7 @@ namespace DanceRegUltra.Static
 
         private static Mutex DatabaseMutex;
 
-        internal static SqLiteDatabase.SqLiteDatabase Database { get; private set; }
+        private static SqLiteDatabase.SqLiteDatabase Database;
 
         static DanceRegDatabase()
         {
@@ -71,6 +73,26 @@ namespace DanceRegUltra.Static
 
             DanceRegDatabase.DatabaseMutex.ReleaseMutex();
             DanceRegDatabase.event_EndTask?.Invoke();
+        }
+
+        internal static async Task<int> ExecuteNonQueryAsync(string query)
+        {
+            DanceRegDatabase.event_StartTask?.Invoke();
+            DanceRegDatabase.DatabaseMutex.WaitOne();
+            int result = await Database.ExecuteNonQueryAsync(query);
+            DanceRegDatabase.DatabaseMutex.ReleaseMutex();
+            DanceRegDatabase.event_EndTask?.Invoke();
+            return result;
+        }
+
+        internal static async Task<DbResult> ExecuteAndGetQueryAsync(string query)
+        {
+            DanceRegDatabase.event_StartTask?.Invoke();
+            DanceRegDatabase.DatabaseMutex.WaitOne();
+            DbResult result = await Database.ExecuteAndGetQueryAsync(query);
+            DanceRegDatabase.DatabaseMutex.ReleaseMutex();
+            DanceRegDatabase.event_EndTask?.Invoke();
+            return result;
         }
 
         internal static bool IsExist()

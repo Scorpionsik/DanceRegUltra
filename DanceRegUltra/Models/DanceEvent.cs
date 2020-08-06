@@ -1,6 +1,7 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
 using DanceRegUltra.Interfaces;
+using DanceRegUltra.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -8,8 +9,10 @@ using System.Runtime.CompilerServices;
 
 namespace DanceRegUltra.Models
 {
-    public struct DanceEvent : INotifyPropertyChanged
+    public class DanceEvent : INotifyPropertyChanged
     {
+        //public static DanceEvent Empty { get; }
+
         public int NodeId { get; private set; }
 
         public int JudgeCount { get; private set; }
@@ -64,21 +67,23 @@ namespace DanceRegUltra.Models
 
         public string JsonSchemeEvent { get; private set; }
 
-        public DanceEvent(int id, string title, int startTimestamp, string jsonScheme, int nodeId, int judgeCount)
+        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp)
         {
-            this.NodeId = nodeId;
-            this.JudgeCount = judgeCount;
+            this.NodeId = -1;
+            this.JudgeCount = 4;
             this.HideMembers = new Lazy<ListExt<IMember>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
             this.IdEvent = id;
             this.title = title;
             this.startEventTimestamp = startTimestamp;
-            this.EndEventTimestamp = -1;
-            this.JsonSchemeEvent = jsonScheme;
-            this.SchemeEvent = DanceScheme.Deserialize(this.JsonSchemeEvent);
-
+            this.EndEventTimestamp = endTimestamp;
+            this.JsonSchemeEvent = "";
+            
             this.event_updateDanceEvent = null;
             this.PropertyChanged = null;
+
+            this.Command_EditEvent = MainViewModel.Command_EditEvent;
+            this.Command_DeleteEvent = MainViewModel.Command_DeleteEvent;
         }
 
         public void SetTitle(string newTitle)
@@ -105,6 +110,9 @@ namespace DanceRegUltra.Models
             this.EndEventTimestamp = UnixTime.CurrentUnixTimestamp();
             this.event_updateDanceEvent?.Invoke(this.IdEvent, "EndEventTimestamp");
         }
+
+        public RelayCommand<DanceEvent> Command_EditEvent { get; private set; }
+        public RelayCommand<DanceEvent> Command_DeleteEvent { get; private set; }
 
         /// <summary>
         /// Событие для обновления привязанного объекта (в XAML)

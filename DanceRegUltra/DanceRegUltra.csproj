@@ -88,10 +88,12 @@
     <Compile Include="Models\DanceEvent.cs" />
     <Compile Include="Models\DanceNode.cs" />
     <Compile Include="Models\DanceScheme.cs" />
+    <Compile Include="Models\CategoryString.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\MemberDancer.cs" />
     <Compile Include="Models\MemberGroup.cs" />
     <Compile Include="Models\SchemeArray.cs" />
+    <Compile Include="Static\DanceRegCollections.cs" />
     <Compile Include="Static\DanceRegDatabase.cs" />
     <Compile Include="Utilites\SqLiteDatabase.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
