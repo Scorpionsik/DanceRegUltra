@@ -15,7 +15,7 @@ namespace DanceRegUltra.Models
         Style
     }
 
-    public struct CategoryString : INotifyPropertyChanged, IComparable
+    public struct CategoryString : INotifyPropertyChanged, IComparable<CategoryString>
     {
         private event Action<int, CategoryType> event_updateCategoryString;
         public event Action<int, CategoryType> Event_UpdateCategoryString
@@ -79,16 +79,12 @@ namespace DanceRegUltra.Models
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(CategoryString obj)
         {
-            if (obj is CategoryString category)
-            {
-                int this_pos = this.Position == 0 ? this.Id : this.Position;
-                int obj_pos = category.Position == 0 ? category.Id : category.Position;
+            int this_pos = this.Position == 0 ? this.Id : this.Position;
+            int obj_pos = obj.Position == 0 ? obj.Id : obj.Position;
 
-                return obj_pos - this_pos;
-            }
-            else throw new Exception("Not a CategoryString");
+            return obj_pos - this_pos;
         }
         //---метод OnPropertyChanged
     }

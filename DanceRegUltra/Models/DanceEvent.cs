@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace DanceRegUltra.Models
 {
-    public class DanceEvent : INotifyPropertyChanged
+    public class DanceEvent : INotifyPropertyChanged, IComparable<DanceEvent>
     {
         //public static DanceEvent Empty { get; }
 
@@ -126,6 +126,11 @@ namespace DanceRegUltra.Models
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public int CompareTo(DanceEvent obj)
+        {
+            return Convert.ToInt32(this.StartEventTimestamp - obj.StartEventTimestamp);
         }
         //---метод OnPropertyChanged
     }
