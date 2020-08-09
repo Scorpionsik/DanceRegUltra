@@ -101,7 +101,7 @@ namespace DanceRegUltra.Models
         public void SetJsonScheme(string newJson)
         {
             this.JsonSchemeEvent = newJson;
-            this.SchemeEvent = DanceScheme.Deserialize(newJson);
+            //this.SchemeEvent = DanceScheme.Deserialize(newJson);
             this.event_updateDanceEvent?.Invoke(this.IdEvent, "JsonSchemeEvent");
         }
 

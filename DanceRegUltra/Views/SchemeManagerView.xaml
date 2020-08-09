@@ -1,0 +1,95 @@
+﻿<window:DialogWindowExt x:Class="DanceRegUltra.Views.SchemeManagerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:xwpf="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        mc:Ignorable="d"
+        Title="{Binding Path=Title}" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <!--Схемы-->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <!--Таблица-->
+                <ListBox Grid.Row="0" ItemsSource="{Binding Path=Schemes}" SelectedItem="{Binding Path=Select_scheme}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Title_scheme}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <!--конец Таблица-->
+                <!--Кнопки-->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddNewScheme}"/>
+                    <Button Grid.Column="1" Content="Delete" Command="{Binding Path=Command_DeleteSelectScheme}" CommandParameter="{Binding Path=Select_scheme}"/>
+                </Grid>
+                <!--конец Кнопки-->
+            </Grid>
+            <!--конец Схемы-->
+            <!--Выбранная схема-->
+            <Grid Grid.Column="1" DataContext="{Binding Path=Select_scheme}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="Name">
+                    <TextBox Text="{Binding Path=Title_scheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </GroupBox>
+                <TabControl Grid.Row="1">
+                    <TabItem Header="Площадки">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+                            <!--Таблица платформ-->
+                            <ListBox Grid.Row="0" ItemsSource="{Binding Path=PlatformsCollection}">
+                     
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel LastChildFill="True">
+                                            <GroupBox DockPanel.Dock="Top" Header="Name">
+                                                <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </GroupBox>
+                                            <GroupBox Header="Leagues">
+                                                <xwpf:CheckListBox ItemsSource="{Binding Path=AllLeagues}" SelectedItemsOverride="{Binding Path=SchemePartValues}">
+                                                    
+                                                </xwpf:CheckListBox>
+                                            </GroupBox>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <!--конец Таблица платформ-->
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Блоки">
+
+                    </TabItem>
+                    <TabItem Header="Стили">
+
+                    </TabItem>
+                </TabControl>
+            </Grid>
+            <!--конец Выбранная схема-->
+        </Grid>
+    </Grid>
+</window:DialogWindowExt>

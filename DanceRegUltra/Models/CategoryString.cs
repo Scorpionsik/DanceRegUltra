@@ -15,10 +15,12 @@ namespace DanceRegUltra.Models
         Style
     }
 
-    public struct CategoryString : INotifyPropertyChanged, IComparable<CategoryString>
+    public delegate void UpdateCategoryString(int id, CategoryType type, string columnName);
+
+    public class CategoryString : INotifyPropertyChanged, IComparable<CategoryString>
     {
-        private event Action<int, CategoryType> event_updateCategoryString;
-        public event Action<int, CategoryType> Event_UpdateCategoryString
+        private event UpdateCategoryString event_updateCategoryString;
+        public event UpdateCategoryString Event_UpdateCategoryString
         {
             add
             {
@@ -37,7 +39,7 @@ namespace DanceRegUltra.Models
             set
             {
                 this.position = value;
-                //this.event_updateCategoryString?.Invoke(this.Id, this.Type);
+                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Position");
             }
         }
 
@@ -51,7 +53,7 @@ namespace DanceRegUltra.Models
             {
                 this.name = value;
                 this.OnPropertyChanged("Name");
-                this.event_updateCategoryString?.Invoke(this.Id, this.Type);
+                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name");
             }
         }
 
@@ -77,7 +79,7 @@ namespace DanceRegUltra.Models
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+        } //---метод OnPropertyChanged
 
         public int CompareTo(CategoryString obj)
         {
@@ -86,6 +88,5 @@ namespace DanceRegUltra.Models
 
             return obj_pos - this_pos;
         }
-        //---метод OnPropertyChanged
     }
 }

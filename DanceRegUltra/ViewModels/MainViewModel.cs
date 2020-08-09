@@ -2,6 +2,7 @@
 using CoreWPF.Utilites;
 using DanceRegUltra.Models;
 using DanceRegUltra.Static;
+using DanceRegUltra.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -132,6 +133,15 @@ namespace DanceRegUltra.ViewModels
                 DeleteEvent(ev);
             },
                 (ev) => ev != null);
+        }
+
+        public static RelayCommand Command_LoadSchemeManager
+        {
+            get => new RelayCommand(obj =>
+            {
+                SchemeManagerView window = new SchemeManagerView();
+                window.Show();
+            });
         }
     }
 }

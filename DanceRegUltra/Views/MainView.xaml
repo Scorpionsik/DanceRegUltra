@@ -41,6 +41,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.Resources>
                 <Style TargetType="Button">
@@ -50,6 +52,7 @@
             <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddEvent}"/>
             <Button Grid.Column="1" Content="Edit" Command="{Binding Path=Command_EditEvent}" CommandParameter="{Binding Path=Select_event}"/>
             <Button Grid.Column="2" Content="Delete" Command="{Binding Path=Command_DeleteEvent}" CommandParameter="{Binding Path=Select_event}"/>
+            <Button Grid.Column="4" Content="Schemes" Command="{Binding Path=Command_LoadSchemeManager}"/>
         </Grid>
         <StatusBar Grid.Row="2">
             <StatusBarItem>
