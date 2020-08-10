@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DanceRegUltra.Models
+namespace DanceRegUltra.Models.Categories
 {
     public enum SchemeType
     {
@@ -18,10 +18,12 @@ namespace DanceRegUltra.Models
         Block
     }
 
+    public delegate void UpdateSchemeArray(SchemeType type, UpdateStatus status, IdCheck value, int old_index, int new_index);
+
     public class SchemeArray : INotifyPropertyChanged
     {
-        private event Action<SchemeType, UpdateStatus, int> event_updateCollection;
-        public event Action <SchemeType, UpdateStatus, int> Event_updateCollection
+        private event UpdateSchemeArray event_updateCollection;
+        public event UpdateSchemeArray Event_updateCollection
         {
             add
             {
@@ -44,31 +46,34 @@ namespace DanceRegUltra.Models
 
         public SchemeType Type { get; private set; }
 
-        public ListExt<int> SchemePartValues { get; set; }
+        public ListExt<IdCheck> SchemePartValues { get; set; }
 
         public SchemeArray(string title, SchemeType type)
         {
             this.event_updateCollection = null;
             this.Type = type;
             this.titleSchemePart = title;
-            this.SchemePartValues = new ListExt<int>();
+            this.SchemePartValues = new ListExt<IdCheck>();
             this.PropertyChanged = null;
             this.SchemePartValues.CollectionChanged += this.UpdateTrigger;
         }
         
         private void UpdateTrigger(object sender, NotifyCollectionChangedEventArgs e)
         {
-            UpdateStatus status = UpdateStatus.Default;
-
             switch (e.Action)
             {
+                /*
                 case NotifyCollectionChangedAction.Add:
                     status = UpdateStatus.Add;
-                    this.event_updateCollection?.Invoke(this.Type, status, (int)e.NewItems[0]);
+                    this.event_updateCollection?.Invoke(this.Type, status, (IdCheck)e.NewItems[0]);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     status = UpdateStatus.Delete;
-                    this.event_updateCollection?.Invoke(this.Type, status, (int)e.OldItems[0]);
+                    this.event_updateCollection?.Invoke(this.Type, status, (IdCheck)e.OldItems[0]);
+                    break;
+                    */
+                case NotifyCollectionChangedAction.Move:
+                    this.event_updateCollection?.Invoke(this.Type, UpdateStatus.Move, (IdCheck)e.NewItems[0], e.OldStartingIndex, e.NewStartingIndex);
                     break;
             }
         }

@@ -2,6 +2,7 @@
 using CoreWPF.Utilites;
 using CoreWPF.Windows.Enums;
 using DanceRegUltra.Models;
+using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,10 @@ namespace DanceRegUltra.ViewModels
     {
         private string JsonEdit;
 
-        
+        public static List<IdCheck> AllLeagues { get; private set; }
+        public static List<IdCheck> AllAges { get; private set; }
+        public static List<IdCheck> AllStyles { get; private set; }
+
         public ListExt<DanceScheme> Schemes { get; private set; }
 
         private DanceScheme select_scheme;
@@ -34,7 +38,14 @@ namespace DanceRegUltra.ViewModels
         {
             this.Title = App.AppTitle + ": Редактор шаблонов схем";
             this.JsonEdit = jsonEdit;
-            this.Initialize();
+
+            AllLeagues = new List<IdCheck>();
+            AllAges = new List<IdCheck>();
+            AllStyles = new List<IdCheck>();
+
+            this.Schemes = new ListExt<DanceScheme>();
+
+            this.Initialize(jsonEdit);
         }
 
         public override WindowClose CloseMethod()
@@ -43,27 +54,37 @@ namespace DanceRegUltra.ViewModels
             return base.CloseMethod();
         }
 
-        private async void Initialize()
+        private async void Initialize(string jsonEdit)
         {
-            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues where IsHide=0");
+            string condition = jsonEdit == null ? " where IsHide=0" : "";
+            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues" + condition);
             foreach(DbRow row in res)
             {
-                DanceRegCollections.LoadLeague(new Models.CategoryString(row["Id_league"].ToInt32(), Models.CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32()));
+               AllLeagues.Insert(
+                   DanceRegCollections.LoadLeague(new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean())),
+                   new IdCheck(row["Id_league"].ToInt32())
+                   );
             }
 
-            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages where IsHide=0");
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages" + condition);
             foreach (DbRow row in res)
             {
-                DanceRegCollections.LoadAge(new Models.CategoryString(row["Id_age"].ToInt32(), Models.CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32()));
+                AllAges.Insert(
+                    DanceRegCollections.LoadAge(new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean())),
+                    new IdCheck(row["Id_age"].ToInt32())
+                    );
             }
 
-            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles where IsHide=0");
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles" + condition);
             foreach (DbRow row in res)
             {
-                DanceRegCollections.LoadStyle(new Models.CategoryString(row["Id_style"].ToInt32(), Models.CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32()));
+                AllStyles.Insert(
+                    DanceRegCollections.LoadStyle(new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean())),
+                    new IdCheck(row["Id_style"].ToInt32())
+                    );
             }
 
-            this.Schemes = new ListExt<DanceScheme>();
+            
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Json_scheme from template_schemes");
             foreach(DbRow row in res)
             {

@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
-        xmlns:xwpf="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"     
+        xmlns:corewpf="clr-namespace:CoreWPF.Utilites;assembly=CoreWPF"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
+    <window:DialogWindowExt.Resources>
+        <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
+    </window:DialogWindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -38,6 +43,11 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </Grid.Resources>
                     <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddNewScheme}"/>
                     <Button Grid.Column="1" Content="Delete" Command="{Binding Path=Command_DeleteSelectScheme}" CommandParameter="{Binding Path=Select_scheme}"/>
                 </Grid>
@@ -47,45 +57,271 @@
             <!--Выбранная схема-->
             <Grid Grid.Column="1" DataContext="{Binding Path=Select_scheme}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="42"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="Name">
                     <TextBox Text="{Binding Path=Title_scheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
                 <TabControl Grid.Row="1">
-                    <TabItem Header="Площадки">
+                    <TabItem>
+                        <TabItem.Header>
+                            <TextBlock Text="{Binding StringFormat=Платформы: {0}, Path=PlatformsCollection.Count}"/>
+                        </TabItem.Header>
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
-                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="30"/>
                             </Grid.RowDefinitions>
                             <!--Таблица платформ-->
-                            <ListBox Grid.Row="0" ItemsSource="{Binding Path=PlatformsCollection}">
-                     
+                            <ListBox 
+                                Grid.Row="0" 
+                                BorderThickness="0" 
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ItemsSource="{Binding Path=PlatformsCollection}"
+                                SelectedItem="{Binding Path=Select_platform}"
+                                >
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="BorderBrush" Value="DarkGray"/>
+                                        <Setter Property="Margin" Value="5 2.5 5 2.5"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DockPanel LastChildFill="True">
                                             <GroupBox DockPanel.Dock="Top" Header="Name">
                                                 <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </GroupBox>
-                                            <GroupBox Header="Leagues">
-                                                <xwpf:CheckListBox ItemsSource="{Binding Path=AllLeagues}" SelectedItemsOverride="{Binding Path=SchemePartValues}">
-                                                    
-                                                </xwpf:CheckListBox>
+                                            <GroupBox Header="Выбранные лиги">
+                                                <!--Таблица лиг-->
+                                                <ListBox 
+                                                   SelectionMode="Multiple"
+                                                   BorderThickness="0"
+                                                   ItemsSource="{Binding Path=SchemePartValues}"
+                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                    <i:Interaction.Behaviors>
+                                                        <corewpf:IgnoreMouseWheelBehavior />
+                                                    </i:Interaction.Behaviors>
+                                                    <ListBox.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ListBox.ItemsPanel>
+                                                    <ListBox.ItemContainerStyle>
+                                                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                            <Setter Property="IsSelected" Value="{Binding IsChecked}" />
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+
+                                                                        <Border x:Name="brd" Background="{TemplateBinding Background}" 
+                                                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                                            <CheckBox Focusable="False" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                                                                                    IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
+                                                                                <ContentPresenter/>
+                                                                            </CheckBox>
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsSelected" Value="True">
+                                                                                <Setter Property="Background" Value="LightBlue"/>
+                                                                                <Setter Property="Foreground" Value="Black"/>
+                                                                                <Setter Property="BorderThickness" Value="1"/>
+                                                                                <Setter Property="BorderBrush" Value="LightBlue"/>
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </ListBox.ItemContainerStyle>
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                                <!--конец Таблица лиг-->
                                             </GroupBox>
                                         </DockPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
                             <!--конец Таблица платформ-->
+                            <!--Кнопки платформ-->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Margin" Value="5"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddPlatform}"/>
+                                <Button Grid.Column="1" Content="Remove" Command="{Binding Path=Command_DeletePlatform}" CommandParameter="{Binding Path=Select_platform}"/>
+                            </Grid>
+                            <!--конец Кнопки платформ-->
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Блоки">
+                    <TabItem>
+                        <TabItem.Header>
+                            <TextBlock Text="{Binding StringFormat=Блоки: {0}, Path=BlocksCollection.Count}"/>
+                        </TabItem.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+                            <!--Таблица блоков-->
+                            <ListBox 
+                                Grid.Row="0" 
+                                BorderThickness="0" 
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ItemsSource="{Binding Path=BlocksCollection}"
+                                SelectedItem="{Binding Path=Select_block}"
+                                >
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="BorderBrush" Value="DarkGray"/>
+                                        <Setter Property="Margin" Value="5 2.5 5 2.5"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel LastChildFill="True">
+                                            <GroupBox DockPanel.Dock="Top" Header="Name">
+                                                <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </GroupBox>
+                                            <GroupBox Header="Выбранные возрастные категории">
+                                                <!--Таблица возрастн категорий-->
+                                                <ListBox 
+                                                   SelectionMode="Multiple"
+                                                   BorderThickness="0"
+                                                   ItemsSource="{Binding Path=SchemePartValues}"
+                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                    <i:Interaction.Behaviors>
+                                                        <corewpf:IgnoreMouseWheelBehavior />
+                                                    </i:Interaction.Behaviors>
+                                                    <ListBox.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ListBox.ItemsPanel>
+                                                    <ListBox.ItemContainerStyle>
+                                                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                            <Setter Property="IsSelected" Value="{Binding IsChecked}" />
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
 
+                                                                        <Border x:Name="brd" Background="{TemplateBinding Background}" 
+                                                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                                            <CheckBox Focusable="False" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                                                                                    IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
+                                                                                <ContentPresenter/>
+                                                                            </CheckBox>
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsSelected" Value="True">
+                                                                                <Setter Property="Background" Value="LightBlue"/>
+                                                                                <Setter Property="Foreground" Value="Black"/>
+                                                                                <Setter Property="BorderThickness" Value="1"/>
+                                                                                <Setter Property="BorderBrush" Value="LightBlue"/>
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </ListBox.ItemContainerStyle>
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                                <!--конец Таблица возрастн категорий-->
+                                            </GroupBox>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <!--конец Таблица блоков-->
+                            <!--Кнопки блоков-->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Margin" Value="5"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddBlock}"/>
+                                <Button Grid.Column="1" Content="Remove" Command="{Binding Path=Command_DeleteBlock}" CommandParameter="{Binding Path=Select_block}"/>
+                            </Grid>
+                            <!--конец Кнопки блоков-->
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Стили">
+                        <GroupBox Header="Выбранные стили">
+                            <!--Таблица стилей-->
+                            <ListBox 
+                                SelectionMode="Multiple"
+                                BorderThickness="0"
+                                ItemsSource="{Binding Path=SchemeStyles}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                        <Setter Property="IsSelected" Value="{Binding IsChecked}" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
 
+                                                    <Border x:Name="brd" Background="{TemplateBinding Background}" 
+                                                                                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                        <CheckBox Focusable="False" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                                                                                        IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
+                                                            <ContentPresenter/>
+                                                        </CheckBox>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="Background" Value="LightBlue"/>
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                            <Setter Property="BorderThickness" Value="1"/>
+                                                            <Setter Property="BorderBrush" Value="LightBlue"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <!--конец Таблица стилей-->
+                        </GroupBox>
                     </TabItem>
                 </TabControl>
             </Grid>

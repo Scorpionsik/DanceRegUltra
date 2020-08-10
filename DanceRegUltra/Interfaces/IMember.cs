@@ -5,7 +5,8 @@
         Default,
         Add,
         Edit,
-        Delete
+        Delete,
+        Move
     }
 
     public delegate void UpdateMember(int eventId, int memberId, string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null);

@@ -4,9 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace DanceRegUltra.Models
+namespace DanceRegUltra.Models.Categories
 {
     public enum CategoryType
     {
@@ -20,6 +21,7 @@ namespace DanceRegUltra.Models
     public class CategoryString : INotifyPropertyChanged, IComparable<CategoryString>
     {
         private event UpdateCategoryString event_updateCategoryString;
+        
         public event UpdateCategoryString Event_UpdateCategoryString
         {
             add
@@ -43,6 +45,18 @@ namespace DanceRegUltra.Models
             }
         }
 
+        private bool isHide;
+        public bool IsHide
+        {
+            get => this.isHide;
+            set
+            {
+                this.isHide = value;
+                this.OnPropertyChanged("IsHide");
+                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "IsHide");
+            }
+        }
+
         public CategoryType Type { get; private set; }
 
         private string name;
@@ -57,14 +71,22 @@ namespace DanceRegUltra.Models
             }
         }
 
-        public CategoryString(int id, CategoryType type, string name = "", int position = 0)
+        public CategoryString(int id, CategoryType type, string name = "", int position = 0, bool isHide = false)
         {
             this.event_updateCategoryString = null;
             this.Id = id;
             this.Type = type;
             this.name = name;
             this.position = position;
-            this.PropertyChanged = null;
+            this.isHide = isHide;
+        }
+
+        public int CompareTo(CategoryString obj)
+        {
+            int this_pos = this.Position == 0 ? this.Id : this.Position;
+            int obj_pos = obj.Position == 0 ? obj.Id : obj.Position;
+
+            return obj_pos - this_pos;
         }
 
         /// <summary>
@@ -81,12 +103,6 @@ namespace DanceRegUltra.Models
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         } //---метод OnPropertyChanged
 
-        public int CompareTo(CategoryString obj)
-        {
-            int this_pos = this.Position == 0 ? this.Id : this.Position;
-            int obj_pos = obj.Position == 0 ? obj.Id : obj.Position;
-
-            return obj_pos - this_pos;
-        }
+       
     }
 }

@@ -1,10 +1,8 @@
 ﻿using CoreWPF.Utilites;
 using DanceRegUltra.Models;
+using DanceRegUltra.Models.Categories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DanceRegUltra.Static
 {
@@ -33,15 +31,17 @@ namespace DanceRegUltra.Static
             Styles = new Lazy<ListExt<CategoryString>>();
         }
 
-        internal static void LoadLeague(CategoryString league)
+        internal static int LoadLeague(CategoryString league)
         {
-            if(league.Type == CategoryType.League && !CheckEnableId(CategoryType.League, league.Id))
+            if (league.Type == CategoryType.League && !CheckEnableId(CategoryType.League, league.Id))
             {
                 int id_sort = 0;
                 while (id_sort < Leagues.Value.Count && Leagues.Value[id_sort].CompareTo(league) >= 0) id_sort++;
 
                 Leagues.Value.Insert(id_sort, league);
+                return id_sort;
             }
+            else return -1;
         }
 
         internal static void UnloadLeague(CategoryString league)
@@ -52,7 +52,7 @@ namespace DanceRegUltra.Static
             }
         }
 
-        internal static void LoadAge(CategoryString age)
+        internal static int LoadAge(CategoryString age)
         {
             if (age.Type == CategoryType.Age && !CheckEnableId(CategoryType.Age, age.Id))
             {
@@ -60,7 +60,9 @@ namespace DanceRegUltra.Static
                 while (id_sort < Ages.Value.Count && Ages.Value[id_sort].CompareTo(age) >= 0) id_sort++;
 
                 Ages.Value.Insert(id_sort, age);
+                return id_sort;
             }
+            else return -1;
         }
 
         internal static void UnloadAge(CategoryString age)
@@ -71,7 +73,7 @@ namespace DanceRegUltra.Static
             }
         }
 
-        internal static void LoadStyle(CategoryString style)
+        internal static int LoadStyle(CategoryString style)
         {
             if (style.Type == CategoryType.Style && !CheckEnableId(CategoryType.Style, style.Id))
             {
@@ -79,7 +81,9 @@ namespace DanceRegUltra.Static
                 while (id_sort < Styles.Value.Count && Styles.Value[id_sort].CompareTo(style) >= 0) id_sort++;
 
                 Styles.Value.Insert(id_sort, style);
+                return id_sort;
             }
+            else return -1;
         }
 
         internal static void UnloadStyle(CategoryString style)
@@ -118,15 +122,11 @@ namespace DanceRegUltra.Static
 
         internal static DanceEvent GetEventById(int id_event)
         {
-            try
+            foreach(DanceEvent ev in Events)
             {
-                return Events.FindFirst(new Func<DanceEvent, bool>(e =>
-                {
-                    if (e.IdEvent == id_event) return true;
-                    else return false;
-                }));
+                if (ev.IdEvent == id_event) return ev;
             }
-            catch { return null; }
+            return null;
         }
     }
 }

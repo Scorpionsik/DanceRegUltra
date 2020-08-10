@@ -61,7 +61,8 @@ namespace DanceRegUltra.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на create table &apos;events&apos; 
+        ///   Ищет локализованную строку, похожую на /*Таблица событий*/
+        ///create table &apos;events&apos;
         ///(
         ///&apos;Id_event&apos; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
         ///&apos;Title&apos; TEXT DEFAULT &apos;&apos;,
@@ -70,7 +71,15 @@ namespace DanceRegUltra.Properties {
         ///&apos;Json_scheme&apos; TEXT DEFAULT &apos;&apos;,
         ///&apos;Id_node_increment&apos; INTERER NOT NULL DEFAULT 1,
         ///&apos;Judge_count&apos; INTEGER DEFAULT 4
-        ///);.
+        ///);
+        ///
+        ////*Таблица узлов, связанных с определенным событием*/
+        ///create table &apos;event_nodes&apos;
+        ///(
+        ///&apos;Id_event&apos; INTEGER NOT NULL,
+        ///&apos;Id_node&apos; INTEGER NOT NULL,
+        ///&apos;Id_member&apos; INTEGER NOT NULL,
+        ///&apos;Id_league&apos; [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string dance {
             get {

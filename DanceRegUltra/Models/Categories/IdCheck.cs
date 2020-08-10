@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DanceRegUltra.Models
+namespace DanceRegUltra.Models.Categories
 {
-    internal class IdCheck : NotifyPropertyChanged
+    public class IdCheck : NotifyPropertyChanged
     {
         private int id;
         public int Id
