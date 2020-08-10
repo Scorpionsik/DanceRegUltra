@@ -163,13 +163,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\git\MyWPFLib\CoreWPF\CoreWPF.csproj">
-      <Project>{9ef180ca-78eb-4df4-96c7-0b9e9399fdb3}</Project>
-      <Name>CoreWPF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DbResult\DbResult\DbResult.csproj">
       <Project>{00057e27-e925-4504-bb55-4982d9bf5432}</Project>
       <Name>DbResult</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyWPFLib\CoreWPF\CoreWPF.csproj">
+      <Project>{9ef180ca-78eb-4df4-96c7-0b9e9399fdb3}</Project>
+      <Name>CoreWPF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
