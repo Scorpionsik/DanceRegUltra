@@ -1,6 +1,7 @@
 ﻿using CoreWPF.Utilites;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.Static;
+using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DanceRegUltra.Models.Categories
 {
@@ -20,7 +22,7 @@ namespace DanceRegUltra.Models.Categories
 
     public delegate void UpdateSchemeArray(SchemeType type, UpdateStatus status, IdCheck value, int old_index, int new_index);
 
-    public class SchemeArray : INotifyPropertyChanged
+    public class SchemeArray : INotifyPropertyChanged, IDropTarget
     {
         private event UpdateSchemeArray event_updateCollection;
         public event UpdateSchemeArray Event_updateCollection
@@ -50,14 +52,34 @@ namespace DanceRegUltra.Models.Categories
 
         public SchemeArray(string title, SchemeType type)
         {
-            this.event_updateCollection = null;
             this.Type = type;
             this.titleSchemePart = title;
             this.SchemePartValues = new ListExt<IdCheck>();
-            this.PropertyChanged = null;
             this.SchemePartValues.CollectionChanged += this.UpdateTrigger;
         }
-        
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is IdCheck check && this.SchemePartValues.Contains(check))
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is IdCheck check)
+            {
+                int oldIndex = this.SchemePartValues.IndexOf(check);
+                int newIndex = dropInfo.InsertIndex;
+
+                if (newIndex > oldIndex) newIndex -= 1;
+
+                this.SchemePartValues.Move(oldIndex, newIndex);
+            }
+        }
+
         private void UpdateTrigger(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -72,6 +94,7 @@ namespace DanceRegUltra.Models.Categories
                     this.event_updateCollection?.Invoke(this.Type, status, (IdCheck)e.OldItems[0]);
                     break;
                     */
+                case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Move:
                     this.event_updateCollection?.Invoke(this.Type, UpdateStatus.Move, (IdCheck)e.NewItems[0], e.OldStartingIndex, e.NewStartingIndex);
                     break;

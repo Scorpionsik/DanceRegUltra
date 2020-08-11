@@ -4,17 +4,23 @@ namespace DanceRegUltra.Models.Categories
 {
     public class JsonSchemeArray
     {
-        public string Title { get; private set; }
+        public string Title { get; set; }
 
-        public List<int> Values { get; private set; }
+        public List<IdCheck> Values { get; set; }
+
+        public JsonSchemeArray()
+        {
+            this.Title = "";
+            this.Values = new List<IdCheck>();
+        }
 
         public JsonSchemeArray(SchemeArray sArray)
         {
             this.Title = sArray.TitleSchemePart;
-            this.Values = new List<int>();
+            this.Values = new List<IdCheck>();
             foreach(IdCheck value in sArray.SchemePartValues)
             {
-                if (value.IsChecked) this.Values.Add(value.Id);
+                this.Values.Add(new IdCheck(value.Id, value.IsChecked));
             }
         }
     }

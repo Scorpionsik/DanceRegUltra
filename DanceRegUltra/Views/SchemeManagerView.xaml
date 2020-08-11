@@ -7,6 +7,8 @@
         xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"     
         xmlns:corewpf="clr-namespace:CoreWPF.Utilites;assembly=CoreWPF"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
     <window:DialogWindowExt.Resources>
@@ -75,6 +77,8 @@
                             </Grid.RowDefinitions>
                             <!--Таблица платформ-->
                             <ListBox 
+                                dd:DragDrop.IsDragSource="True"
+                                dd:DragDrop.IsDropTarget="True"
                                 Grid.Row="0" 
                                 BorderThickness="0" 
                                 VirtualizingPanel.ScrollUnit="Pixel"
@@ -99,52 +103,29 @@
                                             </GroupBox>
                                             <GroupBox Header="Выбранные лиги">
                                                 <!--Таблица лиг-->
-                                                <ListBox 
-                                                   SelectionMode="Multiple"
+                                                <xctk:CheckListBox
+                                                   dd:DragDrop.IsDragSource="True"
+                                                   dd:DragDrop.IsDropTarget="True"
+                                                   dd:DragDrop.DropHandler="{Binding}"
+                                                   SelectedMemberPath="IsChecked"
                                                    BorderThickness="0"
                                                    ItemsSource="{Binding Path=SchemePartValues}"
                                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                     <i:Interaction.Behaviors>
                                                         <corewpf:IgnoreMouseWheelBehavior />
                                                     </i:Interaction.Behaviors>
-                                                    <ListBox.ItemsPanel>
+                                                    <xctk:CheckListBox.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Orientation="Horizontal"/>
                                                         </ItemsPanelTemplate>
-                                                    </ListBox.ItemsPanel>
-                                                    <ListBox.ItemContainerStyle>
-                                                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                                                            <Setter Property="IsSelected" Value="{Binding IsChecked}" />
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                    </xctk:CheckListBox.ItemsPanel>
 
-                                                                        <Border x:Name="brd" Background="{TemplateBinding Background}" 
-                                                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                                                            <CheckBox Focusable="False" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
-                                                                                    IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
-                                                                                <ContentPresenter/>
-                                                                            </CheckBox>
-                                                                        </Border>
-                                                                        <ControlTemplate.Triggers>
-                                                                            <Trigger Property="IsSelected" Value="True">
-                                                                                <Setter Property="Background" Value="LightBlue"/>
-                                                                                <Setter Property="Foreground" Value="Black"/>
-                                                                                <Setter Property="BorderThickness" Value="1"/>
-                                                                                <Setter Property="BorderBrush" Value="LightBlue"/>
-                                                                            </Trigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </ListBox.ItemContainerStyle>
-                                                    <ListBox.ItemTemplate>
+                                                    <xctk:CheckListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
                                                         </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
+                                                    </xctk:CheckListBox.ItemTemplate>
+                                                </xctk:CheckListBox>
                                                 <!--конец Таблица лиг-->
                                             </GroupBox>
                                         </DockPanel>
@@ -180,6 +161,8 @@
                             </Grid.RowDefinitions>
                             <!--Таблица блоков-->
                             <ListBox 
+                                dd:DragDrop.IsDragSource="True"
+                                dd:DragDrop.IsDropTarget="True"
                                 Grid.Row="0" 
                                 BorderThickness="0" 
                                 VirtualizingPanel.ScrollUnit="Pixel"
@@ -204,52 +187,28 @@
                                             </GroupBox>
                                             <GroupBox Header="Выбранные возрастные категории">
                                                 <!--Таблица возрастн категорий-->
-                                                <ListBox 
-                                                   SelectionMode="Multiple"
+                                                <xctk:CheckListBox 
                                                    BorderThickness="0"
+                                                   dd:DragDrop.IsDragSource="True"
+                                                   dd:DragDrop.IsDropTarget="True"
+                                                   dd:DragDrop.DropHandler="{Binding}"
+                                                   SelectedMemberPath="IsChecked"
                                                    ItemsSource="{Binding Path=SchemePartValues}"
                                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                     <i:Interaction.Behaviors>
                                                         <corewpf:IgnoreMouseWheelBehavior />
                                                     </i:Interaction.Behaviors>
-                                                    <ListBox.ItemsPanel>
+                                                    <xctk:CheckListBox.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Orientation="Horizontal"/>
                                                         </ItemsPanelTemplate>
-                                                    </ListBox.ItemsPanel>
-                                                    <ListBox.ItemContainerStyle>
-                                                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                                                            <Setter Property="IsSelected" Value="{Binding IsChecked}" />
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-
-                                                                        <Border x:Name="brd" Background="{TemplateBinding Background}" 
-                                                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                                                            <CheckBox Focusable="False" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
-                                                                                    IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
-                                                                                <ContentPresenter/>
-                                                                            </CheckBox>
-                                                                        </Border>
-                                                                        <ControlTemplate.Triggers>
-                                                                            <Trigger Property="IsSelected" Value="True">
-                                                                                <Setter Property="Background" Value="LightBlue"/>
-                                                                                <Setter Property="Foreground" Value="Black"/>
-                                                                                <Setter Property="BorderThickness" Value="1"/>
-                                                                                <Setter Property="BorderBrush" Value="LightBlue"/>
-                                                                            </Trigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </ListBox.ItemContainerStyle>
-                                                    <ListBox.ItemTemplate>
+                                                    </xctk:CheckListBox.ItemsPanel>
+                                                    <xctk:CheckListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
                                                         </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
+                                                    </xctk:CheckListBox.ItemTemplate>
+                                                </xctk:CheckListBox>
                                                 <!--конец Таблица возрастн категорий-->
                                             </GroupBox>
                                         </DockPanel>
@@ -277,49 +236,25 @@
                     <TabItem Header="Стили">
                         <GroupBox Header="Выбранные стили">
                             <!--Таблица стилей-->
-                            <ListBox 
-                                SelectionMode="Multiple"
+                            <xctk:CheckListBox 
                                 BorderThickness="0"
+                                dd:DragDrop.IsDragSource="True"
+                                dd:DragDrop.IsDropTarget="True"
+                                dd:DragDrop.DropHandler="{Binding}"
+                                SelectedMemberPath="IsChecked"
                                 ItemsSource="{Binding Path=SchemeStyles}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                <ListBox.ItemsPanel>
+                                <xctk:CheckListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel Orientation="Horizontal"/>
                                     </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                                        <Setter Property="IsSelected" Value="{Binding IsChecked}" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
-
-                                                    <Border x:Name="brd" Background="{TemplateBinding Background}" 
-                                                                                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                                        <CheckBox Focusable="False" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
-                                                                                        IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
-                                                            <ContentPresenter/>
-                                                        </CheckBox>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsSelected" Value="True">
-                                                            <Setter Property="Background" Value="LightBlue"/>
-                                                            <Setter Property="Foreground" Value="Black"/>
-                                                            <Setter Property="BorderThickness" Value="1"/>
-                                                            <Setter Property="BorderBrush" Value="LightBlue"/>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
-                                <ListBox.ItemTemplate>
+                                </xctk:CheckListBox.ItemsPanel>
+                                <xctk:CheckListBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                </xctk:CheckListBox.ItemTemplate>
+                            </xctk:CheckListBox>
                             <!--конец Таблица стилей-->
                         </GroupBox>
                     </TabItem>
@@ -327,5 +262,6 @@
             </Grid>
             <!--конец Выбранная схема-->
         </Grid>
+        <Button Grid.Row="1" Content="Save" Command="{Binding Path=Command_save}"/>
     </Grid>
 </window:DialogWindowExt>

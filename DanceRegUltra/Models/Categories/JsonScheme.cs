@@ -9,29 +9,36 @@ namespace DanceRegUltra.Models.Categories
 {
     public class JsonScheme
     {
-        public List<JsonSchemeArray> Platforms { get; private set; }
-        public List<JsonSchemeArray> Blocks { get; private set; }
-        public List<int> Styles { get; private set; }
+        public List<JsonSchemeArray> Platforms { get; set; }
+        public List<JsonSchemeArray> Blocks { get; set; }
+        public List<IdCheck> Styles { get; set; }
 
+
+        public JsonScheme()
+        {
+            this.Platforms = new List<JsonSchemeArray>();
+            this.Blocks = new List<JsonSchemeArray>();
+            this.Styles = new List<IdCheck>();
+        }
         public JsonScheme(DanceScheme scheme)
         {
             this.Platforms = new List<JsonSchemeArray>();
             this.Blocks = new List<JsonSchemeArray>();
-            this.Styles = new List<int>();
+            this.Styles = new List<IdCheck>();
 
-            foreach(SchemeArray platform in scheme.PlatformsCollection)
+            foreach (SchemeArray platform in scheme.PlatformsCollection)
             {
                 this.Platforms.Add(new JsonSchemeArray(platform));
             }
 
-            foreach(SchemeArray block in scheme.BlocksCollection)
+            foreach (SchemeArray block in scheme.BlocksCollection)
             {
                 this.Blocks.Add(new JsonSchemeArray(block));
             }
 
-            foreach(IdCheck style in scheme.SchemeStyles)
+            foreach (IdCheck style in scheme.SchemeStyles)
             {
-                if (style.IsChecked) this.Styles.Add(style.Id);
+                this.Styles.Add(new IdCheck(style.Id, style.IsChecked));
             }
         }
 

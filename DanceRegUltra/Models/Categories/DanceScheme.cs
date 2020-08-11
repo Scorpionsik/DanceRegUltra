@@ -2,11 +2,16 @@
 using CoreWPF.Utilites;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.ViewModels;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DanceRegUltra.Models.Categories
 {
-    public class DanceScheme : NotifyPropertyChanged
+    public class DanceScheme : NotifyPropertyChanged 
     {
+        public bool UpdateFlag { get; private set; }
+
         public int Id_scheme { get; private set; }
 
         private string title_scheme;
@@ -52,6 +57,7 @@ namespace DanceRegUltra.Models.Categories
 
         public DanceScheme()
         {
+            this.UpdateFlag = true;
             this.Id_scheme = -1;
             this.title_scheme = "";
             
@@ -73,11 +79,59 @@ namespace DanceRegUltra.Models.Categories
             this.AddBlock();
             this.AddBlock();
         }
+        
+        public DanceScheme(int id, string title, JsonScheme scheme)
+        {
+            this.UpdateFlag = false;
+            this.Id_scheme = id;
+            this.title_scheme = title;
 
-        public void AddPlatform(string title = "Платформа")
+            this.SchemeLeagues = new ListExt<IdCheck>();
+            this.SchemeAges = new ListExt<IdCheck>();
+            this.SchemeStyles = new ListExt<IdCheck>();
+
+            this.PlatformsCollection = new ListExt<SchemeArray>();
+            this.BlocksCollection = new ListExt<SchemeArray>();
+
+            bool isNew = false;
+            foreach(JsonSchemeArray platform in scheme.Platforms)
+            {
+                if (!isNew)
+                {
+                    foreach(IdCheck value in platform.Values)
+                    {
+                        this.SchemeLeagues.Add(new IdCheck(value.Id));
+                    }
+                    isNew = true;
+                }
+                this.AddPlatform(platform.Title, platform.Values);
+            }
+
+            isNew = false;
+            foreach(JsonSchemeArray block in scheme.Blocks)
+            {
+                if (!isNew)
+                {
+                    foreach(IdCheck value in block.Values)
+                    {
+                        this.SchemeAges.Add(new IdCheck(value.Id));
+                    }
+                    isNew = true;
+                }
+                this.AddBlock(block.Title, block.Values);
+            }
+
+            foreach(IdCheck style in scheme.Styles)
+            {
+                this.SchemeStyles.Add(new IdCheck(style.Id, style.IsChecked));
+            }
+        }
+
+        public void AddPlatform(string title = "Платформа", IEnumerable<IdCheck> collection = null)
         {
             SchemeArray platform = new SchemeArray(title, SchemeType.Platform);
-            foreach(IdCheck league in this.SchemeLeagues)
+            if (collection == null) collection = this.SchemeLeagues;
+            foreach (IdCheck league in collection)
             {
                 platform.SchemePartValues.Add(new IdCheck(league.Id, league.IsChecked));
             }
@@ -85,16 +139,19 @@ namespace DanceRegUltra.Models.Categories
             this.PlatformsCollection.Add(platform);
         }
 
-        public void AddBlock(string title = "Блок")
+        public void AddBlock(string title = "Блок", IEnumerable<IdCheck> collection = null)
         {
             SchemeArray block = new SchemeArray(title, SchemeType.Block);
-            foreach(IdCheck age in this.SchemeAges)
+            if (collection == null) collection = this.SchemeAges;
+            foreach (IdCheck age in collection)
             {
                 block.SchemePartValues.Add(new IdCheck(age.Id, age.IsChecked));
             }
             block.Event_updateCollection += this.UpdateSchemeArray;
             this.BlocksCollection.Add(block);
         }
+
+       
 
         private void UpdateSchemeArray(SchemeType type, UpdateStatus status, IdCheck value, int old_index, int new_index)
         {

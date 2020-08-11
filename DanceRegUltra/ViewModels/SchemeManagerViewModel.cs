@@ -54,6 +54,26 @@ namespace DanceRegUltra.ViewModels
             return base.CloseMethod();
         }
 
+        private async void SaveChangesMethod()
+        {
+            foreach (DanceScheme scheme in this.Schemes)
+            {
+                string json = JsonScheme.Serialize(new JsonScheme(scheme));
+
+                if (scheme.Id_scheme == -1) await DanceRegDatabase.ExecuteNonQueryAsync("insert into 'template_schemes' ('Title', 'Json_scheme') values ('" + scheme.Title_scheme + "', '" + json + "')");
+                else await DanceRegDatabase.ExecuteNonQueryAsync("update 'template_schemes' set 'Title'='" + scheme.Title_scheme + "', 'Json_scheme'='"+ json +"' where Id_scheme="+ scheme.Id_scheme);
+            }
+            base.Command_save?.Execute();
+        }
+
+        public override RelayCommand Command_save
+        {
+            get => new RelayCommand(obj =>
+            {
+                this.SaveChangesMethod();
+            });
+        }
+
         private async void Initialize(string jsonEdit)
         {
             string condition = jsonEdit == null ? " where IsHide=0" : "";
@@ -85,10 +105,10 @@ namespace DanceRegUltra.ViewModels
             }
 
             
-            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Json_scheme from template_schemes");
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from template_schemes");
             foreach(DbRow row in res)
             {
-                //this.Schemes.Add(DanceScheme.Deserialize(res["Json_scheme"].ToString()));
+                this.Schemes.Add(new DanceScheme(row["Id_scheme"].ToInt32(), row["Title"].ToString(), JsonScheme.Deserialize(row["Json_scheme"].ToString())));
             }
 
             if (this.Schemes.Count == 0) this.Schemes.Add(new DanceScheme());
