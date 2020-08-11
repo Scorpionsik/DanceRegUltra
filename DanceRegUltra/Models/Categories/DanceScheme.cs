@@ -11,6 +11,17 @@ namespace DanceRegUltra.Models.Categories
 {
     public class DanceScheme : NotifyPropertyChanged 
     {
+        private event Action<bool> event_UpdateDanceScheme;
+        public event Action<bool> Event_UpdateDanceScheme
+        {
+            add
+            {
+                this.event_UpdateDanceScheme -= value;
+                this.event_UpdateDanceScheme += value;
+            }
+            remove => this.event_UpdateDanceScheme -= value;
+        }
+
         private bool updateFlag;
         public bool UpdateFlag
         {
@@ -32,7 +43,7 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.title_scheme = value;
                 this.OnPropertyChanged("Title_scheme");
-                this.UpdateFlagChange();
+                this.UpdateFlagChange(true, true);
             }
         }
 
@@ -94,8 +105,8 @@ namespace DanceRegUltra.Models.Categories
             this.AddBlock("Блок 3");
             this.AddBlock("Блок 4");
         }
-        
-        public DanceScheme(int id, string title, JsonScheme scheme)
+
+        public DanceScheme(int id, string title, JsonScheme scheme, bool isNewScheme = false)
         {
             
             this.Id_scheme = id;
@@ -143,7 +154,7 @@ namespace DanceRegUltra.Models.Categories
                 add_style.Event_UpdateCheck += this.UpdateCheck;
                 this.SchemeStyles.Add(add_style);
             }
-            this.UpdateFlag = false;
+            this.UpdateFlag = isNewScheme == false ? false : true;
         }
 
         public void AddPlatform(string title = "Платформа", IEnumerable<IdCheck> collection = null)
@@ -221,9 +232,10 @@ namespace DanceRegUltra.Models.Categories
             }
         }
 
-        private void UpdateFlagChange(bool flag = true)
+        private void UpdateFlagChange(bool flag = true, bool isUpdateTitle = false)
         {
             if(this.UpdateFlag != flag) this.UpdateFlag = flag;
+            this.event_UpdateDanceScheme?.Invoke(isUpdateTitle);
         }
 
         public RelayCommand Command_AddPlatform
@@ -264,6 +276,28 @@ namespace DanceRegUltra.Models.Categories
                 this.BlocksCollection.Remove(block);
             },
                 (block) => block != null && block.Type == SchemeType.Block && this.BlocksCollection.Count > 1);
+        }
+
+        public RelayCommand Command_CheckAllStyles
+        {
+            get => new RelayCommand(obj =>
+            {
+                foreach (IdCheck value in this.SchemeStyles)
+                {
+                    value.IsChecked = true;
+                }
+            });
+        }
+
+        public RelayCommand Command_UncheckAllStyles
+        {
+            get => new RelayCommand(obj =>
+            {
+                foreach (IdCheck value in this.SchemeStyles)
+                {
+                    value.IsChecked = false;
+                }
+            });
         }
         #region для старой логики перемещения категорий внутри схемы
         /*

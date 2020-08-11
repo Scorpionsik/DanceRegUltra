@@ -6,6 +6,7 @@ using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,27 @@ namespace DanceRegUltra.ViewModels
 {
     public class SchemeManagerViewModel : ViewModel
     {
+        private bool updateConfirm;
+        public bool UpdateConfirm
+        {
+            get
+            {
+                if(this.JsonEdit == null)
+                {
+                    return this.updateConfirm;
+                }
+                else
+                {
+                    return this.Select_scheme != null ? true : false;
+                }
+            }
+            private set
+            {
+                this.updateConfirm = value;
+                this.OnPropertyChanged("UpdateConfirm");
+            }
+        }
+
         private string jsonEdit;
         public string JsonEdit
         {
@@ -59,11 +81,20 @@ namespace DanceRegUltra.ViewModels
             {
                 this.select_scheme = value;
                 this.OnPropertyChanged("Select_scheme");
+                this.OnPropertyChanged("Title");
             }
         }
 
+        public override string Title
+        {
+            get
+            {
+                if (this.Select_scheme != null) return base.Title + " ["+ this.Select_scheme.Title_scheme +"]";
+                else return base.Title;
+            }
+            set => base.Title = value;
+        }
 
-        
         public SchemeManagerViewModel(string jsonEdit = null) : base()
         {
             this.Title = App.AppTitle + ": Редактор шаблонов схем";
@@ -75,7 +106,7 @@ namespace DanceRegUltra.ViewModels
             AllStyles = new List<IdCheck>();
 
             this.Schemes = new ListExt<DanceScheme>();
-
+            this.Schemes.CollectionChanged += this.UpdateDanceSchemes;
             this.Initialize(jsonEdit);
         }
 
@@ -109,7 +140,8 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand(obj =>
             {
                 this.SaveChangesMethod();
-            });
+            },
+                (obj) => this.UpdateConfirm);
         }
 
         private async void Initialize(string jsonEdit)
@@ -166,11 +198,31 @@ namespace DanceRegUltra.ViewModels
             this.Select_scheme = this.Schemes.First;
         }
 
+        private void UpdateDanceSchemes(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    ((DanceScheme)e.NewItems[0]).Event_UpdateDanceScheme += this.ChangeUpdateFlag;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    ((DanceScheme)e.OldItems[0]).Event_UpdateDanceScheme += this.ChangeUpdateFlag;
+                    break;
+            }
+        }
+
+        private void ChangeUpdateFlag(bool isUpdateTitleScheme)
+        {
+            if(!this.updateConfirm) this.UpdateConfirm = true;
+            if (isUpdateTitleScheme) this.OnPropertyChanged("Title");
+        }
+
         public RelayCommand Command_AddNewScheme
         {
             get => new RelayCommand(obj =>
             {
                 this.Schemes.Add(new DanceScheme("Схема " + this.Schemes.Count + 1));
+                this.ChangeUpdateFlag(false);
             });
         }
 
@@ -178,8 +230,10 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceScheme>(scheme =>
             {
-                DanceScheme copy_scheme = new DanceScheme(-1, scheme.Title_scheme + "_копия", new JsonScheme(scheme));
+                DanceScheme copy_scheme = new DanceScheme(-1, scheme.Title_scheme + "_копия", new JsonScheme(scheme), true);
                 this.Schemes.Add(copy_scheme);
+                this.Select_scheme = copy_scheme;
+                this.ChangeUpdateFlag(false);
             });
         }
 
@@ -191,6 +245,7 @@ namespace DanceRegUltra.ViewModels
                 this.Schemes.Remove(scheme);
                 if (this.Schemes.Count == 0) this.Schemes.Add(new DanceScheme());
                 this.Select_scheme = this.Schemes.Last;
+                this.ChangeUpdateFlag(false);
             });
         }
     }

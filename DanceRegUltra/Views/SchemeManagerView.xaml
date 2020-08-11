@@ -53,8 +53,8 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=Title_scheme}"/>
                                     <TextBlock Visibility="{Binding Path=UpdateFlag, Converter={StaticResource VisibilityBool}}" Text="*"/>
+                                    <TextBlock Text="{Binding Path=Title_scheme}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -133,7 +133,23 @@
                                             <GroupBox DockPanel.Dock="Top" Header="Название платформы">
                                                 <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </GroupBox>
-                                            <GroupBox Header="Выбранные лиги">
+                                            <GroupBox>
+                                                <GroupBox.Header>
+                                                    <DockPanel LastChildFill="False">
+                                                        <TextBlock DockPanel.Dock="Left" Text="Выбранные лиги"/>
+                                                        <Label DockPanel.Dock="Left" Margin="5 0 0 0"/>
+                                                        <Button DockPanel.Dock="Right"  Height="20" Command="{Binding Path=Command_UncheckAll}">
+                                                            <Button.Content>
+                                                                <CheckBox IsEnabled="False" IsChecked="False"/>
+                                                            </Button.Content>
+                                                        </Button>
+                                                        <Button DockPanel.Dock="Right" Height="20" Command="{Binding Path=Command_CheckAll}">
+                                                            <Button.Content>
+                                                                <CheckBox IsEnabled="False" IsChecked="True"/>
+                                                            </Button.Content>
+                                                        </Button>
+                                                    </DockPanel>
+                                                </GroupBox.Header>
                                                 <!--Таблица лиг-->
                                                 <xctk:CheckListBox
                                                    dd:DragDrop.IsDragSource="True"
@@ -217,7 +233,23 @@
                                             <GroupBox DockPanel.Dock="Top" Header="Название блока">
                                                 <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </GroupBox>
-                                            <GroupBox Header="Выбранные возрастные категории">
+                                            <GroupBox>
+                                                <GroupBox.Header>
+                                                    <DockPanel LastChildFill="False">
+                                                        <TextBlock DockPanel.Dock="Left" Text="Выбранные возрастные категории"/>
+                                                        <Label DockPanel.Dock="Left" Margin="5 0 0 0"/>
+                                                        <Button DockPanel.Dock="Right"  Height="20" Command="{Binding Path=Command_UncheckAll}">
+                                                            <Button.Content>
+                                                                <CheckBox IsEnabled="False" IsChecked="False"/>
+                                                            </Button.Content>
+                                                        </Button>
+                                                        <Button DockPanel.Dock="Right" Height="20" Command="{Binding Path=Command_CheckAll}">
+                                                            <Button.Content>
+                                                                <CheckBox IsEnabled="False" IsChecked="True"/>
+                                                            </Button.Content>
+                                                        </Button>
+                                                    </DockPanel>
+                                                </GroupBox.Header>
                                                 <!--Таблица возрастн категорий-->
                                                 <xctk:CheckListBox 
                                                    BorderThickness="0"
@@ -266,7 +298,23 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="Стили">
-                        <GroupBox Header="Выбранные стили">
+                        <GroupBox>
+                            <GroupBox.Header>
+                                <DockPanel LastChildFill="False">
+                                    <TextBlock DockPanel.Dock="Left" Text="Выбранные стили"/>
+                                    <Label DockPanel.Dock="Left" Margin="5 0 0 0"/>
+                                    <Button DockPanel.Dock="Right"  Height="20" Command="{Binding Path=Command_UncheckAllStyles}">
+                                        <Button.Content>
+                                            <CheckBox IsEnabled="False" IsChecked="False"/>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button DockPanel.Dock="Right" Height="20" Command="{Binding Path=Command_CheckAllStyles}">
+                                        <Button.Content>
+                                            <CheckBox IsEnabled="False" IsChecked="True"/>
+                                        </Button.Content>
+                                    </Button>
+                                </DockPanel>
+                            </GroupBox.Header>
                             <!--Таблица стилей-->
                             <xctk:CheckListBox 
                                 BorderThickness="0"

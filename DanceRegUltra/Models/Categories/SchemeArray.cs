@@ -92,6 +92,28 @@ namespace DanceRegUltra.Models.Categories
             }
         }
 
+        public RelayCommand Command_CheckAll
+        {
+            get => new RelayCommand(obj =>
+            {
+                foreach(IdCheck value in this.SchemePartValues)
+                {
+                    value.IsChecked = true;
+                }
+            });
+        }
+
+        public RelayCommand Command_UncheckAll
+        {
+            get => new RelayCommand(obj =>
+            {
+                foreach (IdCheck value in this.SchemePartValues)
+                {
+                    value.IsChecked = false;
+                }
+            });
+        }
+
         private void UpdateTrigger(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
