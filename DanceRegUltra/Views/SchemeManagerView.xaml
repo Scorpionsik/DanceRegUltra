@@ -36,7 +36,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="{Binding Path=Title_scheme}"/>
-                                <TextBlock Text="{Binding Path=UpdateFlag}"/>
+                                <TextBlock IsEnabled="{Binding Path=UpdateFlag}" Text="{Binding Path=UpdateFlag}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -15,7 +15,16 @@ namespace DanceRegUltra.ViewModels
 {
     public class SchemeManagerViewModel : ViewModel
     {
-        private string JsonEdit;
+        private string jsonEdit;
+        public string JsonEdit
+        {
+            get => this.jsonEdit;
+            set
+            {
+                this.jsonEdit = value;
+                this.OnPropertyChanged("JsonEdit");
+            }
+        }
 
         public static List<IdCheck> AllLeagues { get; private set; }
         public static List<IdCheck> AllAges { get; private set; }
@@ -33,6 +42,8 @@ namespace DanceRegUltra.ViewModels
                 this.OnPropertyChanged("Select_scheme");
             }
         }
+
+
         
         public SchemeManagerViewModel(string jsonEdit = null) : base()
         {
@@ -78,32 +89,45 @@ namespace DanceRegUltra.ViewModels
 
         private async void Initialize(string jsonEdit)
         {
-            string condition = jsonEdit == null ? " where IsHide=0" : "";
-            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues" + condition);
+            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues");
+            int insert_index = -1;
             foreach(DbRow row in res)
             {
-               AllLeagues.Insert(
-                   DanceRegCollections.LoadLeague(new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean())),
-                   new IdCheck(row["Id_league"].ToInt32())
-                   );
+                insert_index = DanceRegCollections.LoadLeague(new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
+
+                if (!row["IsHide"].ToBoolean())
+                {
+                    AllLeagues.Insert(
+                        insert_index,
+                        new IdCheck(row["Id_league"].ToInt32())
+                        );
+                }
             }
 
-            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages" + condition);
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages");
             foreach (DbRow row in res)
             {
-                AllAges.Insert(
-                    DanceRegCollections.LoadAge(new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean())),
+                insert_index = DanceRegCollections.LoadAge(new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
+                if (!row["IsHide"].ToBoolean())
+                {
+                    AllAges.Insert(
+                    insert_index,
                     new IdCheck(row["Id_age"].ToInt32())
                     );
+                }
             }
 
-            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles" + condition);
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles");
             foreach (DbRow row in res)
             {
-                AllStyles.Insert(
-                    DanceRegCollections.LoadStyle(new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean())),
-                    new IdCheck(row["Id_style"].ToInt32())
-                    );
+                insert_index = DanceRegCollections.LoadStyle(new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
+                if (!row["IsHide"].ToBoolean())
+                {
+                    AllStyles.Insert(
+                        insert_index,
+                        new IdCheck(row["Id_style"].ToInt32())
+                        );
+                }
             }
 
             
