@@ -54,6 +54,7 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.titleSchemePart = value;
                 this.OnPropertyChanged("TitleSchemePart");
+                this.UpdateCheck();
             }
         }
 

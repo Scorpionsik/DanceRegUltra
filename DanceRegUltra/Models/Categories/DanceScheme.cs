@@ -32,6 +32,7 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.title_scheme = value;
                 this.OnPropertyChanged("Title_scheme");
+                this.UpdateFlagChange();
             }
         }
 
@@ -65,11 +66,11 @@ namespace DanceRegUltra.Models.Categories
 
         public ListExt<IdCheck> SchemeStyles { get; private set; }
 
-        public DanceScheme()
+        public DanceScheme(string title = "")
         {
             this.UpdateFlag = true;
             this.Id_scheme = -1;
-            this.title_scheme = "";
+            this.title_scheme = title;
             
 
             this.SchemeLeagues = new ListExt<IdCheck>(SchemeManagerViewModel.AllLeagues);
@@ -87,11 +88,11 @@ namespace DanceRegUltra.Models.Categories
             this.PlatformsCollection = new ListExt<SchemeArray>();
             this.BlocksCollection = new ListExt<SchemeArray>();
 
-            this.AddPlatform();
-            this.AddBlock();
-            this.AddBlock();
-            this.AddBlock();
-            this.AddBlock();
+            this.AddPlatform("Платформа 1");
+            this.AddBlock("Блок 1");
+            this.AddBlock("Блок 2");
+            this.AddBlock("Блок 3");
+            this.AddBlock("Блок 4");
         }
         
         public DanceScheme(int id, string title, JsonScheme scheme)

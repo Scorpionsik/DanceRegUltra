@@ -13,59 +13,88 @@
         Title="{Binding Path=Title}" Height="450" Width="800">
     <window:DialogWindowExt.Resources>
         <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
+        <corewpf:VisibilityBoolConverter x:Key="VisibilityBool"/>
     </window:DialogWindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <!--Схемы-->
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-                <!--Таблица-->
-                <ListBox Grid.Row="0" ItemsSource="{Binding Path=Schemes}" SelectedItem="{Binding Path=Select_scheme}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding Path=Title_scheme}"/>
-                                <TextBlock IsEnabled="{Binding Path=UpdateFlag}" Text="{Binding Path=UpdateFlag}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <!--конец Таблица-->
-                <!--Кнопки-->
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Margin" Value="5"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddNewScheme}"/>
-                    <Button Grid.Column="1" Content="Delete" Command="{Binding Path=Command_DeleteSelectScheme}" CommandParameter="{Binding Path=Select_scheme}"/>
+            <GroupBox Header="Схемы" Grid.Row="0" >
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="33"/>
+                    </Grid.RowDefinitions>
+                    <!--Таблица схем-->
+                    <ListBox 
+                        BorderThickness="0" 
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ItemsSource="{Binding Path=Schemes}" 
+                        SelectedItem="{Binding Path=Select_scheme}"
+                        >
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="BorderBrush" Value="DarkGray"/>
+                                <Setter Property="Margin" Value="5 2.5 5 2.5"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=Title_scheme}"/>
+                                    <TextBlock Visibility="{Binding Path=UpdateFlag, Converter={StaticResource VisibilityBool}}" Text="*"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <!--конец Таблица схем-->
+                
+                <!--Кнопки для схем-->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Command="{Binding Path=Command_AddNewScheme}">
+                            <Button.Content>
+                                <TextBlock TextAlignment="Center" Text="Добавить схему" Margin="0 -3 0 0" TextWrapping="WrapWithOverflow"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Grid.Column="1" Command="{Binding Path=Command_CopySelectScheme}" CommandParameter="{Binding Path=Select_scheme}">
+                            <Button.Content>
+                                <TextBlock TextAlignment="Center" Text="Копия схемы" Margin="0 -3 0 0" TextWrapping="WrapWithOverflow"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Grid.Column="2" Command="{Binding Path=Command_DeleteSelectScheme}" CommandParameter="{Binding Path=Select_scheme}">
+                            <Button.Content>
+                                <TextBlock TextAlignment="Center" Text="Удалить схему" Margin="0 -3 0 0" TextWrapping="WrapWithOverflow"/>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+                    <!--конец Кнопки для схем-->
                 </Grid>
-                <!--конец Кнопки-->
-            </Grid>
+            </GroupBox>
             <!--конец Схемы-->
             <!--Выбранная схема-->
-            <Grid Grid.Column="1" DataContext="{Binding Path=Select_scheme}">
+            <Grid Grid.Column="2" DataContext="{Binding Path=Select_scheme}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="42"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <GroupBox Grid.Row="0" Header="Name">
+                <GroupBox Grid.Row="0" Header="Название схемы">
                     <TextBox Text="{Binding Path=Title_scheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
                 <TabControl Grid.Row="1">
@@ -101,7 +130,7 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DockPanel LastChildFill="True">
-                                            <GroupBox DockPanel.Dock="Top" Header="Name">
+                                            <GroupBox DockPanel.Dock="Top" Header="Название платформы">
                                                 <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </GroupBox>
                                             <GroupBox Header="Выбранные лиги">
@@ -147,8 +176,8 @@
                                         <Setter Property="Margin" Value="5"/>
                                     </Style>
                                 </Grid.Resources>
-                                <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddPlatform}"/>
-                                <Button Grid.Column="1" Content="Remove" Command="{Binding Path=Command_DeletePlatform}" CommandParameter="{Binding Path=Select_platform}"/>
+                                <Button Grid.Column="0" Content="Добавить платформу" Command="{Binding Path=Command_AddPlatform}"/>
+                                <Button Grid.Column="1" Content="Удалить платформу" Command="{Binding Path=Command_DeletePlatform}" CommandParameter="{Binding Path=Select_platform}"/>
                             </Grid>
                             <!--конец Кнопки платформ-->
                         </Grid>
@@ -185,7 +214,7 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DockPanel LastChildFill="True">
-                                            <GroupBox DockPanel.Dock="Top" Header="Name">
+                                            <GroupBox DockPanel.Dock="Top" Header="Название блока">
                                                 <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </GroupBox>
                                             <GroupBox Header="Выбранные возрастные категории">
@@ -230,8 +259,8 @@
                                         <Setter Property="Margin" Value="5"/>
                                     </Style>
                                 </Grid.Resources>
-                                <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddBlock}"/>
-                                <Button Grid.Column="1" Content="Remove" Command="{Binding Path=Command_DeleteBlock}" CommandParameter="{Binding Path=Select_block}"/>
+                                <Button Grid.Column="0" Content="Добавить блок" Command="{Binding Path=Command_AddBlock}"/>
+                                <Button Grid.Column="1" Content="Удалить блок" Command="{Binding Path=Command_DeleteBlock}" CommandParameter="{Binding Path=Select_block}"/>
                             </Grid>
                             <!--конец Кнопки блоков-->
                         </Grid>
@@ -265,6 +294,18 @@
             </Grid>
             <!--конец Выбранная схема-->
         </Grid>
-        <Button Grid.Row="1" Content="Save" Command="{Binding Path=Command_save}"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </Grid.Resources>
+            <Button Grid.Column="0" IsDefault="True" Content="{Binding Path=ContentSaveButton}" Command="{Binding Path=Command_save}"/>
+            <Button Grid.Column="1" IsCancel="True" Content="Закрыть без изменений" Command="{Binding Path=Command_close}"/>
+        </Grid>
     </Grid>
 </window:DialogWindowExt>

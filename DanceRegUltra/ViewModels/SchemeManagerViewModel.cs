@@ -23,6 +23,23 @@ namespace DanceRegUltra.ViewModels
             {
                 this.jsonEdit = value;
                 this.OnPropertyChanged("JsonEdit");
+                this.OnPropertyChanged("ContentSaveButton");
+            }
+        }
+
+        public string ContentSaveButton
+        {
+            get
+            {
+                if (this.JsonEdit == null) return "Сохранить изменения";
+                else
+                {
+                    if(this.Select_scheme != null)
+                    {
+                        if (this.Select_scheme.UpdateFlag) return "Выбрать схему и сохранить изменения";
+                    }
+                    return "Выбрать схему";
+                }
             }
         }
 
@@ -31,6 +48,8 @@ namespace DanceRegUltra.ViewModels
         public static List<IdCheck> AllStyles { get; private set; }
 
         public ListExt<DanceScheme> Schemes { get; private set; }
+
+        private List<int> DeleteschemesId;
 
         private DanceScheme select_scheme;
         public DanceScheme Select_scheme
@@ -49,6 +68,7 @@ namespace DanceRegUltra.ViewModels
         {
             this.Title = App.AppTitle + ": Редактор шаблонов схем";
             this.JsonEdit = jsonEdit;
+            this.DeleteschemesId = new List<int>();
 
             AllLeagues = new List<IdCheck>();
             AllAges = new List<IdCheck>();
@@ -75,6 +95,11 @@ namespace DanceRegUltra.ViewModels
                     if (scheme.Id_scheme == -1) await DanceRegDatabase.ExecuteNonQueryAsync("insert into 'template_schemes' ('Title', 'Json_scheme') values ('" + scheme.Title_scheme + "', '" + json + "')");
                     else await DanceRegDatabase.ExecuteNonQueryAsync("update 'template_schemes' set 'Title'='" + scheme.Title_scheme + "', 'Json_scheme'='" + json + "' where Id_scheme=" + scheme.Id_scheme);
                 }
+            }
+
+            foreach(int delete_id in this.DeleteschemesId)
+            {
+                await DanceRegDatabase.ExecuteNonQueryAsync("delete from 'template_schemes' where Id_scheme=" + delete_id);
             }
             base.Command_save?.Execute();
         }
@@ -145,7 +170,16 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand(obj =>
             {
-                this.Schemes.Add(new DanceScheme());
+                this.Schemes.Add(new DanceScheme("Схема " + this.Schemes.Count + 1));
+            });
+        }
+
+        public RelayCommand<DanceScheme> Command_CopySelectScheme
+        {
+            get => new RelayCommand<DanceScheme>(scheme =>
+            {
+                DanceScheme copy_scheme = new DanceScheme(-1, scheme.Title_scheme + "_копия", new JsonScheme(scheme));
+                this.Schemes.Add(copy_scheme);
             });
         }
 
@@ -153,6 +187,7 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceScheme>(scheme =>
             {
+                if (scheme.Id_scheme != -1) this.DeleteschemesId.Add(scheme.Id_scheme);
                 this.Schemes.Remove(scheme);
                 if (this.Schemes.Count == 0) this.Schemes.Add(new DanceScheme());
                 this.Select_scheme = this.Schemes.Last;
