@@ -103,7 +103,7 @@
     <Compile Include="Enums\CategoryType.cs" />
     <Compile Include="Enums\SchemeType.cs" />
     <Compile Include="Enums\UpdateStatus.cs" />
-    <Compile Include="Interfaces\ICategoriesManagerCommands.cs" />
+    <Compile Include="Interfaces\ICategoriesMenu.cs" />
     <Compile Include="Models\Categories\IdCheck.cs" />
     <Compile Include="Models\Categories\JsonScheme.cs" />
     <Compile Include="Models\Categories\JsonSchemeArray.cs" />

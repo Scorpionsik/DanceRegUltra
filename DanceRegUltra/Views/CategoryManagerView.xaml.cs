@@ -1,6 +1,8 @@
-﻿using CoreWPF.Windows;
+﻿using CoreWPF.Utilites.Navigation;
+using CoreWPF.Windows;
 using DanceRegUltra.Enums;
 using DanceRegUltra.ViewModels;
+using DanceRegUltra.ViewModels.CategoryMenuElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,10 @@ namespace DanceRegUltra.Views
         public CategoryManagerView(CategoryType select_type = CategoryType.League)
         {
             InitializeComponent();
+            NavigationManager nav = new NavigationManager(this.Dispatcher, this.Frame);
+            nav.Register<LeagueMenuElementViewModel, CategoryMenuElementView>(new LeagueMenuElementViewModel(nav), CategoryType.League.ToString());
+            nav.Register<AgeMenuElementViewModel, CategoryMenuElementView>(new AgeMenuElementViewModel(nav), CategoryType.Age.ToString());
+            nav.Register<StyleMenuElementViewModel, CategoryMenuElementView>(new StyleMenuElementViewModel(nav), CategoryType.Style.ToString());
             this.DataContext = new CategoryManagerViewModel(select_type, null);
         }
     }
