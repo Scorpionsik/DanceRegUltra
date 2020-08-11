@@ -100,18 +100,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Enums\CategoryType.cs" />
+    <Compile Include="Enums\SchemeType.cs" />
+    <Compile Include="Enums\UpdateStatus.cs" />
+    <Compile Include="Interfaces\ICategoriesManagerCommands.cs" />
     <Compile Include="Models\Categories\IdCheck.cs" />
     <Compile Include="Models\Categories\JsonScheme.cs" />
     <Compile Include="Models\Categories\JsonSchemeArray.cs" />
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
+    <Compile Include="ViewModels\CategoryManagerViewModel.cs" />
+    <Compile Include="ViewModels\CategoryMenuElements\AgeMenuElementViewModel.cs" />
+    <Compile Include="ViewModels\CategoryMenuElements\LeagueMenuElementViewModel.cs" />
+    <Compile Include="ViewModels\CategoryMenuElements\StyleMenuElementViewModel.cs" />
     <Compile Include="ViewModels\SchemeManagerViewModel.cs" />
-    <Compile Include="Views\CategoryManagerViewModel.xaml.cs">
-      <DependentUpon>CategoryManagerViewModel.xaml</DependentUpon>
+    <Compile Include="Views\CategoryManagerView.xaml.cs">
+      <DependentUpon>CategoryManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CategoryMenuElementView.xaml.cs">
+      <DependentUpon>CategoryMenuElementView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SchemeManagerView.xaml.cs">
       <DependentUpon>SchemeManagerView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\CategoryManagerViewModel.xaml">
+    <Page Include="Views\CategoryManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CategoryMenuElementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

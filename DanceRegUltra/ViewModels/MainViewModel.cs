@@ -45,7 +45,7 @@ namespace DanceRegUltra.ViewModels
 
         public MainViewModel() : base()
         {
-            this.Title = App.AppTitle + ": Создание или выбор события";
+            this.Title = "Создание или выбор события - " + App.AppTitle;
 
             this.Status = new StatusString();
             this.Initialize();

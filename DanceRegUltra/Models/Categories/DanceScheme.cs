@@ -1,5 +1,6 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.ViewModels;
 using System;

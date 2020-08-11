@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DanceRegUltra.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,12 +10,7 @@ using System.Threading.Tasks;
 
 namespace DanceRegUltra.Models.Categories
 {
-    public enum CategoryType
-    {
-        League,
-        Age,
-        Style
-    }
+   
 
     public delegate void UpdateCategoryString(int id, CategoryType type, string columnName);
 

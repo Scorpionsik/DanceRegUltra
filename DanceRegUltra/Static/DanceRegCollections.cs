@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Utilites;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using System;

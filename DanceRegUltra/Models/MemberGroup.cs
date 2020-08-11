@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Utilites;
+using DanceRegUltra.Enums;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace DanceRegUltra.Models
             if (!this.HideGroupMembersId.Contains(memberId))
             {
                 this.HideGroupMembersId.Add(memberId);
-                this.InvokeUpdate("MembersId", memberId, Interfaces.UpdateStatus.Add);
+                this.InvokeUpdate("MembersId", memberId, UpdateStatus.Add);
             }
         }
 
@@ -34,7 +35,7 @@ namespace DanceRegUltra.Models
             if (this.HideGroupMembersId.Contains(memberId))
             {
                 this.HideGroupMembersId.Remove(memberId);
-                this.InvokeUpdate("MembersId", memberId, Interfaces.UpdateStatus.Delete);
+                this.InvokeUpdate("MembersId", memberId, UpdateStatus.Delete);
             }
         }
     }

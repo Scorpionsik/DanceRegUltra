@@ -1,6 +1,7 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
 using CoreWPF.Windows.Enums;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
@@ -16,6 +17,8 @@ namespace DanceRegUltra.ViewModels
 {
     public class SchemeManagerViewModel : ViewModel
     {
+        public static bool IsSchemeManagerExist { get; private set; }
+
         private bool updateConfirm;
         public bool UpdateConfirm
         {
@@ -95,9 +98,16 @@ namespace DanceRegUltra.ViewModels
             set => base.Title = value;
         }
 
+        static SchemeManagerViewModel()
+        {
+            IsSchemeManagerExist = false;
+        }
+
         public SchemeManagerViewModel(string jsonEdit = null) : base()
         {
-            this.Title = App.AppTitle + ": Редактор шаблонов схем";
+            IsSchemeManagerExist = true;
+
+            this.Title = "Редактор шаблонов схем - " + App.AppTitle;
             this.JsonEdit = jsonEdit;
             this.DeleteschemesId = new List<int>();
 
@@ -113,6 +123,7 @@ namespace DanceRegUltra.ViewModels
         public override WindowClose CloseMethod()
         {
             if(this.JsonEdit == null) DanceRegCollections.ClearCategories();
+            IsSchemeManagerExist = false;
             return base.CloseMethod();
         }
 

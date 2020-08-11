@@ -1,10 +1,13 @@
 ﻿using CoreWPF.MVVM;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace DanceRegUltra.Models
 {
+    public delegate void UpdateMember(int eventId, int memberId, string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null);
+
     public abstract class Member : NotifyPropertyChanged, IMember
     {
         private event UpdateMember event_UpdateMember;

@@ -1,16 +1,7 @@
-﻿namespace DanceRegUltra.Interfaces
+﻿using DanceRegUltra.Models;
+
+namespace DanceRegUltra.Interfaces
 {
-    public enum UpdateStatus
-    {
-        Default,
-        Add,
-        Edit,
-        Delete,
-        Move
-    }
-
-    public delegate void UpdateMember(int eventId, int memberId, string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null);
-
     public interface IMember
     {
         event UpdateMember Event_UpdateMember;

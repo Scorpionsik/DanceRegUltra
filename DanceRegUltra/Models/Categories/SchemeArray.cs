@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Utilites;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.Static;
 using GongSolutions.Wpf.DragDrop;
@@ -14,12 +15,6 @@ using System.Windows;
 
 namespace DanceRegUltra.Models.Categories
 {
-    public enum SchemeType
-    {
-        Platform,
-        Block
-    }
-
     public delegate void UpdateSchemeArray(SchemeType type, UpdateStatus status, IdCheck value, int old_index, int new_index);
 
     public class SchemeArray : INotifyPropertyChanged, IDropTarget

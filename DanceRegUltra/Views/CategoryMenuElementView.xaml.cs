@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace DanceRegUltra.Views
 {
     /// <summary>
-    /// Логика взаимодействия для CategoryManagerViewModel.xaml
+    /// Логика взаимодействия для CategoryMenuElementView.xaml
     /// </summary>
-    public partial class CategoryManagerViewModel : Window
+    public partial class CategoryMenuElementView : UserControl
     {
-        public CategoryManagerViewModel()
+        public CategoryMenuElementView()
         {
             InitializeComponent();
         }
