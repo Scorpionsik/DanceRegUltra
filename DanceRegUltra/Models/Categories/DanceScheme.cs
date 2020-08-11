@@ -5,12 +5,22 @@ using DanceRegUltra.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace DanceRegUltra.Models.Categories
 {
     public class DanceScheme : NotifyPropertyChanged 
     {
-        public bool UpdateFlag { get; private set; }
+        private bool updateFlag;
+        public bool UpdateFlag
+        {
+            get => this.updateFlag;
+            set
+            {
+                this.updateFlag = value;
+                this.OnPropertyChanged("UpdateFlag");
+            }
+        }
 
         public int Id_scheme { get; private set; }
 
@@ -65,9 +75,13 @@ namespace DanceRegUltra.Models.Categories
             this.SchemeLeagues = new ListExt<IdCheck>(SchemeManagerViewModel.AllLeagues);
             this.SchemeAges = new ListExt<IdCheck>(SchemeManagerViewModel.AllAges);
             this.SchemeStyles = new ListExt<IdCheck>();
+            this.SchemeStyles.CollectionChanged += this.UpdateStyleTrigger;
+
             foreach (IdCheck style in SchemeManagerViewModel.AllStyles)
             {
-                this.SchemeStyles.Add(new IdCheck(style.Id, style.IsChecked));
+                IdCheck add_style = new IdCheck(style.Id, style.IsChecked);
+                add_style.Event_UpdateCheck += this.UpdateCheck;
+                this.SchemeStyles.Add(add_style);
             }
 
             this.PlatformsCollection = new ListExt<SchemeArray>();
@@ -82,13 +96,14 @@ namespace DanceRegUltra.Models.Categories
         
         public DanceScheme(int id, string title, JsonScheme scheme)
         {
-            this.UpdateFlag = false;
+            
             this.Id_scheme = id;
             this.title_scheme = title;
 
             this.SchemeLeagues = new ListExt<IdCheck>();
             this.SchemeAges = new ListExt<IdCheck>();
             this.SchemeStyles = new ListExt<IdCheck>();
+            this.SchemeStyles.CollectionChanged += this.UpdateStyleTrigger;
 
             this.PlatformsCollection = new ListExt<SchemeArray>();
             this.BlocksCollection = new ListExt<SchemeArray>();
@@ -123,8 +138,11 @@ namespace DanceRegUltra.Models.Categories
 
             foreach(IdCheck style in scheme.Styles)
             {
-                this.SchemeStyles.Add(new IdCheck(style.Id, style.IsChecked));
+                IdCheck add_style = new IdCheck(style.Id, style.IsChecked);
+                add_style.Event_UpdateCheck += this.UpdateCheck;
+                this.SchemeStyles.Add(add_style);
             }
+            this.UpdateFlag = false;
         }
 
         public void AddPlatform(string title = "Платформа", IEnumerable<IdCheck> collection = null)
@@ -136,7 +154,9 @@ namespace DanceRegUltra.Models.Categories
                 platform.SchemePartValues.Add(new IdCheck(league.Id, league.IsChecked));
             }
             platform.Event_updateCollection += this.UpdateSchemeArray;
+            platform.Event_UpdateCheck += this.UpdateCheck;
             this.PlatformsCollection.Add(platform);
+            this.UpdateFlagChange();
         }
 
         public void AddBlock(string title = "Блок", IEnumerable<IdCheck> collection = null)
@@ -148,13 +168,24 @@ namespace DanceRegUltra.Models.Categories
                 block.SchemePartValues.Add(new IdCheck(age.Id, age.IsChecked));
             }
             block.Event_updateCollection += this.UpdateSchemeArray;
+            block.Event_UpdateCheck += this.UpdateCheck;
             this.BlocksCollection.Add(block);
+            this.UpdateFlagChange();
         }
 
-       
+        private void UpdateCheck()
+        {
+            this.UpdateFlagChange();
+        }
+
+        private void UpdateStyleTrigger(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.UpdateFlagChange();
+        }
 
         private void UpdateSchemeArray(SchemeType type, UpdateStatus status, IdCheck value, int old_index, int new_index)
         {
+
             if (old_index != new_index)
             {
                 switch (status)
@@ -183,9 +214,15 @@ namespace DanceRegUltra.Models.Categories
                                 }
                                 break;
                         }
+                        this.UpdateFlagChange();
                         break;
                 }
             }
+        }
+
+        private void UpdateFlagChange(bool flag = true)
+        {
+            if(this.UpdateFlag != flag) this.UpdateFlag = flag;
         }
 
         public RelayCommand Command_AddPlatform
@@ -200,6 +237,9 @@ namespace DanceRegUltra.Models.Categories
         {
             get => new RelayCommand<SchemeArray>(platform =>
             {
+                this.UpdateFlagChange();
+                platform.Event_updateCollection -= this.UpdateSchemeArray;
+                platform.Event_UpdateCheck -= this.UpdateCheck;
                 this.PlatformsCollection.Remove(platform);
             },
                 (platform) => platform != null && platform.Type == SchemeType.Platform && this.PlatformsCollection.Count > 1);
@@ -217,6 +257,9 @@ namespace DanceRegUltra.Models.Categories
         {
             get => new RelayCommand<SchemeArray>(block =>
             {
+                this.UpdateFlagChange();
+                block.Event_updateCollection -= this.UpdateSchemeArray;
+                block.Event_UpdateCheck -= this.UpdateCheck;
                 this.BlocksCollection.Remove(block);
             },
                 (block) => block != null && block.Type == SchemeType.Block && this.BlocksCollection.Count > 1);

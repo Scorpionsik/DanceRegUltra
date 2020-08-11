@@ -32,6 +32,17 @@ namespace DanceRegUltra.Models.Categories
             remove => this.event_updateCategoryString -= value;
         }
 
+        private bool updateFlag;
+        public bool UpdateFlag
+        {
+            get => this.updateFlag;
+            set
+            {
+                this.updateFlag = value;
+                this.OnPropertyChanged("UpdateFlag");
+            }
+        }
+
         public int Id { get; private set; }
 
         private int position;
@@ -42,6 +53,7 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.position = value;
                 this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Position");
+                this.UpdateFlagChange();
             }
         }
 
@@ -54,6 +66,7 @@ namespace DanceRegUltra.Models.Categories
                 this.isHide = value;
                 this.OnPropertyChanged("IsHide");
                 this.event_updateCategoryString?.Invoke(this.Id, this.Type, "IsHide");
+                this.UpdateFlagChange();
             }
         }
 
@@ -68,6 +81,7 @@ namespace DanceRegUltra.Models.Categories
                 this.name = value;
                 this.OnPropertyChanged("Name");
                 this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name");
+                this.UpdateFlagChange();
             }
         }
 
@@ -87,6 +101,11 @@ namespace DanceRegUltra.Models.Categories
             int obj_pos = obj.Position == 0 ? obj.Id : obj.Position;
 
             return obj_pos - this_pos;
+        }
+
+        private void UpdateFlagChange(bool flag = true)
+        {
+            if (this.UpdateFlag != flag) this.UpdateFlag = flag;
         }
 
         /// <summary>

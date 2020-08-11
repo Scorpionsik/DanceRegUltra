@@ -105,9 +105,16 @@
     <Compile Include="Models\Categories\JsonSchemeArray.cs" />
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
     <Compile Include="ViewModels\SchemeManagerViewModel.cs" />
+    <Compile Include="Views\CategoryManagerViewModel.xaml.cs">
+      <DependentUpon>CategoryManagerViewModel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SchemeManagerView.xaml.cs">
       <DependentUpon>SchemeManagerView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\CategoryManagerViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

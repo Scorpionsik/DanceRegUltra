@@ -9,6 +9,17 @@ namespace DanceRegUltra.Models.Categories
 {
     public class IdCheck : NotifyPropertyChanged
     {
+        private event Action event_UpdateCheck;
+        public event Action Event_UpdateCheck
+        {
+            add
+            {
+                this.event_UpdateCheck -= value;
+                this.event_UpdateCheck += value;
+            }
+            remove => this.event_UpdateCheck -= value;
+        }
+
         private int id;
         public int Id
         {
@@ -28,13 +39,14 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.isChecked = value;
                 this.OnPropertyChanged("IsChecked");
+                this.event_UpdateCheck?.Invoke();
             }
         }
 
         public IdCheck(int id, bool isChecked = false)
         {
             this.Id = id;
-            this.IsChecked = isChecked;
+            this.isChecked = isChecked;
         }
     }
 }

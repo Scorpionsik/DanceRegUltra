@@ -58,10 +58,12 @@ namespace DanceRegUltra.ViewModels
         {
             foreach (DanceScheme scheme in this.Schemes)
             {
-                string json = JsonScheme.Serialize(new JsonScheme(scheme));
-
-                if (scheme.Id_scheme == -1) await DanceRegDatabase.ExecuteNonQueryAsync("insert into 'template_schemes' ('Title', 'Json_scheme') values ('" + scheme.Title_scheme + "', '" + json + "')");
-                else await DanceRegDatabase.ExecuteNonQueryAsync("update 'template_schemes' set 'Title'='" + scheme.Title_scheme + "', 'Json_scheme'='"+ json +"' where Id_scheme="+ scheme.Id_scheme);
+                if (scheme.UpdateFlag)
+                {
+                    string json = JsonScheme.Serialize(new JsonScheme(scheme));
+                    if (scheme.Id_scheme == -1) await DanceRegDatabase.ExecuteNonQueryAsync("insert into 'template_schemes' ('Title', 'Json_scheme') values ('" + scheme.Title_scheme + "', '" + json + "')");
+                    else await DanceRegDatabase.ExecuteNonQueryAsync("update 'template_schemes' set 'Title'='" + scheme.Title_scheme + "', 'Json_scheme'='" + json + "' where Id_scheme=" + scheme.Id_scheme);
+                }
             }
             base.Command_save?.Execute();
         }

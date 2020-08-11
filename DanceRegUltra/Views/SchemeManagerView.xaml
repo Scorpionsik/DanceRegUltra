@@ -34,7 +34,10 @@
                 <ListBox Grid.Row="0" ItemsSource="{Binding Path=Schemes}" SelectedItem="{Binding Path=Select_scheme}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Title_scheme}"/>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Path=Title_scheme}"/>
+                                <TextBlock Text="{Binding Path=UpdateFlag}"/>
+                            </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

@@ -35,6 +35,17 @@ namespace DanceRegUltra.Models.Categories
             remove => this.event_updateCollection -= value;
         }
 
+        private event Action event_UpdateCheck;
+        public event Action Event_UpdateCheck
+        {
+            add
+            {
+                this.event_UpdateCheck -= value;
+                this.event_UpdateCheck += value;
+            }
+            remove => this.event_UpdateCheck -= value;
+        }
+
         private string titleSchemePart;
         public string TitleSchemePart
         {
@@ -94,11 +105,22 @@ namespace DanceRegUltra.Models.Categories
                     this.event_updateCollection?.Invoke(this.Type, status, (IdCheck)e.OldItems[0]);
                     break;
                     */
+                case NotifyCollectionChangedAction.Add:
+                    ((IdCheck)e.NewItems[0]).Event_UpdateCheck += this.UpdateCheck;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    ((IdCheck)e.OldItems[0]).Event_UpdateCheck -= this.UpdateCheck;
+                    break;
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Move:
                     this.event_updateCollection?.Invoke(this.Type, UpdateStatus.Move, (IdCheck)e.NewItems[0], e.OldStartingIndex, e.NewStartingIndex);
                     break;
             }
+        }
+
+        private void UpdateCheck()
+        {
+            this.event_UpdateCheck?.Invoke();
         }
 
         /// <summary>
