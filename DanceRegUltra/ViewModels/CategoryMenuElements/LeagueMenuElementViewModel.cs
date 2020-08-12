@@ -4,12 +4,14 @@ using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
+using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DanceRegUltra.ViewModels.CategoryMenuElements
 {
@@ -17,9 +19,10 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
     {
         public LeagueMenuElementViewModel(NavigationManager nav) : base(CategoryType.League.ToString(), nav)
         {
-
+            
         }
 
+        private ListExt<CategoryString> categorys;
         public ListExt<CategoryString> Categorys
         {
             get
@@ -29,6 +32,7 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
                 {
                     if (!value.IsHide) result.Add(value);
                 }
+                this.categorys = new ListExt<CategoryString>(result);
                 return result;
             }
         }
@@ -47,16 +51,18 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
 
         private async void AddLeagueMethod(string league_name)
         {
-            bool isBeginAdd = true;
-            foreach(CategoryString league in DanceRegCollections.Leagues.Value)
+            bool isBeginAdd = await Task.Run<bool>(() =>
             {
-                if(league.Name == league_name)
+                foreach (CategoryString league in DanceRegCollections.Leagues.Value)
                 {
-                    league.IsHide = false;
-                    isBeginAdd = false;
-                    break;
+                    if (league.Name == league_name)
+                    {
+                        if(league.IsHide) league.IsHide = false;
+                        return false;
+                    }
                 }
-            }
+                return true;
+            });
 
             if (isBeginAdd)
             {
@@ -86,6 +92,41 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
                 this.OnPropertyChanged("Categorys");
             },
                 (obj) => this.Select_category != null);
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = DragDropEffects.Move;
+        }
+
+        public async void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is CategoryString category)
+            {
+                int oldIndex = DanceRegCollections.Leagues.Value.IndexOf(category);
+
+                int insert_index = dropInfo.InsertIndex;
+                if (insert_index > oldIndex) insert_index -= 1;
+                CategoryString new_category = this.categorys[insert_index];
+                int newIndex = DanceRegCollections.Leagues.Value.IndexOf(new_category);
+                
+                
+
+                DanceRegCollections.Leagues.Value.Move(oldIndex, newIndex);
+                this.OnPropertyChanged("Categorys");
+
+                await Task.Run(() =>
+                {
+                    int[] minmax = new int[2] { Math.Min(oldIndex, newIndex), Math.Max(oldIndex, newIndex) };
+
+                    for (int i = minmax[0]; i <= minmax[1]; i++)
+                    {
+                        DanceRegCollections.Leagues.Value[i].Position = i + 1;
+                    }
+                });
+                
+            }
         }
 
         public override void OnNavigatingFrom() { }

@@ -16,6 +16,14 @@ namespace DanceRegUltra.Models.Categories
 
     public class CategoryString : INotifyPropertyChanged, IComparable<CategoryString>
     {
+        private TimerCallback NameUpdate_Callback;
+        private Timer NameUpdate_Timer;
+
+        private void NameUpdateMethod(object value)
+        {
+            this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name", value);
+        }
+
         private event UpdateCategoryString event_updateCategoryString;
         
         public event UpdateCategoryString Event_UpdateCategoryString
@@ -74,9 +82,10 @@ namespace DanceRegUltra.Models.Categories
             get => this.name;
             set
             {
+                if (this.NameUpdate_Timer != null) this.NameUpdate_Timer.Dispose();
                 this.name = value;
                 this.OnPropertyChanged("Name");
-                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name", value);
+                this.NameUpdate_Timer = new Timer(this.NameUpdate_Callback, this.name, 500, 0);
                 //this.UpdateFlagChange();
             }
         }
@@ -89,6 +98,8 @@ namespace DanceRegUltra.Models.Categories
             this.name = name;
             this.position = position;
             this.isHide = isHide;
+
+            this.NameUpdate_Callback = new TimerCallback(this.NameUpdateMethod);
         }
 
         public int CompareTo(CategoryString obj)

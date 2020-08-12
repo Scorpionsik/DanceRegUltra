@@ -258,7 +258,8 @@
                                                    dd:DragDrop.DropHandler="{Binding}"
                                                    SelectedMemberPath="IsChecked"
                                                    ItemsSource="{Binding Path=SchemePartValues}"
-                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                    >
                                                     <i:Interaction.Behaviors>
                                                         <corewpf:IgnoreMouseWheelBehavior />
                                                     </i:Interaction.Behaviors>

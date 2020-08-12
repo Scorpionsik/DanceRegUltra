@@ -4,6 +4,9 @@ using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace DanceRegUltra.Static
 {
@@ -49,7 +52,15 @@ namespace DanceRegUltra.Static
             string table_name = type.ToString().ToLower();
             string value_str = value.ToString();
             if (value.GetType() == typeof(string)) value_str = "'" + value_str + "'";
-            await DanceRegDatabase.ExecuteNonQueryAsync("update " + table_name + "s set " + columnName + "=" + value_str + " where Id_" + table_name + "=" + id);
+
+            bool name_dublicate = false;
+            if(columnName == "Name")
+            {
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from " + table_name + "s where Name=" + value_str);
+                name_dublicate = res.RowsCount == 0 ? false : true;
+            }
+
+            if(!name_dublicate) await DanceRegDatabase.ExecuteNonQueryAsync("update " + table_name + "s set " + columnName + "=" + value_str + " where Id_" + table_name + "=" + id);
         }
 
         internal static int LoadLeague(CategoryString league)

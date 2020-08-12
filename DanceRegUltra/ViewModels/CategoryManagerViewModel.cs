@@ -96,7 +96,10 @@ namespace DanceRegUltra.ViewModels
         private RelayCommand<string> command_add;
         public RelayCommand<string> Command_add
         {
-            get { return this.command_add; }
+            get 
+            {
+                return this.command_add; 
+            }
             private set
             {
                 this.command_add = value;

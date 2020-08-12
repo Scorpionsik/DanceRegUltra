@@ -1,5 +1,6 @@
 ﻿using CoreWPF.Utilites;
 using DanceRegUltra.Models.Categories;
+using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DanceRegUltra.Interfaces
 {
-    public interface ICategoriesMenu
+    public interface ICategoriesMenu : IDropTarget
     {
         ListExt<CategoryString> Categorys { get; }
 
