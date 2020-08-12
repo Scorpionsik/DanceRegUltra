@@ -4,9 +4,55 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
+    <window:DialogWindowExt.Resources>
+        <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
+    </window:DialogWindowExt.Resources>
     <Grid>
-        <ContentControl x:Name="Frame"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" ItemsSource="{Binding Path=MenuItems}" SelectedItem="{Binding Path=Select_menu}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding Path=MenuItems.Count}" Rows="1" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="DarkBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource CategoryName}}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="1" LastChildFill="True">
+            <GroupBox Header="Редактор категорий" DockPanel.Dock="Bottom">
+                <DockPanel LastChildFill="False">
+                    <Grid DockPanel.Dock="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_add}" CommandParameter="{Binding Path=Name_category}"/>
+                        <Button Grid.Column="1" Content="Remove" Command="{Binding Path=Command_remove}"/>
+                    </Grid>
+                    <TextBox DockPanel.Dock="Bottom" Text="{Binding Path=Name_category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+            </GroupBox>
+            <ContentControl x:Name="Frame"/>
+        </DockPanel>
     </Grid>
 </window:DialogWindowExt>

@@ -162,43 +162,48 @@ namespace DanceRegUltra.ViewModels
             foreach(DbRow row in res)
             {
                 insert_index = DanceRegCollections.LoadLeague(new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-
-                if (!row["IsHide"].ToBoolean())
-                {
                     AllLeagues.Insert(
                         insert_index,
                         new IdCheck(row["Id_league"].ToInt32())
                         );
-                }
+            }
+
+            foreach (CategoryString league in DanceRegCollections.Leagues.Value)
+            {
+                if (!league.IsHide) AllLeagues.Add(new IdCheck(league.Id));
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages");
             foreach (DbRow row in res)
             {
                 insert_index = DanceRegCollections.LoadAge(new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                if (!row["IsHide"].ToBoolean())
-                {
                     AllAges.Insert(
                     insert_index,
                     new IdCheck(row["Id_age"].ToInt32())
                     );
-                }
+            }
+
+            foreach (CategoryString age in DanceRegCollections.Ages.Value)
+            {
+                if (!age.IsHide) AllAges.Add(new IdCheck(age.Id));
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles");
             foreach (DbRow row in res)
             {
                 insert_index = DanceRegCollections.LoadStyle(new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                if (!row["IsHide"].ToBoolean())
-                {
-                    AllStyles.Insert(
+                AllStyles.Insert(
                         insert_index,
                         new IdCheck(row["Id_style"].ToInt32())
                         );
-                }
+                
             }
 
-            
+            foreach (CategoryString style in DanceRegCollections.Styles.Value)
+            {
+                if (!style.IsHide) AllStyles.Add(new IdCheck(style.Id));
+            }
+
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from template_schemes");
             foreach(DbRow row in res)
             {

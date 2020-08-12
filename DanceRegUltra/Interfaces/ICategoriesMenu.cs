@@ -14,7 +14,7 @@ namespace DanceRegUltra.Interfaces
 
         CategoryString Select_category { get; set; }
 
-        RelayCommand Command_add { get; }
+        RelayCommand<string> Command_add { get; }
         RelayCommand Command_remove { get; }
     }
 }

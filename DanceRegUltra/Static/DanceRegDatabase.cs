@@ -56,25 +56,7 @@ namespace DanceRegUltra.Static
 
             DanceRegDatabase.Database = new SqLiteDatabase.SqLiteDatabase("database/" + DatabaseName);
         }
-        /*
-        internal static async void MethodUpdateMember(int eventId, int memberId, string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null)
-        {
-            DanceRegDatabase.event_StartTask?.Invoke();
-            DanceRegDatabase.DatabaseMutex.WaitOne();
 
-            DanceRegDatabase.DatabaseMutex.ReleaseMutex();
-            DanceRegDatabase.event_EndTask?.Invoke();
-        }
-
-        internal static async void MethodUpdateEvent(int eventId, string column)
-        {
-            DanceRegDatabase.event_StartTask?.Invoke();
-            DanceRegDatabase.DatabaseMutex.WaitOne();
-
-            DanceRegDatabase.DatabaseMutex.ReleaseMutex();
-            DanceRegDatabase.event_EndTask?.Invoke();
-        }
-        */
         internal static async Task<int> ExecuteNonQueryAsync(string query)
         {
             DanceRegDatabase.event_StartTask?.Invoke();

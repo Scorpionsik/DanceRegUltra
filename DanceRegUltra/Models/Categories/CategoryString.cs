@@ -12,7 +12,7 @@ namespace DanceRegUltra.Models.Categories
 {
    
 
-    public delegate void UpdateCategoryString(int id, CategoryType type, string columnName);
+    public delegate void UpdateCategoryString(int id, CategoryType type, string columnName, object value);
 
     public class CategoryString : INotifyPropertyChanged, IComparable<CategoryString>
     {
@@ -27,7 +27,7 @@ namespace DanceRegUltra.Models.Categories
             }
             remove => this.event_updateCategoryString -= value;
         }
-
+        /*
         private bool updateFlag;
         public bool UpdateFlag
         {
@@ -37,7 +37,7 @@ namespace DanceRegUltra.Models.Categories
                 this.updateFlag = value;
                 this.OnPropertyChanged("UpdateFlag");
             }
-        }
+        }*/
 
         public int Id { get; private set; }
 
@@ -48,8 +48,8 @@ namespace DanceRegUltra.Models.Categories
             set
             {
                 this.position = value;
-                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Position");
-                this.UpdateFlagChange();
+                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Position", value);
+                //this.UpdateFlagChange();
             }
         }
 
@@ -61,8 +61,8 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.isHide = value;
                 this.OnPropertyChanged("IsHide");
-                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "IsHide");
-                this.UpdateFlagChange();
+                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "IsHide", value);
+                //this.UpdateFlagChange();
             }
         }
 
@@ -76,8 +76,8 @@ namespace DanceRegUltra.Models.Categories
             {
                 this.name = value;
                 this.OnPropertyChanged("Name");
-                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name");
-                this.UpdateFlagChange();
+                this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name", value);
+                //this.UpdateFlagChange();
             }
         }
 
@@ -99,10 +99,11 @@ namespace DanceRegUltra.Models.Categories
             return obj_pos - this_pos;
         }
 
+        /*
         private void UpdateFlagChange(bool flag = true)
         {
             if (this.UpdateFlag != flag) this.UpdateFlag = flag;
-        }
+        }*/
 
         /// <summary>
         /// Событие для обновления привязанного объекта (в XAML)

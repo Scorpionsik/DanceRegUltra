@@ -20,6 +20,17 @@ namespace DanceRegUltra.ViewModels
     {
         public List<CategoryType> MenuItems { get; private set; }
 
+        private string name_category;
+        public string Name_category
+        {
+            get => this.name_category;
+            set
+            {
+                this.name_category = value;
+                this.OnPropertyChanged("Name_category");
+            }
+        }
+
         private CategoryType select_menu;
         public CategoryType Select_menu
         {
@@ -82,8 +93,8 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
-        private RelayCommand command_add;
-        public RelayCommand Command_add
+        private RelayCommand<string> command_add;
+        public RelayCommand<string> Command_add
         {
             get { return this.command_add; }
             private set

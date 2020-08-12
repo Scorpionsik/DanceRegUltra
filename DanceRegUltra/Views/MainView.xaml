@@ -8,11 +8,17 @@
         Title="{Binding Path=Title}" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <ListBox ItemsSource="{Binding Path=Events}" SelectedItem="{Binding Path=Select_event}">
+        <ToolBar>
+            <Button Content="League" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="league"/>
+            <Button Content="Age" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="age"/>
+            <Button Content="Style" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="style"/>
+        </ToolBar>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Path=Events}" SelectedItem="{Binding Path=Select_event}">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -36,7 +42,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -54,7 +60,7 @@
             <Button Grid.Column="2" Content="Delete" Command="{Binding Path=Command_DeleteEvent}" CommandParameter="{Binding Path=Select_event}"/>
             <Button Grid.Column="4" Content="Schemes" Command="{Binding Path=Command_LoadSchemeManager}"/>
         </Grid>
-        <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="3">
             <StatusBarItem>
                 <TextBlock Text="{Binding Path=Status.Status}"/>
             </StatusBarItem>

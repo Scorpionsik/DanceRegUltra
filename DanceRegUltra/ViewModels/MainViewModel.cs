@@ -1,5 +1,6 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Static;
 using DanceRegUltra.Views;
@@ -140,6 +141,29 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand(obj =>
             {
                 SchemeManagerView window = new SchemeManagerView();
+                window.Show();
+            });
+        }
+
+        public static RelayCommand<string> Command_OpencategoryWindow
+        {
+            get => new RelayCommand<string>(param =>
+            {
+                CategoryType type = CategoryType.League;
+                switch (param)
+                {
+                    case "league":
+                        type = CategoryType.League;
+                        break;
+                    case "age":
+                        type = CategoryType.Age;
+                        break;
+                    case "style":
+                        type = CategoryType.Style;
+                        break;
+                }
+
+                CategoryManagerView window = new CategoryManagerView(type);
                 window.Show();
             });
         }

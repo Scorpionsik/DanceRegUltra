@@ -1,4 +1,5 @@
-﻿using DanceRegUltra.Models.Categories;
+﻿using DanceRegUltra.Enums;
+using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,18 @@ namespace DanceRegUltra.Utilites.Converters
                             if (style.Id == id) return style.Name;
                         }
                         break;
+                }
+            }
+            else if(value is CategoryType category)
+            {
+                switch (category)
+                {
+                    case CategoryType.League:
+                        return "Лиги";
+                    case CategoryType.Age:
+                        return "Возрастные категории";
+                    case CategoryType.Style:
+                        return "Стили";
                 }
             }
             return DependencyProperty.UnsetValue;

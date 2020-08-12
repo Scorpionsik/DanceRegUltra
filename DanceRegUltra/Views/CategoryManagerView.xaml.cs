@@ -31,7 +31,7 @@ namespace DanceRegUltra.Views
             nav.Register<LeagueMenuElementViewModel, CategoryMenuElementView>(new LeagueMenuElementViewModel(nav), CategoryType.League.ToString());
             nav.Register<AgeMenuElementViewModel, CategoryMenuElementView>(new AgeMenuElementViewModel(nav), CategoryType.Age.ToString());
             nav.Register<StyleMenuElementViewModel, CategoryMenuElementView>(new StyleMenuElementViewModel(nav), CategoryType.Style.ToString());
-            this.DataContext = new CategoryManagerViewModel(select_type, null);
+            this.DataContext = new CategoryManagerViewModel(select_type, nav);
         }
     }
 }
