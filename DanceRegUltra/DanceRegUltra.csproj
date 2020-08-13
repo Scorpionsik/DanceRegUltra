@@ -112,12 +112,16 @@
     <Compile Include="ViewModels\CategoryMenuElements\AgeMenuElementViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\LeagueMenuElementViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\StyleMenuElementViewModel.cs" />
+    <Compile Include="ViewModels\RegisterWindowViewModel.cs" />
     <Compile Include="ViewModels\SchemeManagerViewModel.cs" />
     <Compile Include="Views\CategoryManagerView.xaml.cs">
       <DependentUpon>CategoryManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CategoryMenuElementView.xaml.cs">
       <DependentUpon>CategoryMenuElementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RegisterWindowView.xaml.cs">
+      <DependentUpon>RegisterWindowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SchemeManagerView.xaml.cs">
       <DependentUpon>SchemeManagerView.xaml</DependentUpon>
@@ -155,6 +159,10 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\RegisterWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SchemeManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

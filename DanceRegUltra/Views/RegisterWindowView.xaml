@@ -1,0 +1,39 @@
+﻿<window:DialogWindowExt x:Class="DanceRegUltra.Views.RegisterWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        mc:Ignorable="d"
+        Title="RegisterWindowView" Height="200" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Название события">
+            
+        </GroupBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Дата" Grid.Column="0">
+                
+            </GroupBox>
+            <GroupBox Header="Схема" Grid.Column="1">
+
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Создать"/>
+            <Button Grid.Column="1" Content="Отмена"/>
+        </Grid>
+    </Grid>
+</window:DialogWindowExt>

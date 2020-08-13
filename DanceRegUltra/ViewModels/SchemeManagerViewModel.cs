@@ -237,7 +237,7 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand(obj =>
             {
-                this.Schemes.Add(new DanceScheme("Схема " + this.Schemes.Count + 1));
+                this.Schemes.Add(new DanceScheme("Схема " + (this.Schemes.Count + 1)));
                 this.ChangeUpdateFlag(false);
             });
         }
