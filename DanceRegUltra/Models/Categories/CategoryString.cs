@@ -21,6 +21,7 @@ namespace DanceRegUltra.Models.Categories
 
         private void NameUpdateMethod(object value)
         {
+            if(this.NameUpdate_Timer != null) this.NameUpdate_Timer.Dispose();
             this.event_updateCategoryString?.Invoke(this.Id, this.Type, "Name", value);
         }
 
@@ -85,7 +86,7 @@ namespace DanceRegUltra.Models.Categories
                 if (this.NameUpdate_Timer != null) this.NameUpdate_Timer.Dispose();
                 this.name = value;
                 this.OnPropertyChanged("Name");
-                this.NameUpdate_Timer = new Timer(this.NameUpdate_Callback, this.name, 500, 0);
+                this.NameUpdate_Timer = new Timer(this.NameUpdate_Callback, this.name, 1000, 0);
                 //this.UpdateFlagChange();
             }
         }
