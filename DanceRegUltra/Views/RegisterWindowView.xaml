@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="RegisterWindowView" Height="200" Width="400">
     <Grid>
@@ -13,7 +14,7 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Название события">
-            
+            <TextBox Text="{Binding Path=TitleEvent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -21,10 +22,22 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Дата" Grid.Column="0">
-                
+                <xctk:DateTimePicker 
+                    x:Name="TestClock" 
+                    Format="Custom" 
+                    FormatString="dd.MMM.yyyy HH:mm" 
+                    ClipValueToMinMax="True" 
+                    Value="{Binding Path=StartDateEvent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </GroupBox>
             <GroupBox Header="Схема" Grid.Column="1">
-
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Path=SchemeEvent.Title_scheme}"/>
+                    <Button Grid.Column="1" Content="SCheme" Command="{Binding Path=Command_SetScheme}"/>
+                </Grid>
             </GroupBox>
         </Grid>
         <Grid Grid.Row="2">
@@ -32,8 +45,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Создать"/>
-            <Button Grid.Column="1" Content="Отмена"/>
+            <Button Grid.Column="0" Content="Создать" Command="{Binding Path=Command_save}"/>
+            <Button Grid.Column="1" Content="Отмена" Command="{Binding Path=Command_close}"/>
         </Grid>
     </Grid>
 </window:DialogWindowExt>

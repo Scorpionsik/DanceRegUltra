@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -87,34 +88,40 @@ namespace DanceRegUltra.ViewModels
         private void StartDbTask() => this.CountDatabaseRequests++;
         private void EndDbTask() => this.CountDatabaseRequests--;
 
-        /// <summary>
-        /// В будущем удалить, вместо этой функции надо вызывать окно для редактирования событий
-        /// </summary>
-        private static async void AddNewEvent()
-        {
-            await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp') values ('test', " + UnixTime.CurrentUnixTimestamp() + ")");
-            DbResult new_event = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_event, Title, Start_timestamp, End_timestamp from events order by Id_event");
-            DbRow current_row = new_event[new_event.RowsCount - 1];
-            DanceEvent newEvent = new DanceEvent(current_row["Id_event"].ToInt32(), current_row["Title"].ToString(), current_row["Start_timestamp"].ToDouble(), current_row["End_timestamp"].ToDouble());
-            int sort_id = 0;
-            while (sort_id < DanceRegCollections.Events.Count && DanceRegCollections.Events[sort_id].CompareTo(newEvent) <= 0) sort_id++;
-            DanceRegCollections.Events.Insert(sort_id, newEvent);
-
-
-            //DanceRegCollections.Events.Sort();
-        }
-
         private static async void DeleteEvent(DanceEvent deleteEvent)
         {
             DanceRegCollections.Events.Remove(deleteEvent);
             await DanceRegDatabase.ExecuteNonQueryAsync("delete from events where Id_event=" + deleteEvent.IdEvent);
         }
 
-        public static RelayCommand Command_AddEvent
+        private async void InitializeEvent(DanceEvent init_event)
+        {
+            await this.Status.SetAsync("Инициализация события " + init_event.Title + "...", StatusString.Infinite);
+
+
+
+
+            await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp', 'Json_scheme') values ('" + init_event.Title + "', " + init_event.StartEventTimestamp + ", '"+ init_event.JsonSchemeEvent +"')");
+            DbResult new_event = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from events order by Id_event");
+            DbRow current_row = new_event[new_event.RowsCount - 1];
+            DanceEvent newEvent = new DanceEvent(current_row["Id_event"].ToInt32(), current_row["Title"].ToString(), current_row["Start_timestamp"].ToDouble(), current_row["End_timestamp"].ToDouble(), current_row["Json_scheme"].ToString());
+            int sort_id = 0;
+            while (sort_id < DanceRegCollections.Events.Count && DanceRegCollections.Events[sort_id].CompareTo(newEvent) <= 0) sort_id++;
+            DanceRegCollections.Events.Insert(sort_id, newEvent);
+
+            await this.Status.SetAsync("Готово! Открываю " + init_event.Title + "...", StatusString.LongTime);
+        }
+
+        public RelayCommand Command_AddEvent
         {
             get => new RelayCommand(obj =>
             {
-                AddNewEvent();
+                //AddNewEvent();
+                RegisterWindowView window = new RegisterWindowView();
+                if ((bool)window.ShowDialog())
+                {
+                    this.InitializeEvent(window.Return_event);
+                }
             });
         }
 

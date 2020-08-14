@@ -108,6 +108,7 @@
     <Compile Include="Models\Categories\JsonScheme.cs" />
     <Compile Include="Models\Categories\JsonSchemeArray.cs" />
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
+    <Compile Include="Utilites\Converters\DancerTimeConvert.cs" />
     <Compile Include="ViewModels\CategoryManagerViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\AgeMenuElementViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\LeagueMenuElementViewModel.cs" />

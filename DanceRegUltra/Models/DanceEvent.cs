@@ -68,7 +68,7 @@ namespace DanceRegUltra.Models
 
         public string JsonSchemeEvent { get; private set; }
 
-        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp)
+        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "")
         {
             this.NodeId = -1;
             this.JudgeCount = 4;
@@ -78,7 +78,7 @@ namespace DanceRegUltra.Models
             this.title = title;
             this.startEventTimestamp = startTimestamp;
             this.EndEventTimestamp = endTimestamp;
-            this.JsonSchemeEvent = "";
+            this.JsonSchemeEvent = json;
             
             this.event_updateDanceEvent = null;
             this.PropertyChanged = null;
@@ -131,7 +131,10 @@ namespace DanceRegUltra.Models
 
         public int CompareTo(DanceEvent obj)
         {
-            return Convert.ToInt32(this.StartEventTimestamp - obj.StartEventTimestamp);
+            double res = this.StartEventTimestamp - obj.StartEventTimestamp;
+
+            if (res == 0) return 0;
+            else return res < 0 ? -1 : 1;
         }
         //---метод OnPropertyChanged
     }

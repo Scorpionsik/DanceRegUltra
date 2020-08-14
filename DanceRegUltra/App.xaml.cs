@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreWPF.Utilites;
+using System;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -10,6 +11,8 @@ namespace DanceRegUltra
     /// </summary>
     public partial class App : Application
     {
+        public static TimeSpan Locality = UnixTime.Local;
+
         public static string AppTitle = "Танцевальный менеджер";
 
         /// Хранит именованный мьютекс, чтобы сохранить владение им до конца пробега программы

@@ -12,11 +12,25 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace DanceRegUltra.ViewModels
 {
     public class SchemeManagerViewModel : ViewModel
     {
+
+        private event Action<DanceScheme> event_SetReturnScheme;
+        public event Action<DanceScheme> Event_SetReturnScheme
+        {
+            add
+            {
+                this.event_SetReturnScheme -= value;
+                this.event_SetReturnScheme += value;
+            }
+            remove => this.event_SetReturnScheme -= value;
+        }
+        public bool EventMode { get; private set; }
+        
         public static bool IsSchemeManagerExist { get; private set; }
 
         private bool updateConfirm;
@@ -30,7 +44,7 @@ namespace DanceRegUltra.ViewModels
                 }
                 else
                 {
-                    return this.Select_scheme != null ? true : false;
+                    return this.Select_scheme != null;
                 }
             }
             private set
@@ -56,6 +70,18 @@ namespace DanceRegUltra.ViewModels
         {
             get
             {
+                switch (this.EventMode)
+                {
+                    case true:
+                        if (this.Select_scheme.UpdateFlag) return "Выбрать схему и сохранить изменения";
+                        else return "Выбрать схему";
+                       
+                    case false:
+                        return "Сохранить изменения";
+                     
+                }
+                return "";
+                /*
                 if (this.JsonEdit == null) return "Сохранить изменения";
                 else
                 {
@@ -64,7 +90,9 @@ namespace DanceRegUltra.ViewModels
                         if (this.Select_scheme.UpdateFlag) return "Выбрать схему и сохранить изменения";
                     }
                     return "Выбрать схему";
-                }
+                }*/
+
+
             }
         }
 
@@ -85,6 +113,7 @@ namespace DanceRegUltra.ViewModels
                 this.select_scheme = value;
                 this.OnPropertyChanged("Select_scheme");
                 this.OnPropertyChanged("Title");
+                this.OnPropertyChanged("UpdateConfirm");
             }
         }
 
@@ -103,12 +132,12 @@ namespace DanceRegUltra.ViewModels
             IsSchemeManagerExist = false;
         }
 
-        public SchemeManagerViewModel(string jsonEdit = null) : base()
+        private SchemeManagerViewModel() : base()
         {
             IsSchemeManagerExist = true;
 
             this.Title = "Редактор шаблонов схем - " + App.AppTitle;
-            this.JsonEdit = jsonEdit;
+            //this.JsonEdit = jsonEdit;
             this.DeleteschemesId = new List<int>();
 
             AllLeagues = new List<IdCheck>();
@@ -117,12 +146,26 @@ namespace DanceRegUltra.ViewModels
 
             this.Schemes = new ListExt<DanceScheme>();
             this.Schemes.CollectionChanged += this.UpdateDanceSchemes;
+            
+        }
+
+        public SchemeManagerViewModel(string jsonEdit) : this()
+        {
+            if (jsonEdit != null && jsonEdit.Length > 0) this.EventMode = true;
+            else this.EventMode = false;
             this.Initialize(jsonEdit);
+        }
+
+        public SchemeManagerViewModel(int insert_index) : this()
+        {
+            this.EventMode = true;
+            this.Initialize("", insert_index);
         }
 
         public override WindowClose CloseMethod()
         {
-            if(this.JsonEdit == null) DanceRegCollections.ClearCategories();
+            this.event_SetReturnScheme?.Invoke(this.Select_scheme);
+            DanceRegCollections.ClearCategories();
             IsSchemeManagerExist = false;
             return base.CloseMethod();
         }
@@ -155,63 +198,60 @@ namespace DanceRegUltra.ViewModels
                 (obj) => this.UpdateConfirm);
         }
 
-        private async void Initialize(string jsonEdit)
+        private async void Initialize(string jsonEdit, int select_index = -1)
         {
+            this.JsonEdit = jsonEdit;
+
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues");
+            IdCheck[] tmp_array = new IdCheck[res.RowsCount];
             int insert_index = -1;
             foreach(DbRow row in res)
             {
                 insert_index = DanceRegCollections.LoadLeague(new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                    AllLeagues.Insert(
-                        insert_index,
-                        new IdCheck(row["Id_league"].ToInt32())
-                        );
+                tmp_array[insert_index] = new IdCheck(row["Id_league"].ToInt32());
             }
-
-            foreach (CategoryString league in DanceRegCollections.Leagues.Value)
+            
+            for(int i = 0; i < DanceRegCollections.Leagues.Value.Count; i++)
             {
-                if (!league.IsHide) AllLeagues.Add(new IdCheck(league.Id));
+                if (!DanceRegCollections.Leagues.Value[i].IsHide) AllLeagues.Add(tmp_array[i]);
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages");
+            tmp_array = new IdCheck[res.RowsCount];
             foreach (DbRow row in res)
             {
                 insert_index = DanceRegCollections.LoadAge(new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                    AllAges.Insert(
-                    insert_index,
-                    new IdCheck(row["Id_age"].ToInt32())
-                    );
+                tmp_array[insert_index] = new IdCheck(row["Id_age"].ToInt32());
             }
 
-            foreach (CategoryString age in DanceRegCollections.Ages.Value)
+            for (int i = 0; i < DanceRegCollections.Ages.Value.Count; i++)
             {
-                if (!age.IsHide) AllAges.Add(new IdCheck(age.Id));
+                if (!DanceRegCollections.Ages.Value[i].IsHide) AllAges.Add(tmp_array[i]);
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles");
+            tmp_array = new IdCheck[res.RowsCount];
             foreach (DbRow row in res)
             {
                 insert_index = DanceRegCollections.LoadStyle(new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                AllStyles.Insert(
-                        insert_index,
-                        new IdCheck(row["Id_style"].ToInt32())
-                        );
-                
+                tmp_array[insert_index] = new IdCheck(row["Id_style"].ToInt32());
+
             }
 
-            foreach (CategoryString style in DanceRegCollections.Styles.Value)
+            for (int i = 0; i < DanceRegCollections.Styles.Value.Count; i++)
             {
-                if (!style.IsHide) AllStyles.Add(new IdCheck(style.Id));
+                if (!DanceRegCollections.Styles.Value[i].IsHide) AllStyles.Add(tmp_array[i]);
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from template_schemes");
             foreach(DbRow row in res)
             {
                 this.Schemes.Add(new DanceScheme(row["Id_scheme"].ToInt32(), row["Title"].ToString(), JsonScheme.Deserialize(row["Json_scheme"].ToString())));
+                if (select_index > 0 && select_index == row["Id_scheme"].ToInt32()) this.Select_scheme = this.Schemes.Last;
             }
 
             if (this.Schemes.Count == 0) this.Schemes.Add(new DanceScheme());
-            this.Select_scheme = this.Schemes.First;
+            if(select_index < 1) this.Select_scheme = this.Schemes.First;
         }
 
         private void UpdateDanceSchemes(object sender, NotifyCollectionChangedEventArgs e)

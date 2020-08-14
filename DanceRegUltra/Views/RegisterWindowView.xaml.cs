@@ -1,4 +1,6 @@
 ﻿using CoreWPF.Windows;
+using DanceRegUltra.Models;
+using DanceRegUltra.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +22,19 @@ namespace DanceRegUltra.Views
     /// </summary>
     public partial class RegisterWindowView : DialogWindowExt
     {
+        public DanceEvent Return_event { get; private set; }
+
         public RegisterWindowView()
         {
             InitializeComponent();
+            RegisterWindowViewModel vm = new RegisterWindowViewModel();
+            vm.Event_SetReturnEvent += this.SetReturnEvent;
+            this.DataContext = vm;
+        }
+
+        private void SetReturnEvent(DanceEvent return_event)
+        {
+            this.Return_event = return_event;
         }
     }
 }

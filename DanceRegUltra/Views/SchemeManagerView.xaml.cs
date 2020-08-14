@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Windows;
+using DanceRegUltra.Models.Categories;
 using DanceRegUltra.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,10 +22,25 @@ namespace DanceRegUltra.Views
     /// </summary>
     public partial class SchemeManagerView : DialogWindowExt
     {
+        public DanceScheme Return_scheme { get; private set; }
+
         public SchemeManagerView(string jsonEdit = null)
         {
             InitializeComponent();
             this.DataContext = new SchemeManagerViewModel(jsonEdit);
+        }
+
+        public SchemeManagerView(int scheme_id)
+        {
+            InitializeComponent();
+            SchemeManagerViewModel vm = new SchemeManagerViewModel(scheme_id);
+            vm.Event_SetReturnScheme += this.SetReturnScheme;
+            this.DataContext = vm;
+        }
+
+        private void SetReturnScheme(DanceScheme scheme)
+        {
+            this.Return_scheme = scheme;
         }
     }
 }

@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:unix="clr-namespace:DanceRegUltra.Utilites.Converters"     
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
+    <window:WindowExt.Resources>
+        <unix:DancerTimeConvert x:Key="Timestamp"/>
+    </window:WindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -35,9 +39,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Path=IdEvent}"/>
-                        <TextBlock Text="{Binding Path=Title}"/>
-                        <TextBlock Text="{Binding Path=StartEventTimestamp}"/>
+                        <TextBlock FontWeight="Bold" Text="{Binding Path=Title}"/>
+                        <TextBlock Text="{Binding StringFormat=Начало: {0}, Path=StartEventTimestamp, Converter={StaticResource Timestamp}}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

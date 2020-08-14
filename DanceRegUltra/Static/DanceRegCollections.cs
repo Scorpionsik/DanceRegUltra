@@ -25,16 +25,39 @@ namespace DanceRegUltra.Static
         {
             Events = new ListExt<DanceEvent>();
             Id_active_events = new Lazy<List<int>>();
+            Leagues = new Lazy<ListExt<CategoryString>>();
+            Ages = new Lazy<ListExt<CategoryString>>();
+            Styles = new Lazy<ListExt<CategoryString>>();
             ClearCategories();
         }
 
-        internal static void ClearCategories()
+        internal async static void ClearCategories()
         {
             if (Id_active_events == null || Id_active_events.Value == null || Id_active_events.Value.Count == 0)
             {
-                Leagues = new Lazy<ListExt<CategoryString>>();
-                Ages = new Lazy<ListExt<CategoryString>>();
-                Styles = new Lazy<ListExt<CategoryString>>();
+                await Task.Run(() =>
+                {
+                    while (Leagues.Value.Count > 0)
+                    {
+                        UnloadLeague(Leagues.Value[0]);
+                    }
+                });
+
+                await Task.Run(() =>
+                {
+                    while (Ages.Value.Count > 0)
+                    {
+                        UnloadAge(Ages.Value[0]);
+                    }
+                });
+
+                await Task.Run(() =>
+                {
+                    while (Styles.Value.Count > 0)
+                    {
+                        UnloadStyle(Styles.Value[0]);
+                    }
+                });
             }
             else
             {
@@ -65,7 +88,8 @@ namespace DanceRegUltra.Static
 
         internal static int LoadLeague(CategoryString league)
         {
-            if (league.Type == CategoryType.League && !CheckEnableId(CategoryType.League, league.Id))
+            int insert_index = CheckEnableId(CategoryType.League, league.Id);
+            if (league.Type == CategoryType.League && insert_index == -1)
             {
                 int id_sort = 0;
                 while (id_sort < Leagues.Value.Count && Leagues.Value[id_sort].CompareTo(league) >= 0) id_sort++;
@@ -73,7 +97,10 @@ namespace DanceRegUltra.Static
                 Leagues.Value.Insert(id_sort, league);
                 return id_sort;
             }
-            else return -1;
+            else
+            {
+                return insert_index;
+            }
         }
 
         
@@ -88,7 +115,8 @@ namespace DanceRegUltra.Static
 
         internal static int LoadAge(CategoryString age)
         {
-            if (age.Type == CategoryType.Age && !CheckEnableId(CategoryType.Age, age.Id))
+            int insert_index = CheckEnableId(CategoryType.Age, age.Id);
+            if (age.Type == CategoryType.Age && insert_index == -1)
             {
                 int id_sort = 0;
                 while (id_sort < Ages.Value.Count && Ages.Value[id_sort].CompareTo(age) >= 0) id_sort++;
@@ -96,7 +124,7 @@ namespace DanceRegUltra.Static
                 Ages.Value.Insert(id_sort, age);
                 return id_sort;
             }
-            else return -1;
+            else return insert_index;
         }
 
         private static void UnloadAge(CategoryString age)
@@ -110,7 +138,8 @@ namespace DanceRegUltra.Static
 
         internal static int LoadStyle(CategoryString style)
         {
-            if (style.Type == CategoryType.Style && !CheckEnableId(CategoryType.Style, style.Id))
+            int insert_index = CheckEnableId(CategoryType.Style, style.Id);
+            if (style.Type == CategoryType.Style && insert_index == -1)
             {
                 int id_sort = 0;
                 while (id_sort < Styles.Value.Count && Styles.Value[id_sort].CompareTo(style) >= 0) id_sort++;
@@ -118,7 +147,7 @@ namespace DanceRegUltra.Static
                 Styles.Value.Insert(id_sort, style);
                 return id_sort;
             }
-            else return -1;
+            else return insert_index;
         }
 
         private static void UnloadStyle(CategoryString style)
@@ -130,30 +159,34 @@ namespace DanceRegUltra.Static
             }
         }
 
-        private static bool CheckEnableId(CategoryType type, int id)
+        private static int CheckEnableId(CategoryType type, int id)
         {
+            int index = 0;
             switch (type)
             {
                 case CategoryType.League:
                     foreach(CategoryString league in Leagues.Value)
                     {
-                        if (league.Id == id) return true;
+                        if (league.Id == id) return index;
+                        else index++;
                     }
                     break;
                 case CategoryType.Age:
                     foreach(CategoryString age in Ages.Value)
                     {
-                        if (age.Id == id) return true;
+                        if (age.Id == id) return index;
+                        else index++;
                     }
                     break;
                 case CategoryType.Style:
                     foreach(CategoryString style in Styles.Value)
                     {
-                        if (style.Id == id) return true;
+                        if (style.Id == id) return index;
+                        else index++;
                     }
                     break;
             }
-            return false;
+            return -1;
         }
 
         internal static DanceEvent GetEventById(int id_event)
