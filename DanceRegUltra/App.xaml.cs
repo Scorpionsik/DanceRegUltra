@@ -11,9 +11,9 @@ namespace DanceRegUltra
     /// </summary>
     public partial class App : Application
     {
-        public static TimeSpan Locality = UnixTime.Local;
+        public static TimeSpan Locality;
 
-        public static string AppTitle = "Танцевальный менеджер";
+        public static string AppTitle;
 
         /// Хранит именованный мьютекс, чтобы сохранить владение им до конца пробега программы
         private static Mutex InstanceCheckMutex;
@@ -31,6 +31,8 @@ namespace DanceRegUltra
 
         public App()
         {
+            AppTitle = "Танцевальный менеджер";
+            Locality = TimeZoneInfo.Local.BaseUtcOffset.Add(TimeZoneInfo.Local.IsDaylightSavingTime(DateTimeOffset.Now) ? new TimeSpan(1, 0, 0) : new TimeSpan(0, 0, 0));
             if (!App.InstanceCheck())
             {
                 MessageBox.Show("Программа уже запущена!", App.AppTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
