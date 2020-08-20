@@ -32,7 +32,7 @@ namespace DanceRegUltra
         public App()
         {
             AppTitle = "Танцевальный менеджер";
-            Locality = TimeZoneInfo.Local.BaseUtcOffset.Add(TimeZoneInfo.Local.IsDaylightSavingTime(DateTimeOffset.Now) ? new TimeSpan(1, 0, 0) : new TimeSpan(0, 0, 0));
+            Locality = DateTimeOffset.Now.Offset;
             if (!App.InstanceCheck())
             {
                 MessageBox.Show("Программа уже запущена!", App.AppTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
