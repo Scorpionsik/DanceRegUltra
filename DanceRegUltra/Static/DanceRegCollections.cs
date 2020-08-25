@@ -20,11 +20,14 @@ namespace DanceRegUltra.Static
 
         public static Lazy<ListExt<CategoryString>> Styles { get; private set; }
 
+        public static Lazy<ListExt<MemberDancer>> Dancers { get; private set; }
+
         public static ListExt<DanceEvent> Events { get; private set; }
         public static Lazy<Dictionary<int, EventManagerView>> Active_events_windows { get; private set; }
 
         static DanceRegCollections()
         {
+            Dancers = new Lazy<ListExt<MemberDancer>>();
             Events = new ListExt<DanceEvent>();
             Active_events_windows = new Lazy<Dictionary<int, EventManagerView>>();
             Leagues = new Lazy<ListExt<CategoryString>>();
@@ -111,6 +114,38 @@ namespace DanceRegUltra.Static
             }
         }
 
+        internal async static Task LoadDancersAsync()
+        {
+            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from dancers");
+            foreach(DbRow row in res)
+            {
+                Dancers.Value.Add(new MemberDancer(-1, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString()));
+            }
+        }
+
+        internal async static Task<int> AddDancerAsync(string name, string surname)
+        {
+            await DanceRegDatabase.ExecuteNonQueryAsync("insert into dancers (Firstname, Surname) values ('" + name + "', '" + surname + "')");
+            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_dancer from dancers order by Id_dancer");
+            return res["Id_dancer", res.RowsCount - 1].ToInt32();
+        }
+
+        internal async static Task RemoveDancerAsync(MemberDancer dancer)
+        {
+            await DanceRegDatabase.ExecuteNonQueryAsync("delete * from dancers where Id_dancer=" + dancer.MemberId);
+            await Task.Run(() =>
+            {
+                foreach (MemberDancer d in Dancers.Value)
+                {
+                    if (d.MemberId == dancer.MemberId)
+                    {
+                        Dancers.Value.Remove(d);
+                        break;
+                    }
+                }
+            });
+        }
+
         internal static int LoadLeague(CategoryString league)
         {
             int insert_index = CheckEnableId(CategoryType.League, league.Id);
@@ -127,7 +162,6 @@ namespace DanceRegUltra.Static
                 return insert_index;
             }
         }
-
         
         private static void UnloadLeague(CategoryString league)
         {
