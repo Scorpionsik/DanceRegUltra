@@ -16,6 +16,7 @@ create table "event_nodes"
 "Id_event" INTEGER NOT NULL,
 "Id_node" INTEGER NOT NULL,
 "Id_member" INTEGER NOT NULL,
+"Is_group" BOOLEAN NOT NULL DEFAULT 0,
 "Index_platfrorm" INTEGER NOT NULL,
 "Id_league" INTEGER NOT NULL,
 "Index_block" INTEGER NOT NULL,

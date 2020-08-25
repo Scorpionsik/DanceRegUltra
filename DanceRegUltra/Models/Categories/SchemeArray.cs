@@ -19,6 +19,8 @@ namespace DanceRegUltra.Models.Categories
 
     public class SchemeArray : INotifyPropertyChanged, IDropTarget
     {
+        public int IdArray { get; private set; }
+
         private event UpdateSchemeArray event_updateCollection;
         public event UpdateSchemeArray Event_updateCollection
         {
@@ -57,8 +59,9 @@ namespace DanceRegUltra.Models.Categories
 
         public ListExt<IdCheck> SchemePartValues { get; set; }
 
-        public SchemeArray(string title, SchemeType type)
+        public SchemeArray(int id, string title, SchemeType type)
         {
+            this.IdArray = id;
             this.Type = type;
             this.titleSchemePart = title;
             this.SchemePartValues = new ListExt<IdCheck>();

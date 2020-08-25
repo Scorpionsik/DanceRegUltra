@@ -9,6 +9,9 @@ namespace DanceRegUltra.Models.Categories
 {
     public class JsonScheme
     {
+        public int PlatformIncrement { get; set; }
+        public int BlockIncrement { get; set; }
+
         public List<JsonSchemeArray> Platforms { get; set; }
         public List<JsonSchemeArray> Blocks { get; set; }
         public List<IdCheck> Styles { get; set; }
@@ -19,12 +22,18 @@ namespace DanceRegUltra.Models.Categories
             this.Platforms = new List<JsonSchemeArray>();
             this.Blocks = new List<JsonSchemeArray>();
             this.Styles = new List<IdCheck>();
+
+            this.PlatformIncrement = 0;
+            this.BlockIncrement = 0;
         }
         public JsonScheme(DanceScheme scheme)
         {
             this.Platforms = new List<JsonSchemeArray>();
             this.Blocks = new List<JsonSchemeArray>();
             this.Styles = new List<IdCheck>();
+
+            this.PlatformIncrement = scheme.PlatformIncrement;
+            this.BlockIncrement = scheme.BlockIncrement;
 
             foreach (SchemeArray platform in scheme.PlatformsCollection)
             {

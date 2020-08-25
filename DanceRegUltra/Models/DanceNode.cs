@@ -11,6 +11,10 @@ namespace DanceRegUltra.Models
         public int EventId { get; private set; }
         public int NodeId { get; private set; }
         public int MemberId { get; private set; }
+        public bool IsGroup { get; private set; }
+
+        public int PlatformId { get; private set; }
+        public int BlockId { get; private set; }
 
         public int LeagueId { get; private set; }
         public int AgeId { get; private set; }
@@ -20,12 +24,17 @@ namespace DanceRegUltra.Models
         public int[] Scores { get => this.HideScores.Value.ToArray(); }
 
 
-        public DanceNode(int eventId, int nodeId, int memberId, int leagueId, int ageId, int styleId)
+        public DanceNode(int eventId, int nodeId, int memberId, bool isGroup, int platformId, int leagueId, int blockId, int ageId, int styleId)
         {
             this.EventId = eventId;
             this.NodeId = nodeId;
+
             this.MemberId = memberId;
+            this.IsGroup = isGroup;
+
+            this.PlatformId = platformId;
             this.LeagueId = leagueId;
+            this.BlockId = blockId;
             this.AgeId = ageId;
             this.StyleId = styleId;
 

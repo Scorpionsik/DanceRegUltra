@@ -12,6 +12,9 @@ namespace DanceRegUltra.Models.Categories
 {
     public class DanceScheme : NotifyPropertyChanged 
     {
+        public int PlatformIncrement { get; private set; }
+        public int BlockIncrement { get; private set; }
+
         private event Action<bool> event_UpdateDanceScheme;
         public event Action<bool> Event_UpdateDanceScheme
         {
@@ -83,7 +86,9 @@ namespace DanceRegUltra.Models.Categories
             this.UpdateFlag = true;
             this.Id_scheme = -1;
             this.title_scheme = title;
-            
+
+            this.PlatformIncrement = 0;
+            this.BlockIncrement = 0;
 
             this.SchemeLeagues = new ListExt<IdCheck>(SchemeManagerViewModel.AllLeagues);
             this.SchemeAges = new ListExt<IdCheck>(SchemeManagerViewModel.AllAges);
@@ -100,11 +105,11 @@ namespace DanceRegUltra.Models.Categories
             this.PlatformsCollection = new ListExt<SchemeArray>();
             this.BlocksCollection = new ListExt<SchemeArray>();
 
-            this.AddPlatform("Платформа 1");
-            this.AddBlock("Блок 1");
-            this.AddBlock("Блок 2");
-            this.AddBlock("Блок 3");
-            this.AddBlock("Блок 4");
+            this.AddPlatform();
+            this.AddBlock();
+            this.AddBlock();
+            this.AddBlock();
+            this.AddBlock();
         }
 
         public DanceScheme(int id, string title, JsonScheme scheme, bool isNewScheme = false)
@@ -117,6 +122,9 @@ namespace DanceRegUltra.Models.Categories
             this.SchemeAges = new ListExt<IdCheck>();
             this.SchemeStyles = new ListExt<IdCheck>();
             this.SchemeStyles.CollectionChanged += this.UpdateStyleTrigger;
+
+            this.PlatformIncrement = scheme.PlatformIncrement;
+            this.BlockIncrement = scheme.BlockIncrement;
 
             this.PlatformsCollection = new ListExt<SchemeArray>();
             this.BlocksCollection = new ListExt<SchemeArray>();
@@ -132,7 +140,7 @@ namespace DanceRegUltra.Models.Categories
                     }
                     isNew = true;
                 }
-                this.AddPlatform(platform.Title, platform.Values);
+                this.AddPlatform(platform.IdArray, platform.Title, platform.Values);
             }
 
             isNew = false;
@@ -146,7 +154,7 @@ namespace DanceRegUltra.Models.Categories
                     }
                     isNew = true;
                 }
-                this.AddBlock(block.Title, block.Values);
+                this.AddBlock(block.IdArray, block.Title, block.Values);
             }
 
             foreach(IdCheck style in scheme.Styles)
@@ -158,9 +166,9 @@ namespace DanceRegUltra.Models.Categories
             this.UpdateFlag = isNewScheme == false ? false : true;
         }
 
-        public void AddPlatform(string title = "Платформа", IEnumerable<IdCheck> collection = null)
+        public void AddPlatform(int id = -1, string title = null, IEnumerable<IdCheck> collection = null)
         {
-            SchemeArray platform = new SchemeArray(title, SchemeType.Platform);
+            SchemeArray platform = new SchemeArray(id == -1 ? this.PlatformIncrement++ : id, (title == null ? "Платформа " + this.PlatformIncrement : title), SchemeType.Platform);
             if (collection == null) collection = this.SchemeLeagues;
             foreach (IdCheck league in collection)
             {
@@ -172,9 +180,9 @@ namespace DanceRegUltra.Models.Categories
             this.UpdateFlagChange();
         }
 
-        public void AddBlock(string title = "Блок", IEnumerable<IdCheck> collection = null)
+        public void AddBlock(int id = -1, string title = null, IEnumerable<IdCheck> collection = null)
         {
-            SchemeArray block = new SchemeArray(title, SchemeType.Block);
+            SchemeArray block = new SchemeArray(id == -1 ? this.BlockIncrement++ : id, (title == null ? "Блок " + this.BlockIncrement : title), SchemeType.Block);
             if (collection == null) collection = this.SchemeAges;
             foreach (IdCheck age in collection)
             {
