@@ -32,12 +32,13 @@ namespace DanceRegUltra.Models
             remove => this.event_updateDanceEvent -= value;
         }
 
+        /*
         private Lazy<ListExt<IMember>> HideMembers;
         public IMember[] Members { get => this.HideMembers?.Value?.ToArray(); }
 
         private Lazy<ListExt<DanceNode>> HideNodes;
         public DanceNode[] Nodes { get => this.HideNodes?.Value?.ToArray(); }
-
+        */
         public int IdEvent { get; private set; }
 
         private string title;
@@ -72,8 +73,10 @@ namespace DanceRegUltra.Models
         {
             this.NodeId = -1;
             this.JudgeCount = 4;
+            /*
             this.HideMembers = new Lazy<ListExt<IMember>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
+            */
             this.IdEvent = id;
             this.title = title;
             this.startEventTimestamp = startTimestamp;
