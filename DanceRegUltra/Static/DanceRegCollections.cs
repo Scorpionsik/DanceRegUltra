@@ -20,7 +20,7 @@ namespace DanceRegUltra.Static
 
         public static Lazy<ListExt<CategoryString>> Styles { get; private set; }
 
-        public static Lazy<ListExt<MemberDancer>> Dancers { get; private set; }
+        //public static Lazy<ListExt<MemberDancer>> Dancers { get; private set; }
 
         public static ListExt<DanceEvent> Events { get; private set; }
         public static Lazy<Dictionary<int, EventManagerView>> Active_events_windows { get; private set; }
@@ -114,6 +114,7 @@ namespace DanceRegUltra.Static
             }
         }
 
+        /*
         internal async static Task LoadDancersAsync()
         {
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from dancers");
@@ -144,7 +145,7 @@ namespace DanceRegUltra.Static
                     }
                 }
             });
-        }
+        }*/
 
         internal static int LoadLeague(CategoryString league)
         {

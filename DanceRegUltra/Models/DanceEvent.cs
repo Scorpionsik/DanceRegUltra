@@ -4,9 +4,12 @@ using DanceRegUltra.Interfaces;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.ViewModels;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace DanceRegUltra.Models
 {
@@ -32,13 +35,13 @@ namespace DanceRegUltra.Models
             remove => this.event_updateDanceEvent -= value;
         }
 
-        /*
+        
         private Lazy<ListExt<IMember>> HideMembers;
         public IMember[] Members { get => this.HideMembers?.Value?.ToArray(); }
 
         private Lazy<ListExt<DanceNode>> HideNodes;
         public DanceNode[] Nodes { get => this.HideNodes?.Value?.ToArray(); }
-        */
+        
         public int IdEvent { get; private set; }
 
         private string title;
@@ -73,10 +76,10 @@ namespace DanceRegUltra.Models
         {
             this.NodeId = -1;
             this.JudgeCount = 4;
-            /*
+            
             this.HideMembers = new Lazy<ListExt<IMember>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
-            */
+            
             this.IdEvent = id;
             this.title = title;
             this.startEventTimestamp = startTimestamp;
@@ -88,6 +91,13 @@ namespace DanceRegUltra.Models
 
             this.Command_EditEvent = MainViewModel.Command_EditEvent;
             this.Command_DeleteEvent = MainViewModel.Command_DeleteEvent;
+        }
+
+        public void AddNode(int node_id, int member_id, bool isGroup, int platform_id, int league_id, int block_id, int age_id, int style_id, string scores)
+        {
+            DanceNode newNode = new DanceNode(this.IdEvent, node_id, member_id, isGroup, platform_id, league_id, block_id, age_id, style_id);
+            newNode.SetScores(scores);
+            this.HideNodes.Value.Add(newNode);
         }
 
         public void SetTitle(string newTitle)
