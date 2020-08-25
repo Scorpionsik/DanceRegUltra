@@ -1,7 +1,9 @@
 ﻿using CoreWPF.Utilites;
+using CoreWPF.Windows;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
+using DanceRegUltra.Views;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -19,12 +21,12 @@ namespace DanceRegUltra.Static
         public static Lazy<ListExt<CategoryString>> Styles { get; private set; }
 
         public static ListExt<DanceEvent> Events { get; private set; }
-        public static Lazy<List<int>> Id_active_events { get; private set; }
+        public static Lazy<Dictionary<int, EventManagerView>> Active_events_windows { get; private set; }
 
         static DanceRegCollections()
         {
             Events = new ListExt<DanceEvent>();
-            Id_active_events = new Lazy<List<int>>();
+            Active_events_windows = new Lazy<Dictionary<int, EventManagerView>>();
             Leagues = new Lazy<ListExt<CategoryString>>();
             Ages = new Lazy<ListExt<CategoryString>>();
             Styles = new Lazy<ListExt<CategoryString>>();
@@ -33,7 +35,7 @@ namespace DanceRegUltra.Static
 
         internal async static void ClearCategories()
         {
-            if (Id_active_events == null || Id_active_events.Value == null || Id_active_events.Value.Count == 0)
+            if (Active_events_windows == null || Active_events_windows.Value == null || Active_events_windows.Value.Count == 0)
             {
                 await Task.Run(() =>
                 {
@@ -63,7 +65,7 @@ namespace DanceRegUltra.Static
             {
                 List<int> del_league = new List<int>(), del_age = new List<int>(), del_style = new List<int>();
 
-                foreach(int id_event in Id_active_events.Value)
+                foreach(int id_event in Active_events_windows.Value.Keys)
                 {
                     //code here
                 }
@@ -84,6 +86,29 @@ namespace DanceRegUltra.Static
             }
 
             if(!name_dublicate) await DanceRegDatabase.ExecuteNonQueryAsync("update " + table_name + "s set " + columnName + "=" + value_str + " where Id_" + table_name + "=" + id);
+        }
+
+        internal static bool LoadEvent(DanceEvent eventLoad)
+        {
+            if (Active_events_windows.Value.ContainsKey(eventLoad.IdEvent))
+            {
+                //Active_events_windows.Value[eventLoad.IdEvent].Activate();
+                return false;
+            }
+            else
+            {
+                EventManagerView eventWindow = new EventManagerView(eventLoad);
+                Active_events_windows.Value.Add(eventLoad.IdEvent, eventWindow);
+                return true;
+            }
+        }
+
+        internal static void UnloadEvent(DanceEvent eventUnload)
+        {
+            if (Active_events_windows.Value.ContainsKey(eventUnload.IdEvent))
+            {
+                Active_events_windows.Value.Remove(eventUnload.IdEvent);
+            }
         }
 
         internal static int LoadLeague(CategoryString league)

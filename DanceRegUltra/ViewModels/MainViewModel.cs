@@ -1,5 +1,6 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
+using CoreWPF.Windows.Enums;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Static;
@@ -32,7 +33,7 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
-        public StatusString Status { get; private set; }
+        public static StatusString Status { get; private set; }
 
         private int countDatabaseRequests;
         public int CountDatabaseRequests
@@ -49,7 +50,7 @@ namespace DanceRegUltra.ViewModels
         {
             this.Title = "Создание или выбор события - " + App.AppTitle;
 
-            this.Status = new StatusString();
+            Status = new StatusString();
             this.Initialize();
         }
 
@@ -60,7 +61,7 @@ namespace DanceRegUltra.ViewModels
 
             if (!DanceRegDatabase.IsExist())
             {
-                await this.Status.SetAsync("Добро пожаловать! Инициализация первого запуска...", StatusString.Infinite);
+                await Status.SetAsync("Добро пожаловать! Инициализация первого запуска...", StatusString.Infinite);
                 //await Task.Run(() => Thread.Sleep(1000));
                 MatchCollection commands = DanceRegDatabase.DatabaseCommands;
 
@@ -77,7 +78,7 @@ namespace DanceRegUltra.ViewModels
             }
             DanceRegCollections.Events.CollectionChanged += this.UpdateEvents;
 
-            await this.Status.SetAsync("Готов к работе!", StatusString.LongTime);
+            await Status.SetAsync("Готов к работе!", StatusString.LongTime);
         }
 
         private void UpdateEvents(object sender, NotifyCollectionChangedEventArgs e)
@@ -96,11 +97,8 @@ namespace DanceRegUltra.ViewModels
 
         private async void InitializeEvent(DanceEvent init_event)
         {
-            await this.Status.SetAsync("Инициализация события " + init_event.Title + "...", StatusString.Infinite);
-
-
-
-
+            await Status.SetAsync("Инициализация события " + init_event.Title + "...", StatusString.Infinite);
+                                 
             await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp', 'Json_scheme') values ('" + init_event.Title + "', " + init_event.StartEventTimestamp + ", '"+ init_event.JsonSchemeEvent +"')");
             DbResult new_event = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from events order by Id_event");
             DbRow current_row = new_event[new_event.RowsCount - 1];
@@ -109,7 +107,19 @@ namespace DanceRegUltra.ViewModels
             while (sort_id < DanceRegCollections.Events.Count && DanceRegCollections.Events[sort_id].CompareTo(newEvent) <= 0) sort_id++;
             DanceRegCollections.Events.Insert(sort_id, newEvent);
 
-            await this.Status.SetAsync("Готово! Открываю " + init_event.Title + "...", StatusString.LongTime);
+            await Status.SetAsync("Готово! Открываю " + newEvent.Title + "...", StatusString.LongTime);
+            DanceRegCollections.LoadEvent(newEvent);
+            DanceRegCollections.Active_events_windows.Value[newEvent.IdEvent].Show();
+        }
+
+        public override WindowClose CloseMethod()
+        {
+            List<EventManagerView> closeEvents = new List<EventManagerView>(DanceRegCollections.Active_events_windows.Value.Values);
+            foreach(EventManagerView closeEvent in closeEvents)
+            {
+                closeEvent.Close();
+            }
+            return base.CloseMethod();
         }
 
         public RelayCommand Command_AddEvent
@@ -121,6 +131,7 @@ namespace DanceRegUltra.ViewModels
                 if ((bool)window.ShowDialog())
                 {
                     this.InitializeEvent(window.Return_event);
+                    
                 }
             });
         }
@@ -129,7 +140,12 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceEvent>(ev =>
             {
-
+                Status.Set("Открываю " + ev + "...", StatusString.LongTime);
+                if (DanceRegCollections.LoadEvent(ev))
+                {
+                    DanceRegCollections.Active_events_windows.Value[ev.IdEvent].Show();
+                }
+                else DanceRegCollections.Active_events_windows.Value[ev.IdEvent].Activate();
             },
                (ev) => ev != null);
         }
@@ -138,7 +154,22 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceEvent>(ev =>
             {
-                DeleteEvent(ev);
+                string text = "Вы уверены, что хотите удалить событие \"" + ev.Title + "\"?";
+
+                if (DanceRegCollections.Active_events_windows.Value.ContainsKey(ev.IdEvent))
+                {
+                    text = "Cобытие \""+ ev.Title +"\" сейчас находится в работе, удаление невозможно!";
+                    App.SetMessageBox(text, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                }
+                else
+                {
+                    switch(App.SetMessageBox(text, System.Windows.MessageBoxButton.YesNoCancel, System.Windows.MessageBoxImage.Question))
+                    {
+                        case System.Windows.MessageBoxResult.Yes:
+                            DeleteEvent(ev);
+                            break;
+                    }
+                }
             },
                 (ev) => ev != null);
         }

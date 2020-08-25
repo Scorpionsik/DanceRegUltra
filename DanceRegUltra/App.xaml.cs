@@ -39,5 +39,10 @@ namespace DanceRegUltra
                 Environment.Exit(0);
             }
         }
+
+        public static MessageBoxResult SetMessageBox(string text, MessageBoxButton buttons, MessageBoxImage image, string subtitle = "")
+        {
+            return MessageBox.Show(text, AppTitle + (subtitle != null && subtitle.Length > 0 ? ": " + subtitle : ""), buttons, image);
+        }
     }
 }
