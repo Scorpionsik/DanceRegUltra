@@ -140,7 +140,7 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceEvent>(ev =>
             {
-                Status.Set("Открываю " + ev + "...", StatusString.LongTime);
+                Status.Set("Открываю " + ev.Title + "...", StatusString.LongTime);
                 if (DanceRegCollections.LoadEvent(ev))
                 {
                     DanceRegCollections.Active_events_windows.Value[ev.IdEvent].Show();

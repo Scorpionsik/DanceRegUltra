@@ -14,10 +14,10 @@ namespace DanceRegUltra.ViewModels
     {
         private DanceEvent EventInWork;
 
-        public EventManagerViewModel(DanceEvent eventLoad)
+        public EventManagerViewModel(int idEventLoad)
         {
-            this.Title = "["+ eventLoad.Title +"] Менеджер событий - " + App.AppTitle;
-            this.EventInWork = eventLoad;
+            this.EventInWork = DanceRegCollections.GetEventById(idEventLoad);
+            this.Title = "["+ this.EventInWork.Title +"] Менеджер событий - " + App.AppTitle;
         }
 
         public override WindowClose CloseMethod()

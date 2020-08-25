@@ -97,7 +97,7 @@ namespace DanceRegUltra.Static
             }
             else
             {
-                EventManagerView eventWindow = new EventManagerView(eventLoad);
+                EventManagerView eventWindow = new EventManagerView(eventLoad.IdEvent);
                 Active_events_windows.Value.Add(eventLoad.IdEvent, eventWindow);
                 return true;
             }

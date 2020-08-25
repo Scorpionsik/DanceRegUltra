@@ -22,10 +22,10 @@ namespace DanceRegUltra.Views
     /// </summary>
     public partial class EventManagerView : WindowExt
     {
-        public EventManagerView(DanceEvent eventLoad)
+        public EventManagerView(int idEventLoad)
         {
             InitializeComponent();
-            this.DataContext = new EventManagerViewModel(eventLoad);
+            this.DataContext = new EventManagerViewModel(idEventLoad);
         }
     }
 }
