@@ -2,25 +2,53 @@
 using DanceRegUltra.Enums;
 using DanceRegUltra.Static;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Common;
 using System.Linq;
 
 namespace DanceRegUltra.Models
 {
-    public class MemberGroup : Member
+    public class MemberGroup : Member, IComparable<MemberGroup>
     {
-        private ListExt<MemberDancer> HideGroupMembers;
-        public MemberDancer[] GroupMembers { get => this.HideGroupMembers.ToArray(); }
+        private Lazy<ListExt<MemberDancer>> HideGroupMembers;
+        public ListExt<MemberDancer> GroupMembers { get => this.HideGroupMembers?.Value; }
 
-        public MemberGroup(int eventId, int memberId, IEnumerable<MemberDancer> group) : base(eventId, memberId)
+        public string GroupType
         {
-            this.HideGroupMembers = new ListExt<MemberDancer>(group);
+            get
+            {
+                int countGroup = this.HideGroupMembers.Value.Count;
+                string type = "";
+
+                if (countGroup < 2) type = "ошибка";
+                else if(countGroup >= 2 && countGroup <= 6) type = "группа";
+                else if (countGroup >= 7 && countGroup <= 23) type = "формейшен";
+                else if (countGroup >= 24) type = "продакшн";
+
+                return type;
+            }
         }
 
-        public MemberGroup(int eventId, int memberId, string group) : base(eventId, memberId)
+        private MemberGroup(int eventId, int memberId) : base(eventId, memberId)
         {
-            this.HideGroupMembers = new ListExt<MemberDancer>();
+            this.HideGroupMembers = new Lazy<ListExt<MemberDancer>>();
+            this.HideGroupMembers.Value.CollectionChanged += this.UpdateMembersMethod;
+        }
+
+        ~MemberGroup()
+        {
+            this.HideGroupMembers.Value.CollectionChanged -= this.UpdateMembersMethod;
+        }
+
+        public MemberGroup(int eventId, int memberId, IEnumerable<MemberDancer> group) : this(eventId, memberId)
+        {
+            this.HideGroupMembers.Value.AddRange(group);
+        }
+
+        public MemberGroup(int eventId, int memberId, string group) : this(eventId, memberId)
+        {
             this.Initialize(group);
         }
         
@@ -37,51 +65,62 @@ namespace DanceRegUltra.Models
 
             foreach(DbRow row in res)
             {
-                this.HideGroupMembers.Add(new MemberDancer(this.EventId, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString()));
+                this.HideGroupMembers.Value.Add(new MemberDancer(this.EventId, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString()));
             }
+        }
+
+        private void UpdateMembersMethod(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.OnPropertyChanged("GroupMembers");
+            this.OnPropertyChanged("GroupType");
         }
 
         public void AddMember(int id_member, string name, string surname)
         {
-            foreach (MemberDancer d in this.HideGroupMembers)
+            foreach (MemberDancer d in this.HideGroupMembers.Value)
             {
                 if (d.MemberId == id_member)
                 {
                     return;
                 }
             }
-            this.HideGroupMembers.Add(new MemberDancer(this.EventId, id_member, name, surname));
+            this.HideGroupMembers.Value.Add(new MemberDancer(this.EventId, id_member, name, surname));
         }
 
         public void RemoveMember(MemberDancer dancer)
         {
-            foreach(MemberDancer d in this.HideGroupMembers)
+            foreach(MemberDancer d in this.HideGroupMembers.Value)
             {
                 if(d.MemberId == dancer.MemberId)
                 {
-                    this.HideGroupMembers.Remove(d);
+                    this.HideGroupMembers.Value.Remove(d);
                     break;
                 }
             }
         }
-        /*
-        public void AddGroupMember(int memberId)
-        {
-            if (!this.HideGroupMembers.Contains(memberId))
-            {
-                this.HideGroupMembers.Add(memberId);
-                this.InvokeUpdate("MembersId", memberId, UpdateStatus.Add);
-            }
-        }
 
-        public void RemoveGroupMember(int memberId)
+        public int CompareTo(MemberGroup other)
         {
-            if (this.HideGroupMembers.Contains(memberId))
-            {
-                this.HideGroupMembers.Remove(memberId);
-                this.InvokeUpdate("MembersId", memberId, UpdateStatus.Delete);
-            }
+            return this.GroupType.CompareTo(other.GroupType);
         }
-        */
+        /*
+public void AddGroupMember(int memberId)
+{
+   if (!this.HideGroupMembers.Contains(memberId))
+   {
+       this.HideGroupMembers.Add(memberId);
+       this.InvokeUpdate("MembersId", memberId, UpdateStatus.Add);
+   }
+}
+
+public void RemoveGroupMember(int memberId)
+{
+   if (this.HideGroupMembers.Contains(memberId))
+   {
+       this.HideGroupMembers.Remove(memberId);
+       this.InvokeUpdate("MembersId", memberId, UpdateStatus.Delete);
+   }
+}
+*/
     }
 }

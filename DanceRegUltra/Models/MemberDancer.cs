@@ -1,6 +1,8 @@
-﻿namespace DanceRegUltra.Models
+﻿using System;
+
+namespace DanceRegUltra.Models
 {
-    public class MemberDancer : Member
+    public class MemberDancer : Member, IComparable<MemberDancer>
     {
         private string name;
         public string Name
@@ -40,6 +42,11 @@
         {
             this.Surname = newSurname;
             this.InvokeUpdate("Surname");
+        }
+
+        public int CompareTo(MemberDancer other)
+        {
+            return this.Surname.CompareTo(other.Surname);
         }
     }
 }
