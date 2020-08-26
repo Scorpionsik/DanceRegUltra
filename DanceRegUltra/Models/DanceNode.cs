@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace DanceRegUltra.Models
 {
-    public struct DanceNode : INotifyPropertyChanged
+    public class DanceNode : INotifyPropertyChanged
     {
         public int EventId { get; private set; }
         public int NodeId { get; private set; }
@@ -23,8 +23,23 @@ namespace DanceRegUltra.Models
         private Lazy<List<int>> HideScores;
         public int[] Scores { get => this.HideScores.Value.ToArray(); }
 
+        public int JudgeCount
+        {
+            get => this.HideScores.Value.Count;
+        }
 
-        public DanceNode(int eventId, int nodeId, int memberId, bool isGroup, int platformId, int leagueId, int blockId, int ageId, int styleId)
+        private int position;
+        public int Position
+        {
+            get => this.position;
+            set
+            {
+                this.position = value;
+                this.OnPropertyChanged("Position");
+            }
+        }
+
+        public DanceNode(int eventId, int nodeId, int memberId, bool isGroup, int platformId, int leagueId, int blockId, int ageId, int styleId, int position = -1)
         {
             this.EventId = eventId;
             this.NodeId = nodeId;
@@ -39,7 +54,8 @@ namespace DanceRegUltra.Models
             this.StyleId = styleId;
 
             this.HideScores = new Lazy<List<int>>();
-            this.PropertyChanged = null;
+
+            this.position = position;
         }
 
         public void SetScores(string jsonScores)
@@ -47,6 +63,7 @@ namespace DanceRegUltra.Models
             this.HideScores = new Lazy<List<int>>();
             this.HideScores.Value.AddRange(JsonConvert.DeserializeObject<List<int>>(jsonScores));
             this.OnPropertyChanged("Scores");
+            this.OnPropertyChanged("JudgeCount");
         }
 
         public string GetScores()

@@ -22,29 +22,21 @@ create table "event_nodes"
 "Id_block" INTEGER NOT NULL,
 "Id_age" INTEGER NOT NULL,
 "Id_style" INTEGER NOT NULL,
-"Json_scores" TEXT DEFAULT ''
+"Json_scores" TEXT DEFAULT '',
+"Position" INTEGER DEFAULT 0
 );
 
 create table "dancers"
 (
-"Id_dancer" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+"Id_member" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 "Firstname" TEXT,
 "Surname" TEXT
 );
 
 create table "groups"
 (
-"Id_group" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+"Id_member" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 "Json_members" TEXT NOT NULL
-);
-
-/*Таблица перемещений узлов*/
-create table "event_nodes_replace"
-(
-"Id_replace" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-"Id_event" INTEGER NOT NULL,
-"Index_from" INTEGER NOT NULL,
-"Index_where"  INTEGER NOT NULL
 );
 
 /*Шаблоны схем для быстрого создания события*/
