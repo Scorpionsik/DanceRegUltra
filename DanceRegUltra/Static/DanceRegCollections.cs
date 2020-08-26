@@ -27,7 +27,7 @@ namespace DanceRegUltra.Static
 
         static DanceRegCollections()
         {
-            Dancers = new Lazy<ListExt<MemberDancer>>();
+            //Dancers = new Lazy<ListExt<MemberDancer>>();
             Events = new ListExt<DanceEvent>();
             Active_events_windows = new Lazy<Dictionary<int, EventManagerView>>();
             Leagues = new Lazy<ListExt<CategoryString>>();
