@@ -23,7 +23,6 @@
             </Grid.ColumnDefinitions>
             <GroupBox Header="Дата" Grid.Column="0">
                 <xctk:DateTimePicker 
-                    x:Name="TestClock" 
                     Format="Custom" 
                     FormatString="dd.MMM.yyyy HH:mm" 
                     ClipValueToMinMax="True" 

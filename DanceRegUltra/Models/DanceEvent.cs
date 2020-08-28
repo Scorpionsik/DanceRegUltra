@@ -143,20 +143,20 @@ namespace DanceRegUltra.Models
         public void SetStartTimestampEvent(double newTimestamp)
         {
             this.StartEventTimestamp = newTimestamp;
-            this.event_updateDanceEvent?.Invoke(this.IdEvent, "StartEventTimestamp", newTimestamp);
+            this.event_updateDanceEvent?.Invoke(this.IdEvent, "Start_timestamp", newTimestamp);
         }
 
         public void SetJsonScheme(string newJson)
         {
             this.JsonSchemeEvent = newJson;
             //this.SchemeEvent = DanceScheme.Deserialize(newJson);
-            this.event_updateDanceEvent?.Invoke(this.IdEvent, "JsonSchemeEvent", newJson);
+            this.event_updateDanceEvent?.Invoke(this.IdEvent, "Json_scheme", newJson);
         }
 
         public void SetEndTimestampEvent()
         {
             this.EndEventTimestamp = UnixTime.CurrentUnixTimestamp();
-            this.event_updateDanceEvent?.Invoke(this.IdEvent, "EndEventTimestamp", this.EndEventTimestamp);
+            this.event_updateDanceEvent?.Invoke(this.IdEvent, "End_timestamp", this.EndEventTimestamp);
         }
 
         public RelayCommand<DanceEvent> Command_EditEvent { get; private set; }

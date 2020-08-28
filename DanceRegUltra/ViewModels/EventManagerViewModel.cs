@@ -17,6 +17,8 @@ namespace DanceRegUltra.ViewModels
         private TimerCallback TitleUpdate_Callback;
         private Timer TitleUpdate_Timer;
 
+
+
         public DanceEvent EventInWork { get; private set; }
 
         public override string Title
@@ -55,6 +57,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork = DanceRegCollections.GetEventById(idEventLoad);
             this.EventInWork.Event_UpdateDanceEvent += UpdateEvent;
             this.eventEditTitle = this.EventInWork.Title;
+            this.startDateEvent = UnixTime.ToDateTimeOffset(this.EventInWork.StartEventTimestamp, App.Locality).DateTime;
             this.Title = "Менеджер событий - " + App.AppTitle;
             this.TitleUpdate_Callback = new TimerCallback(this.UpdateEventTitleMethod);
         }
@@ -76,7 +79,7 @@ namespace DanceRegUltra.ViewModels
         {
             if (event_id > 0)
             {
-                await DanceRegDatabase.ExecuteNonQueryAsync("update events set " + column_name + "=" + value_update + " where Id_event=" + event_id);
+                await DanceRegDatabase.ExecuteNonQueryAsync("update events set " + column_name + "='" + value_update + "' where Id_event=" + event_id);
             }
         }
     }
