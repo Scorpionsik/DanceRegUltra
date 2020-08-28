@@ -3,8 +3,11 @@ using CoreWPF.Utilites;
 using CoreWPF.Windows.Enums;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
+using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using DanceRegUltra.Views;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -99,7 +102,7 @@ namespace DanceRegUltra.ViewModels
         {
             await Status.SetAsync("Инициализация события " + init_event.Title + "...", StatusString.Infinite);
                                  
-            await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp', 'Json_scheme') values ('" + init_event.Title + "', " + init_event.StartEventTimestamp + ", '"+ init_event.JsonSchemeEvent +"')");
+            await DanceRegDatabase.ExecuteNonQueryAsync("insert into events ('Title', 'Start_timestamp', 'Json_scheme') values ('" + init_event.Title + "', " + init_event.StartEventTimestamp + ", '"+ JsonScheme.Serialize(init_event.SchemeEvent) +"')");
             DbResult new_event = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from events order by Id_event");
             DbRow current_row = new_event[new_event.RowsCount - 1];
             DanceEvent newEvent = new DanceEvent(current_row["Id_event"].ToInt32(), current_row["Title"].ToString(), current_row["Start_timestamp"].ToDouble(), current_row["End_timestamp"].ToDouble(), current_row["Json_scheme"].ToString());
