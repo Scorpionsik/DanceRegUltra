@@ -75,9 +75,9 @@ namespace DanceRegUltra.Models
 
         public double EndEventTimestamp { get; private set; }
 
-        public DanceScheme SchemeEvent { get; private set; }
+        public JsonScheme SchemeEvent { get; private set; }
 
-        public string JsonSchemeEvent { get; private set; }
+        //public string JsonSchemeEvent { get; private set; }
 
         public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "")
         {
@@ -92,10 +92,10 @@ namespace DanceRegUltra.Models
             this.title = title;
             this.startEventTimestamp = startTimestamp;
             this.EndEventTimestamp = endTimestamp;
-            this.JsonSchemeEvent = json;
+            //this.JsonSchemeEvent = json;
+            if(json != null && json.Length > 0) this.SchemeEvent = JsonScheme.Deserialize(json);
             
             this.event_updateDanceEvent = null;
-            this.PropertyChanged = null;
 
             this.Command_EditEvent = MainViewModel.Command_EditEvent;
             this.Command_DeleteEvent = MainViewModel.Command_DeleteEvent;
@@ -148,8 +148,8 @@ namespace DanceRegUltra.Models
 
         public void SetJsonScheme(string newJson)
         {
-            this.JsonSchemeEvent = newJson;
-            //this.SchemeEvent = DanceScheme.Deserialize(newJson);
+            //this.JsonSchemeEvent = newJson;
+            this.SchemeEvent = JsonScheme.Deserialize(newJson);
             this.event_updateDanceEvent?.Invoke(this.IdEvent, "Json_scheme", newJson);
         }
 
