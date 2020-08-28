@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using DanceRegUltra.Interfaces;
+using DanceRegUltra.Models.Categories;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,11 +12,11 @@ namespace DanceRegUltra.Models
     {
         public int EventId { get; private set; }
         public int NodeId { get; private set; }
-        public int MemberId { get; private set; }
+        public IMember Member { get; private set; }
         public bool IsGroup { get; private set; }
 
-        public int PlatformId { get; private set; }
-        public int BlockId { get; private set; }
+        public IdTitle Platform { get; private set; }
+        public IdTitle Block { get; private set; }
 
         public int LeagueId { get; private set; }
         public int AgeId { get; private set; }
@@ -39,17 +41,17 @@ namespace DanceRegUltra.Models
             }
         }
 
-        public DanceNode(int eventId, int nodeId, int memberId, bool isGroup, int platformId, int leagueId, int blockId, int ageId, int styleId, int position = -1)
+        public DanceNode(int eventId, int nodeId, IMember member, bool isGroup, IdTitle platform, int leagueId, IdTitle block, int ageId, int styleId, int position = -1)
         {
             this.EventId = eventId;
             this.NodeId = nodeId;
 
-            this.MemberId = memberId;
+            this.Member = member;
             this.IsGroup = isGroup;
 
-            this.PlatformId = platformId;
+            this.Platform = platform;
             this.LeagueId = leagueId;
-            this.BlockId = blockId;
+            this.Block = block;
             this.AgeId = ageId;
             this.StyleId = styleId;
 
