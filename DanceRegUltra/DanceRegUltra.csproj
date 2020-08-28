@@ -105,6 +105,7 @@
     <Compile Include="Enums\UpdateStatus.cs" />
     <Compile Include="Interfaces\ICategoriesMenu.cs" />
     <Compile Include="Models\Categories\IdCheck.cs" />
+    <Compile Include="Models\Categories\IdTitle.cs" />
     <Compile Include="Models\Categories\JsonScheme.cs" />
     <Compile Include="Models\Categories\JsonSchemeArray.cs" />
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="ViewModels\CategoryMenuElements\LeagueMenuElementViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\StyleMenuElementViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\AddDancerViewModel.cs" />
     <Compile Include="ViewModels\RegisterWindowViewModel.cs" />
     <Compile Include="ViewModels\SchemeManagerViewModel.cs" />
     <Compile Include="Views\CategoryManagerView.xaml.cs">
@@ -125,6 +127,9 @@
     </Compile>
     <Compile Include="Views\EventManagerView.xaml.cs">
       <DependentUpon>EventManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventManagerViews\AddDancerView.xaml.cs">
+      <DependentUpon>AddDancerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RegisterWindowView.xaml.cs">
       <DependentUpon>RegisterWindowView.xaml</DependentUpon>
@@ -141,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EventManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventManagerViews\AddDancerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
