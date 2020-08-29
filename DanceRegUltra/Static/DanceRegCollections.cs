@@ -64,6 +64,7 @@ namespace DanceRegUltra.Static
                     }
                 });
             }
+            /*
             else
             {
                 List<int> del_league = new List<int>(), del_age = new List<int>(), del_style = new List<int>();
@@ -72,7 +73,7 @@ namespace DanceRegUltra.Static
                 {
                     //code here
                 }
-            }
+            }*/
         }
 
         private static async void MethodUpdateCategoryString(int id, CategoryType type, string columnName, object value)
@@ -110,7 +111,9 @@ namespace DanceRegUltra.Static
         {
             if (Active_events_windows.Value.ContainsKey(eventUnload.IdEvent))
             {
+                eventUnload.UnloadEvent();
                 Active_events_windows.Value.Remove(eventUnload.IdEvent);
+                ClearCategories();
             }
         }
 

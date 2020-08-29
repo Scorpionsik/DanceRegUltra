@@ -39,7 +39,7 @@ namespace DanceRegUltra.Models
             remove => this.event_updateDanceEvent -= value;
         }
 
-        
+
         private Lazy<ListExt<MemberDancer>> HideDancers;
         public ListExt<MemberDancer> Dancers { get => this.HideDancers?.Value; }
 
@@ -48,7 +48,7 @@ namespace DanceRegUltra.Models
 
         private Lazy<ListExt<DanceNode>> HideNodes;
         public ListExt<DanceNode> Nodes { get => this.HideNodes?.Value; }
-        
+
         public int IdEvent { get; private set; }
 
         private string title;
@@ -77,33 +77,51 @@ namespace DanceRegUltra.Models
 
         public JsonScheme SchemeEvent { get; private set; }
 
+        public Dictionary<int, List<IdTitle>> Leagues { get; private set; }
+        public Dictionary<int, List<IdTitle>> Ages { get; private set; }
+        public List<IdCheck> Styles { get; private set; }
+
         //public string JsonSchemeEvent { get; private set; }
 
         public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "")
         {
             this.NodeId = -1;
             this.JudgeCount = 4;
-            
+
             this.HideDancers = new Lazy<ListExt<MemberDancer>>();
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
-            
+
             this.IdEvent = id;
             this.title = title;
             this.startEventTimestamp = startTimestamp;
             this.EndEventTimestamp = endTimestamp;
             //this.JsonSchemeEvent = json;
-            if(json != null && json.Length > 0) this.SchemeEvent = JsonScheme.Deserialize(json);
-            
+            if (json != null && json.Length > 0) this.SchemeEvent = JsonScheme.Deserialize(json);
+            this.Leagues = new Dictionary<int, List<IdTitle>>();
+            this.Ages = new Dictionary<int, List<IdTitle>>();
+            this.Styles = new List<IdCheck>();
+
             this.event_updateDanceEvent = null;
 
             this.Command_EditEvent = MainViewModel.Command_EditEvent;
             this.Command_DeleteEvent = MainViewModel.Command_DeleteEvent;
         }
-        
-        public void AddNode(int node_id, int member_id, bool isGroup, int platform_id, int league_id, int block_id, int age_id, int style_id, string scores)
+
+        public void UnloadEvent()
         {
-            DanceNode newNode = new DanceNode(this.IdEvent, node_id, member_id, isGroup, platform_id, league_id, block_id, age_id, style_id);
+            this.HideDancers = new Lazy<ListExt<MemberDancer>>();
+            this.HideGroups = new Lazy<ListExt<MemberGroup>>();
+            this.HideNodes = new Lazy<ListExt<DanceNode>>();
+
+            this.Leagues = new Dictionary<int, List<IdTitle>>();
+            this.Ages = new Dictionary<int, List<IdTitle>>();
+            this.Styles = new List<IdCheck>();
+        }
+
+        public void AddNode(int node_id, IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)
+        {
+            DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
             newNode.SetScores(scores);
             this.HideNodes.Value.Add(newNode);
         }

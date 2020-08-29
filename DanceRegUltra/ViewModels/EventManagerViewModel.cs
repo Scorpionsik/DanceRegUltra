@@ -1,10 +1,13 @@
 ﻿using CoreWPF.MVVM;
 using CoreWPF.Utilites;
 using CoreWPF.Windows.Enums;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
+using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -60,6 +63,55 @@ namespace DanceRegUltra.ViewModels
             this.startDateEvent = UnixTime.ToDateTimeOffset(this.EventInWork.StartEventTimestamp, App.Locality).DateTime;
             this.Title = "Менеджер событий - " + App.AppTitle;
             this.TitleUpdate_Callback = new TimerCallback(this.UpdateEventTitleMethod);
+            this.Initialize();
+        }
+
+        private async void Initialize()
+        {
+            DbResult res = null;
+            foreach(JsonSchemeArray platform in this.EventInWork.SchemeEvent.Platforms)
+            {
+                foreach(IdCheck league in platform.Values)
+                {
+                    if (league.IsChecked)
+                    {
+                        if (!this.EventInWork.Leagues.ContainsKey(league.Id))
+                        {
+                            this.EventInWork.Leagues.Add(league.Id, new List<IdTitle>());
+                            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues where Id_league=" + league.Id);
+                            DanceRegCollections.LoadLeague(new CategoryString(res["Id_league", 0].ToInt32(), CategoryType.League, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
+                        }
+                        this.EventInWork.Leagues[league.Id].Add(new IdTitle(platform.IdArray, platform.Title));
+                    }
+                }
+            }
+
+            foreach(JsonSchemeArray block in this.EventInWork.SchemeEvent.Blocks)
+            {
+                foreach(IdCheck age in block.Values)
+                {
+                    if (age.IsChecked)
+                    {
+                        if (!this.EventInWork.Ages.ContainsKey(age.Id))
+                        {
+                            this.EventInWork.Ages.Add(age.Id, new List<IdTitle>());
+                            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages where Id_age=" + age.Id);
+                            DanceRegCollections.LoadAge(new CategoryString(res["Id_age", 0].ToInt32(), CategoryType.League, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
+                        }
+                        this.EventInWork.Ages[age.Id].Add(new IdTitle(block.IdArray, block.Title));
+                    }
+                }
+            }
+
+            foreach(IdCheck style in this.EventInWork.SchemeEvent.Styles)
+            {
+                if (style.IsChecked)
+                {
+                    this.EventInWork.Styles.Add(new IdCheck(style.Id));
+                    res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles where Id_style=" + style.Id);
+                    DanceRegCollections.LoadStyle(new CategoryString(res["Id_style", 0].ToInt32(), CategoryType.League, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
+                }
+            }
         }
 
         private void UpdateEventTitleMethod(object obj)
