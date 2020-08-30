@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DanceRegUltra.Models.Categories
 {
-    public struct IdTitle
+    public class IdTitle
     {
         public int Id { get; private set; }
         public string Title { get; private set; }

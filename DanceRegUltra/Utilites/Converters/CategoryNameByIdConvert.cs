@@ -55,6 +55,36 @@ namespace DanceRegUltra.Utilites.Converters
             return DependencyProperty.UnsetValue;
         }
 
+        public static string Convert(int category_id, CategoryType type)
+        {
+            if (category_id > 0)
+            {
+                switch (type)
+                {
+                    case CategoryType.League:
+                        foreach (CategoryString league in DanceRegCollections.Leagues.Value)
+                        {
+                            if (league.Id == category_id) return league.Name;
+                        }
+                        break;
+                    case CategoryType.Age:
+                        foreach (CategoryString age in DanceRegCollections.Ages.Value)
+                        {
+                            if (age.Id == category_id) return age.Name;
+                        }
+                        break;
+                    case CategoryType.Style:
+                        foreach (CategoryString style in DanceRegCollections.Styles.Value)
+                        {
+                            if (style.Id == category_id) return style.Name;
+                        }
+                        break;
+                }
+                return null;
+            }
+            else return null;
+        }
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return DependencyProperty.UnsetValue;

@@ -79,7 +79,7 @@ namespace DanceRegUltra.Models
 
         public Dictionary<int, List<IdTitle>> Leagues { get; private set; }
         public Dictionary<int, List<IdTitle>> Ages { get; private set; }
-        public List<IdCheck> Styles { get; private set; }
+        public List<int> Styles { get; private set; }
 
         //public string JsonSchemeEvent { get; private set; }
 
@@ -100,7 +100,7 @@ namespace DanceRegUltra.Models
             if (json != null && json.Length > 0) this.SchemeEvent = JsonScheme.Deserialize(json);
             this.Leagues = new Dictionary<int, List<IdTitle>>();
             this.Ages = new Dictionary<int, List<IdTitle>>();
-            this.Styles = new List<IdCheck>();
+            this.Styles = new List<int>();
 
             this.event_updateDanceEvent = null;
 
@@ -116,7 +116,7 @@ namespace DanceRegUltra.Models
 
             this.Leagues = new Dictionary<int, List<IdTitle>>();
             this.Ages = new Dictionary<int, List<IdTitle>>();
-            this.Styles = new List<IdCheck>();
+            this.Styles = new List<int>();
         }
 
         public void AddNode(int node_id, IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)

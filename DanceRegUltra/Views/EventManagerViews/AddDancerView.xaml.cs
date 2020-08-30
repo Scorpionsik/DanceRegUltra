@@ -1,4 +1,5 @@
-﻿using DanceRegUltra.ViewModels.EventManagerViewModels;
+﻿using CoreWPF.Windows;
+using DanceRegUltra.ViewModels.EventManagerViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace DanceRegUltra.Views.EventManagerViews
     /// <summary>
     /// Логика взаимодействия для AddDancerView.xaml
     /// </summary>
-    public partial class AddDancerView : Window
+    public partial class AddDancerView : DialogWindowExt
     {
         public AddDancerView(int event_id)
         {

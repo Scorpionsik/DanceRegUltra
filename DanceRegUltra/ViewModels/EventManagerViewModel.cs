@@ -5,6 +5,7 @@ using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
+using DanceRegUltra.Views.EventManagerViews;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -107,7 +108,7 @@ namespace DanceRegUltra.ViewModels
             {
                 if (style.IsChecked)
                 {
-                    this.EventInWork.Styles.Add(new IdCheck(style.Id));
+                    this.EventInWork.Styles.Add(style.Id);
                     res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles where Id_style=" + style.Id);
                     DanceRegCollections.LoadStyle(new CategoryString(res["Id_style", 0].ToInt32(), CategoryType.League, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
                 }
@@ -133,6 +134,15 @@ namespace DanceRegUltra.ViewModels
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("update events set " + column_name + "='" + value_update + "' where Id_event=" + event_id);
             }
+        }
+
+        public RelayCommand Command_AddDancer
+        {
+            get => new RelayCommand(obj =>
+            {
+                AddDancerView window = new AddDancerView(this.EventInWork.IdEvent);
+                window.ShowDialog();
+            });
         }
     }
 }

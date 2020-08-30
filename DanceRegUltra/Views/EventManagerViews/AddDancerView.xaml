@@ -1,12 +1,36 @@
-﻿<Window x:Class="DanceRegUltra.Views.EventManagerViews.AddDancerView"
+﻿<window:DialogWindowExt x:Class="DanceRegUltra.Views.EventManagerViews.AddDancerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DanceRegUltra.Views.EventManagerViews"
+        xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
         mc:Ignorable="d"
         Title="AddDancerView" Height="450" Width="800">
+    <window:DialogWindowExt.Resources>
+        <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
+    </window:DialogWindowExt.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Platform">
+                <TextBlock Text="{Binding Path=Select_platform.Title}"/>
+            </GroupBox>
+            <ComboBox Grid.Row="1" ItemsSource="{Binding Path=EventInWork.Leagues}" SelectedItem="{Binding Path=Select_league}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
     </Grid>
-</Window>
+</window:DialogWindowExt>
