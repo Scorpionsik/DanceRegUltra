@@ -21,9 +21,29 @@ namespace DanceRegUltra.Models
     {
         //public static DanceEvent Empty { get; }
 
-        public int NodeId { get; private set; }
+        private int nodeId;
+        public int NodeId
+        {
+            get => this.nodeId;
+            private set
+            {
+                this.nodeId = value;
+                this.OnPropertyChanged("NodeId");
+                this.event_updateDanceEvent?.Invoke(this.IdEvent, "Id_node_increment", value);
+            }
+        }
 
-        public int JudgeCount { get; private set; }
+        private int judgeCount;
+        public int JudgeCount
+        {
+            get => this.judgeCount;
+            private set
+            {
+                this.judgeCount = value;
+                this.OnPropertyChanged("JudgeCount");
+                this.event_updateDanceEvent?.Invoke(this.IdEvent, "Judge_count", value);
+            }
+        }
 
         private event UpdateDanceEvent event_updateDanceEvent;
         /// <summary>
@@ -83,10 +103,10 @@ namespace DanceRegUltra.Models
 
         //public string JsonSchemeEvent { get; private set; }
 
-        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "")
+        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "", int node_id = 1, int judge_count = 4)
         {
-            this.NodeId = -1;
-            this.JudgeCount = 4;
+            this.NodeId = node_id;
+            this.JudgeCount = judge_count;
 
             this.HideDancers = new Lazy<ListExt<MemberDancer>>();
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();
