@@ -19,43 +19,6 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
     {
         public DanceEvent EventInWork { get; private set; }
 
-        private string showSelectStyles;
-        public string ShowSelectStyles
-        {
-            get => this.showSelectStyles;
-            set
-            {
-                this.showSelectStyles = value;
-                this.OnPropertyChanged("ShowSelectStyles");
-            }
-        }
-
-        private string comboBoxTextStyle;
-        public string ComboBoxTextStyle
-        {
-            get => this.comboBoxTextStyle;
-            set
-            {
-                this.comboBoxTextStyle = "";
-                this.ShowSelectStyles = "";
-                if (this.Styles == null) this.comboBoxTextStyle += "0";
-                else
-                {
-                    foreach(IdCheck style in this.Styles)
-                    {
-                        if (style.IsChecked)
-                        {
-                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + ", ";
-                        }
-                    }
-                    this.ShowSelectStyles = this.ShowSelectStyles.Remove(this.ShowSelectStyles.Length - 2);
-                }
-                this.OnPropertyChanged("ComboBoxTextStyle");
-            }
-        }
-
-
-
         internal FindDancer FindList { get; private set; }
 
         private MemberDancer dancerInWork;
@@ -115,7 +78,55 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             }
         }
 
+        public List<IdTitle> Schools { get => DanceRegCollections.Schools.Value; }
+
+        private IdTitle select_school;
+        public IdTitle Select_school
+        {
+            get => this.select_school;
+            set
+            {
+                this.select_school = value;
+                this.OnPropertyChanged("Select_school");
+            }
+        }
+
         public List<IdCheck> Styles { get; private set; }
+
+        private string showSelectStyles;
+        public string ShowSelectStyles
+        {
+            get => this.showSelectStyles;
+            set
+            {
+                this.showSelectStyles = value;
+                this.OnPropertyChanged("ShowSelectStyles");
+            }
+        }
+
+        private string comboBoxTextStyle;
+        public string ComboBoxTextStyle
+        {
+            get => this.comboBoxTextStyle;
+            set
+            {
+                this.comboBoxTextStyle = "";
+                this.ShowSelectStyles = "";
+                if (this.Styles == null) this.comboBoxTextStyle += "0";
+                else
+                {
+                    foreach (IdCheck style in this.Styles)
+                    {
+                        if (style.IsChecked)
+                        {
+                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + ", ";
+                        }
+                    }
+                    this.ShowSelectStyles = this.ShowSelectStyles.Remove(this.ShowSelectStyles.Length - 2);
+                }
+                this.OnPropertyChanged("ComboBoxTextStyle");
+            }
+        }
 
         public AddDancerViewModel(int event_id)
         {
@@ -177,6 +188,14 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 this.SetSchemeType(SchemeType.Block, this.Select_age.Value);
             },
                 (obj) => this.Select_age.Value != null && this.Select_age.Value.Count > 1);
+        }
+
+        public RelayCommand Command_AddSchool
+        {
+            get => new RelayCommand(obj =>
+            {
+
+            });
         }
 
     }
