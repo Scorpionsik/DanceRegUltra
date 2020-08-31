@@ -1,4 +1,5 @@
-﻿using CoreWPF.Utilites;
+﻿using CoreWPF.MVVM;
+using CoreWPF.Utilites;
 using DanceRegUltra.Models;
 using DanceRegUltra.Static;
 using System;
@@ -11,12 +12,23 @@ using System.Threading.Tasks;
 
 namespace DanceRegUltra.Utilites
 {
-    internal class FindDancer
+    public class FindDancer
     {
 
         private TimerCallback Find_Callback;
         private Timer Find_Timer;
         private int Timeout;
+
+        private event Action event_FinishSearch;
+        public event Action Event_FinishSearch
+        {
+            add
+            {
+                this.event_FinishSearch -= value;
+                this.event_FinishSearch += value;
+            }
+            remove => this.event_FinishSearch -= value;
+        }
 
         private event Action<MemberDancer> event_changeSelectDancer;
         public event Action<MemberDancer> Event_changeSelectDancer
@@ -70,21 +82,26 @@ namespace DanceRegUltra.Utilites
                 string whereQuery = "";
                 if(name.Length > 0)
                 {
-                    whereQuery += "dancers.Name like (%" + name + "%)";
+                    whereQuery += "dancers.Firstname like ('%" + name + "%')";
                     if (surname.Length > 0) whereQuery += " and ";
                 }
-                if (surname.Length > 0) whereQuery += "dancers.Surname like (%" + surname + "%)";
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Name, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) where " + whereQuery);
+                if (surname.Length > 0) whereQuery += "dancers.Surname like ('%" + surname + "%')";
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) where " + whereQuery);
 
                 foreach(DbRow row in res)
                 {
-                    MemberDancer dancer = new MemberDancer(-1, row["dancers.Id_member"].ToInt32(), row["dancers.Name"].ToString(), row["dancers.Surname"].ToString());
-                    dancer.SetSchool(new Models.Categories.IdTitle(row["dancers.Id_school"].ToInt32(), row["schools.Name"].ToString()));
+                    MemberDancer dancer = new MemberDancer(-1, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                    dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
                     this.FindList.Add(dancer);
                 }
+                this.event_FinishSearch?.Invoke();
             }
         }
 
-
+        public void Clear()
+        {
+            this.FindList = new ListExt<MemberDancer>();
+            this.event_FinishSearch?.Invoke();
+        }
     }
 }

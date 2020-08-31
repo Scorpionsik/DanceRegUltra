@@ -126,6 +126,12 @@ namespace DanceRegUltra.Models
             this.HideNodes.Value.Add(newNode);
         }
 
+        public void AddNode(IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
+        {
+            DanceNode newNode = new DanceNode(this.IdEvent, this.NodeId++, member, isGroup, platform, league_id, block, age_id, style_id);
+            this.HideNodes.Value.Add(newNode);
+        }
+
         public void AddMember(IMember newMember)
         {
             if(newMember is MemberDancer dancer)
@@ -150,6 +156,15 @@ namespace DanceRegUltra.Models
                 this.HideGroups.Value.Add(group);
                 this.OnPropertyChanged("Groups");
             }
+        }
+
+        public MemberDancer GetDancerById(int id_dancer)
+        {
+            foreach(MemberDancer dancer in this.HideDancers.Value)
+            {
+                if (dancer.MemberId == id_dancer) return dancer;
+            }
+            return null;
         }
         
         public void SetTitle(string newTitle)

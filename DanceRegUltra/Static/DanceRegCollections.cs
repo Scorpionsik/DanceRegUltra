@@ -101,13 +101,22 @@ namespace DanceRegUltra.Static
             {
                 Schools = new Lazy<ListExt<IdTitle>>();
 
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from schools order by Id_school");
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from schools");
 
                 foreach(DbRow row in res)
                 {
                     Schools.Value.Add(new IdTitle(row["Id_school"].ToInt32(), row["Name"].ToString()));
                 }
             }
+        }
+
+        internal static IdTitle GetSchoolById(int id_school)
+        {
+            foreach(IdTitle school in Schools.Value)
+            {
+                if (school.Id == id_school) return school;
+            }
+            return null;
         }
 
         internal static bool LoadEvent(DanceEvent eventLoad)
