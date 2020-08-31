@@ -1,6 +1,7 @@
 ﻿using CoreWPF.MVVM;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
+using DanceRegUltra.Models.Categories;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -24,6 +25,8 @@ namespace DanceRegUltra.Models
         public int MemberId { get; private set; }
         public int EventId { get; private set; }
 
+        public IdTitle School { get; private set; }
+
         private int memberNum;
         public int MemberNum
         {
@@ -40,6 +43,12 @@ namespace DanceRegUltra.Models
         {
             this.EventId = eventId;
             this.MemberId = memberId;
+        }
+
+        public void SetSchool(IdTitle school)
+        {
+            this.School = school;
+            this.OnPropertyChanged("SetSchool");
         }
 
         protected void InvokeUpdate(string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null)

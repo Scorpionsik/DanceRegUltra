@@ -26,11 +26,18 @@ create table "event_nodes"
 "Position" INTEGER DEFAULT 0
 );
 
+create table "schools"
+(
+"Id_school" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+"Name" TEXT NOT NULL
+);
+
 create table "dancers"
 (
 "Id_member" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 "Firstname" TEXT,
-"Surname" TEXT
+"Surname" TEXT,
+"Id_school" INTEGER NOT NULL
 );
 
 create table "groups"

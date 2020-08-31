@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,6 +114,8 @@ namespace DanceRegUltra.ViewModels
                     DanceRegCollections.LoadStyle(new CategoryString(res["Id_style", 0].ToInt32(), CategoryType.Style, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
                 }
             }
+
+            await DanceRegCollections.LoadSchools();
         }
 
         private void UpdateEventTitleMethod(object obj)

@@ -22,6 +22,8 @@ namespace DanceRegUltra.Static
 
         //public static Lazy<ListExt<MemberDancer>> Dancers { get; private set; }
 
+        public static Lazy<List<IdTitle>> Schools { get; private set; }
+
         public static ListExt<DanceEvent> Events { get; private set; }
         public static Lazy<Dictionary<int, EventManagerView>> Active_events_windows { get; private set; }
 
@@ -33,6 +35,7 @@ namespace DanceRegUltra.Static
             Leagues = new Lazy<ListExt<CategoryString>>();
             Ages = new Lazy<ListExt<CategoryString>>();
             Styles = new Lazy<ListExt<CategoryString>>();
+
             ClearCategories();
         }
 
@@ -90,6 +93,21 @@ namespace DanceRegUltra.Static
             }
 
             if(!name_dublicate) await DanceRegDatabase.ExecuteNonQueryAsync("update " + table_name + "s set " + columnName + "=" + value_str + " where Id_" + table_name + "=" + id);
+        }
+
+        internal async static Task LoadSchools()
+        {
+            if(Schools == null || Schools.Value == null || Schools.Value.Count == 0)
+            {
+                Schools = new Lazy<List<IdTitle>>();
+
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from schools");
+
+                foreach(DbRow row in res)
+                {
+                    Schools.Value.Add(new IdTitle(row["Id_school"].ToInt32(), row["Name"].ToString()));
+                }
+            }
         }
 
         internal static bool LoadEvent(DanceEvent eventLoad)
