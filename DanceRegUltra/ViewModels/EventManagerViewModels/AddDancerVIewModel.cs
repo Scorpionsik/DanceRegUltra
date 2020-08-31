@@ -80,13 +80,12 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
 
         public ListExt<IdTitle> Schools { get => DanceRegCollections.Schools.Value; }
 
-        private IdTitle select_school;
         public IdTitle Select_school
         {
-            get => this.select_school;
+            get => this.DancerInWork.School;
             set
             {
-                this.select_school = value;
+                this.DancerInWork.SetSchool(value);
                 this.OnPropertyChanged("Select_school");
             }
         }
