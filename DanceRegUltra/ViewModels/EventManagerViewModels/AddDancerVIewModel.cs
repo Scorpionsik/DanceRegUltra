@@ -1,4 +1,5 @@
 ﻿using CoreWPF.MVVM;
+using CoreWPF.Utilites;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
@@ -98,7 +99,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     if (values.Count() == 1) this.Select_platform = values.ElementAt(0);
                     else
                     {
-                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_league.Key, SchemeType.Platform, this.Select_league.Value);
+                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_league.Key, SchemeType.Platform, values);
                         if ((bool)window.ShowDialog())
                         {
                             this.Select_platform = window.Select_value;
@@ -110,7 +111,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     if (values.Count() == 1) this.Select_block = values.ElementAt(0);
                     else
                     {
-                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_age.Key, SchemeType.Block, this.Select_age.Value);
+                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_age.Key, SchemeType.Block, values);
                         if ((bool)window.ShowDialog())
                         {
                             this.Select_block = window.Select_value;
@@ -119,6 +120,24 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     break;
             }
         }
-  
+
+        public RelayCommand Command_ChangePlatform
+        {
+            get => new RelayCommand(obj =>
+            {
+                this.SetSchemeType(SchemeType.Platform, this.Select_league.Value); 
+            },
+                (obj) => this.Select_league.Value != null && this.Select_league.Value.Count > 1);
+        }
+
+        public RelayCommand Command_ChangeBlock
+        {
+            get => new RelayCommand(obj =>
+            {
+                this.SetSchemeType(SchemeType.Block, this.Select_age.Value);
+            },
+                (obj) => this.Select_age.Value != null && this.Select_age.Value.Count > 1);
+        }
+
     }
 }
