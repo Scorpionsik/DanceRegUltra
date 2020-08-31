@@ -22,7 +22,12 @@
         
         <!--конец Имя-фамилия-->
         <!--Школа-->
-
+        <GroupBox Grid.Row="1" Header="School">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="Add School..." Command="{Binding Path=Command_AddSchool}"/>
+                <ComboBox ItemsSource="{Binding Path=Schools}" DisplayMemberPath="Title" SelectedItem="{Binding Path=Select_school}"/>
+            </DockPanel>
+        </GroupBox>
         <!--конец Школа-->
         <!--Категории-->
         <Grid Grid.Row="2">

@@ -78,7 +78,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             }
         }
 
-        public List<IdTitle> Schools { get => DanceRegCollections.Schools.Value; }
+        public ListExt<IdTitle> Schools { get => DanceRegCollections.Schools.Value; }
 
         private IdTitle select_school;
         public IdTitle Select_school
@@ -194,7 +194,12 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         {
             get => new RelayCommand(obj =>
             {
-
+                AddSchoolView window = new AddSchoolView();
+                if((bool)window.ShowDialog())
+                {
+                    this.OnPropertyChanged("Schools");
+                    this.Select_school = this.Schools.Last();
+                }
             });
         }
 

@@ -22,7 +22,7 @@ namespace DanceRegUltra.Static
 
         //public static Lazy<ListExt<MemberDancer>> Dancers { get; private set; }
 
-        public static Lazy<List<IdTitle>> Schools { get; private set; }
+        public static Lazy<ListExt<IdTitle>> Schools { get; private set; }
 
         public static ListExt<DanceEvent> Events { get; private set; }
         public static Lazy<Dictionary<int, EventManagerView>> Active_events_windows { get; private set; }
@@ -99,9 +99,9 @@ namespace DanceRegUltra.Static
         {
             if(Schools == null || Schools.Value == null || Schools.Value.Count == 0)
             {
-                Schools = new Lazy<List<IdTitle>>();
+                Schools = new Lazy<ListExt<IdTitle>>();
 
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from schools");
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from schools order by Id_school");
 
                 foreach(DbRow row in res)
                 {

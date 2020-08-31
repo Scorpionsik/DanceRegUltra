@@ -117,6 +117,7 @@
     <Compile Include="ViewModels\CategoryMenuElements\StyleMenuElementViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\AddDancerViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\AddSchoolViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\SelectSchemeTypeViewModel.cs" />
     <Compile Include="ViewModels\RegisterWindowViewModel.cs" />
     <Compile Include="ViewModels\SchemeManagerViewModel.cs" />
@@ -131,6 +132,9 @@
     </Compile>
     <Compile Include="Views\EventManagerViews\AddDancerView.xaml.cs">
       <DependentUpon>AddDancerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventManagerViews\AddSchoolView.xaml.cs">
+      <DependentUpon>AddSchoolView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventManagerViews\SelectSchemeTypeView.xaml.cs">
       <DependentUpon>SelectSchemeTypeView.xaml</DependentUpon>
@@ -154,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EventManagerViews\AddDancerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventManagerViews\AddSchoolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
