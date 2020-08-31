@@ -5,58 +5,96 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
         xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="AddDancerView" Height="450" Width="800">
+        Title="{Binding Path=Title}" Height="450" Width="800">
     <window:DialogWindowExt.Resources>
         <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
     </window:DialogWindowExt.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Header="Platform">
-                <DockPanel LastChildFill="True">
-                    <Button DockPanel.Dock="Right" Content="Change" Command="{Binding Path=Command_ChangePlatform}"/>
-                    <TextBlock Text="{Binding Path=Select_platform.Title}"/>
-                </DockPanel>
-            </GroupBox>
-            <GroupBox Grid.Row="1" Header="League">
-                <ComboBox ItemsSource="{Binding Path=EventInWork.Leagues}" SelectedItem="{Binding Path=Select_league}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </GroupBox>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!--Имя-фамилия-->
+        
+        <!--конец Имя-фамилия-->
+        <!--Школа-->
+
+        <!--конец Школа-->
+        <!--Категории-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="Platform">
+                    <DockPanel LastChildFill="True">
+                        <Button DockPanel.Dock="Right" Content="Change" Command="{Binding Path=Command_ChangePlatform}"/>
+                        <TextBlock Text="{Binding Path=Select_platform.Title}"/>
+                    </DockPanel>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="League">
+                    <ComboBox ItemsSource="{Binding Path=EventInWork.Leagues}" SelectedItem="{Binding Path=Select_league}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="Block">
+                    <DockPanel LastChildFill="True">
+                        <Button DockPanel.Dock="Right" Content="Change" Command="{Binding Path=Command_ChangeBlock}"/>
+                        <TextBlock Text="{Binding Path=Select_block.Title}"/>
+                    </DockPanel>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="Age">
+                    <ComboBox ItemsSource="{Binding Path=EventInWork.Ages}" SelectedItem="{Binding Path=Select_age}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="Selected styles">
+                    <TextBlock Text="{Binding Path=ShowSelectStyles}" TextWrapping="WrapWithOverflow" ToolTip="{Binding Path=ShowSelectStyles}"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="Style">
+                    <xctk:CheckComboBox ToolTip="{Binding Path=ShowSelectStyles}" ItemsSource="{Binding Path=Styles}" SelectedValue="{Binding Path=ComboBoxTextStyle}" IsEditable="False" IsSelectAllActive="True"  SelectedMemberPath="IsChecked">
+                        <xctk:CheckComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                            </DataTemplate>
+                        </xctk:CheckComboBox.ItemTemplate>
+                    </xctk:CheckComboBox>
+                </GroupBox>
+            </Grid>
         </Grid>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Header="Block">
-                <DockPanel LastChildFill="True">
-                    <Button DockPanel.Dock="Right" Content="Change" Command="{Binding Path=Command_ChangeBlock}"/>
-                    <TextBlock Text="{Binding Path=Select_block.Title}"/>
-                </DockPanel>
-            </GroupBox>
-            <GroupBox Grid.Row="1" Header="Age">
-                <ComboBox ItemsSource="{Binding Path=EventInWork.Ages}" SelectedItem="{Binding Path=Select_age}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </GroupBox>
-        </Grid>
+        <!--конец Категории-->
+        <!--Кнопки-->
+
+        <!--конец Кнопки-->
     </Grid>
 </window:DialogWindowExt>

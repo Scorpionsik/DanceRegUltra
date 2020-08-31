@@ -35,23 +35,25 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 this.select_value = value;
                 this.OnPropertyChanged("Select_value");
-                this.event_SetTitle?.Invoke(value);
+                
             }
         }
 
-        public SelectSchemeTypeViewModel(int category_id, SchemeType type, IEnumerable<IdTitle> values)
+        public SelectSchemeTypeViewModel(int category_id, SchemeType type, IEnumerable<IdTitle> values, IdTitle select_title)
         {
             string category_name = CategoryNameByIdConvert.Convert(category_id, type == SchemeType.Platform ? CategoryType.League : CategoryType.Age);
 
             this.Title = "Выберите " + (type == SchemeType.Platform ? "платформу" : "блок") + " для " + (type == SchemeType.Platform ? "лиги" : "возрастной категории") + " '" + category_name + "'";
 
             this.Values = new List<IdTitle>(values);
+            this.Select_value = select_title;
         }
 
         public override RelayCommand Command_save
         {
             get => new RelayCommand(obj =>
             {
+                this.event_SetTitle?.Invoke(this.Select_value);
                 base.Command_save?.Execute();
             },
                 (obj) => this.Select_value != null);

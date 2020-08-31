@@ -5,6 +5,7 @@ using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using DanceRegUltra.Utilites;
+using DanceRegUltra.Utilites.Converters;
 using DanceRegUltra.Views.EventManagerViews;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,44 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
     public class AddDancerViewModel : ViewModel
     {
         public DanceEvent EventInWork { get; private set; }
-        
+
+        private string showSelectStyles;
+        public string ShowSelectStyles
+        {
+            get => this.showSelectStyles;
+            set
+            {
+                this.showSelectStyles = value;
+                this.OnPropertyChanged("ShowSelectStyles");
+            }
+        }
+
+        private string comboBoxTextStyle;
+        public string ComboBoxTextStyle
+        {
+            get => this.comboBoxTextStyle;
+            set
+            {
+                this.comboBoxTextStyle = "";
+                this.ShowSelectStyles = "";
+                if (this.Styles == null) this.comboBoxTextStyle += "0";
+                else
+                {
+                    foreach(IdCheck style in this.Styles)
+                    {
+                        if (style.IsChecked)
+                        {
+                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + ", ";
+                        }
+                    }
+                    this.ShowSelectStyles = this.ShowSelectStyles.Remove(this.ShowSelectStyles.Length - 2);
+                }
+                this.OnPropertyChanged("ComboBoxTextStyle");
+            }
+        }
+
+
+
         internal FindDancer FindList { get; private set; }
 
         private MemberDancer dancerInWork;
@@ -81,6 +119,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
 
         public AddDancerViewModel(int event_id)
         {
+            this.ComboBoxTextStyle = "";
             this.EventInWork = DanceRegCollections.GetEventById(event_id);
             this.DancerInWork = new MemberDancer(event_id, -1, "", "");
             this.FindList = new FindDancer(1000);
@@ -89,6 +128,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 this.Styles.Add(new IdCheck(style));
             }
+            
         }
 
         private void SetSchemeType(SchemeType type, IEnumerable<IdTitle> values)
@@ -99,7 +139,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     if (values.Count() == 1) this.Select_platform = values.ElementAt(0);
                     else
                     {
-                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_league.Key, SchemeType.Platform, values);
+                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_league.Key, SchemeType.Platform, values, this.Select_platform);
                         if ((bool)window.ShowDialog())
                         {
                             this.Select_platform = window.Select_value;
@@ -111,7 +151,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     if (values.Count() == 1) this.Select_block = values.ElementAt(0);
                     else
                     {
-                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_age.Key, SchemeType.Block, values);
+                        SelectSchemeTypeView window = new SelectSchemeTypeView(this.Select_age.Key, SchemeType.Block, values, this.Select_block);
                         if ((bool)window.ShowDialog())
                         {
                             this.Select_block = window.Select_value;

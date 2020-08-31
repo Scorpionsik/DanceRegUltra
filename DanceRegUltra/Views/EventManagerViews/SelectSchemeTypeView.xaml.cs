@@ -25,10 +25,10 @@ namespace DanceRegUltra.Views.EventManagerViews
     public partial class SelectSchemeTypeView : DialogWindowExt
     {
         public IdTitle Select_value { get; private set; }
-        public SelectSchemeTypeView(int category_id, SchemeType type, IEnumerable<IdTitle> values)
+        public SelectSchemeTypeView(int category_id, SchemeType type, IEnumerable<IdTitle> values, IdTitle select_title)
         { 
             InitializeComponent();
-            SelectSchemeTypeViewModel vm = new SelectSchemeTypeViewModel(category_id, type, values);
+            SelectSchemeTypeViewModel vm = new SelectSchemeTypeViewModel(category_id, type, values, select_title);
             vm.Event_SetTitle += this.SetValue;
             this.DataContext = vm;
         }
