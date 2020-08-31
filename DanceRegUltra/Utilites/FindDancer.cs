@@ -70,15 +70,17 @@ namespace DanceRegUltra.Utilites
                 string whereQuery = "";
                 if(name.Length > 0)
                 {
-                    whereQuery += "Name like (%" + name + "%)";
+                    whereQuery += "dancers.Name like (%" + name + "%)";
                     if (surname.Length > 0) whereQuery += " and ";
                 }
-                if (surname.Length > 0) whereQuery += "Surname like (%" + surname + "%)";
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from dancers where " + whereQuery);
+                if (surname.Length > 0) whereQuery += "dancers.Surname like (%" + surname + "%)";
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Name, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) where " + whereQuery);
 
                 foreach(DbRow row in res)
                 {
-                    this.FindList.Add(new MemberDancer(-1, row["Id_member"].ToInt32(), row["Name"].ToString(), row["Surname"].ToString()));
+                    MemberDancer dancer = new MemberDancer(-1, row["dancers.Id_member"].ToInt32(), row["dancers.Name"].ToString(), row["dancers.Surname"].ToString());
+                    dancer.SetSchool(new Models.Categories.IdTitle(row["dancers.Id_school"].ToInt32(), row["schools.Name"].ToString()));
+                    this.FindList.Add(dancer);
                 }
             }
         }
