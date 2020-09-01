@@ -252,22 +252,31 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         private async void AddNodeMethod()
         {
             this.EnableAddButton = false;
-            int id_dancer = -1;
+            MemberDancer tmp_dancer = null;
+
             if (this.IsEnableDancerEdit)
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into dancers (Firstname, Surname, Id_school) values ('" + this.DancerName + "', '" + this.DancerSurname + "', " + this.Select_school.Id + ")");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) order by dancers.Id_member");
                 DbRow row = res[res.RowsCount - 1];
-                MemberDancer tmp_dancer = new MemberDancer(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                tmp_dancer = new MemberDancer(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
                 tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
-                id_dancer = row["Id_member"].ToInt32();
+                
                 this.SetDancerFromSearch(tmp_dancer);
                 this.EventInWork.AddMember(tmp_dancer);
             }
-            else id_dancer = this.DancerInWork.MemberId;
+            else
+            {
+                tmp_dancer = this.EventInWork.GetDancerById(this.DancerInWork.MemberId);
+                if (tmp_dancer == null)
+                {
+                    this.EventInWork.AddMember(this.DancerInWork);
+                    tmp_dancer = this.DancerInWork;
+                }
+            }
             foreach (IdCheck style in this.Styles)
             {
-                if(style.IsChecked) this.EventInWork.AddNode(this.EventInWork.GetDancerById(id_dancer), false, this.Select_platform, this.Select_league.Key, this.Select_block, this.Select_age.Key, style.Id);
+                if(style.IsChecked) await this.EventInWork.AddNodeAsync(tmp_dancer, false, this.Select_platform, this.Select_league.Key, this.Select_block, this.Select_age.Key, style.Id);
             }
             this.EnableAddButton = true;
         }

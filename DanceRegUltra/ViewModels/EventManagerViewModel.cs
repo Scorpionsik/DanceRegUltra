@@ -6,14 +6,17 @@ using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using DanceRegUltra.Views.EventManagerViews;
+using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Common;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DanceRegUltra.ViewModels
 {
@@ -116,6 +119,41 @@ namespace DanceRegUltra.ViewModels
             }
 
             await DanceRegCollections.LoadSchools();
+
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.EventInWork.IdEvent + " order by Position");
+            foreach(DbRow row in res)
+            {
+                //add member
+                Member tmp_member = null;
+                bool isGroup = row["Is_group"].ToBoolean();
+                if (!isGroup)
+                {
+                    tmp_member = this.EventInWork.GetDancerById(row["Id_member"].ToInt32());
+                }
+                else tmp_member = this.EventInWork.GetGroupById(row["Id_member"].ToInt32());
+
+                if(tmp_member == null)
+                {
+                    DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from " + (isGroup ? "groups" : "dancers") + " where Id_member=" + row["Id_member"].ToInt32());
+
+                    if (!isGroup)
+                    {
+                        tmp_member = new MemberDancer(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Firstname"].ToString(), res_member["Surname"].ToString());
+                    }
+                    else
+                    {
+                        tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Json_members", 0].ToString());
+                    }
+
+                    this.EventInWork.AddMember(tmp_member);
+                }
+
+                //add node
+                IdTitle tmp_platform = new IdTitle(row["Id_platform"].ToInt32(), this.EventInWork.SchemeEvent.GetSchemeTypeById(row["Id_platform"].ToInt32(), SchemeType.Platform));
+                IdTitle tmp_block = new IdTitle(row["Id_block"].ToInt32(), this.EventInWork.SchemeEvent.GetSchemeTypeById(row["Id_block"].ToInt32(), SchemeType.Block));
+
+                this.EventInWork.AddNode(row["Id_node"].ToInt32(), tmp_member, isGroup, tmp_platform, row["Id_league"].ToInt32(), tmp_block, row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Json_scores"].ToString());
+            }
         }
 
         private void UpdateEventTitleMethod(object obj)
