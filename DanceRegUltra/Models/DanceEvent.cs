@@ -12,6 +12,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Xceed.Wpf.Toolkit.Core.Converters;
 
 namespace DanceRegUltra.Models
 {
@@ -146,10 +147,41 @@ namespace DanceRegUltra.Models
             this.HideNodes.Value.Add(newNode);
         }
 
-        public void AddNode(IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
+        public async Task AddNodeAsync(IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
         {
-            DanceNode newNode = new DanceNode(this.IdEvent, this.NodeId++, member, isGroup, platform, league_id, block, age_id, style_id);
-            this.HideNodes.Value.Add(newNode);
+            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + member.MemberId + " and Is_group=" + isGroup + " and Id_platform=" + platform.Id + " and Id_league=" + league_id + " and Id_block=" + block.Id + " and Id_age=" + age_id + " and Id_style=" + style_id);
+            if (res.RowsCount == 0)
+            {
+                DanceNode newNode = new DanceNode(this.IdEvent, this.NodeId++, member, isGroup, platform, league_id, block, age_id, style_id);
+                bool getPosition = false;
+                int position = 0;
+                for (; position < this.HideNodes.Value.Count; position++)
+                {
+                    if (this.SchemeEvent.Compare(this.HideNodes.Value[position], newNode) == 1)
+                    {
+                        this.HideNodes.Value.Insert(position, newNode);
+                        getPosition = true;
+                        break;
+                    }
+                }
+
+                if (!getPosition) this.HideNodes.Value.Add(newNode);
+
+                await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', " + position + ")");
+                if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
+                //this.HideNodes.Value.Add(newNode);
+            }
+        }
+
+        public async Task UpdateNodePosition(int index1, int index2)
+        {
+            int[] minmax = new int[2] { Math.Min(index1, index2), Math.Max(index1, index2) };
+
+            for (int i = minmax[0]; i <= minmax[1]; i++)
+            {
+                //DanceRegCollections.Ages.Value[i].Position = i + 1;
+                await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Position=" + i + " where Id_event=" + this.IdEvent + " and Id_node=" + this.Nodes[i].NodeId);
+            }
         }
 
         public void AddMember(IMember newMember)
@@ -183,6 +215,15 @@ namespace DanceRegUltra.Models
             foreach(MemberDancer dancer in this.HideDancers.Value)
             {
                 if (dancer.MemberId == id_dancer) return dancer;
+            }
+            return null;
+        }
+
+        public MemberGroup GetGroupById(int id_group)
+        {
+            foreach(MemberGroup group in this.HideGroups.Value)
+            {
+                if (group.MemberId == id_group) return group;
             }
             return null;
         }

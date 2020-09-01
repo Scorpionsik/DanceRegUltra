@@ -20,7 +20,7 @@ using System.Windows;
 
 namespace DanceRegUltra.ViewModels
 {
-    public class EventManagerViewModel : ViewModel
+    public class EventManagerViewModel : ViewModel, IDropTarget
     {
         private TimerCallback TitleUpdate_Callback;
         private Timer TitleUpdate_Timer;
@@ -174,6 +174,32 @@ namespace DanceRegUltra.ViewModels
             if (event_id > 0)
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("update events set " + column_name + "='" + value_update + "' where Id_event=" + event_id);
+            }
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = DragDropEffects.Move;
+        }
+
+        public async void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is DanceNode node)
+            {
+                int oldIndex = this.EventInWork.Nodes.IndexOf(node);
+
+                int insert_index = dropInfo.InsertIndex;
+                if (insert_index > oldIndex) insert_index -= 1;
+                DanceNode new_node = this.EventInWork.Nodes[insert_index];
+                int newIndex = this.EventInWork.Nodes.IndexOf(new_node);
+
+
+
+                this.EventInWork.Nodes.Move(oldIndex, newIndex);
+                //this.OnPropertyChanged("EventInWork");
+                await this.EventInWork.UpdateNodePosition(oldIndex, newIndex);
+
             }
         }
 
