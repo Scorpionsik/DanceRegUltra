@@ -140,14 +140,14 @@ namespace DanceRegUltra.Models
             this.Styles = new List<int>();
         }
 
-        public void AddNode(int node_id, IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)
+        public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)
         {
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
             newNode.SetScores(scores);
             this.HideNodes.Value.Add(newNode);
         }
 
-        public async Task AddNodeAsync(IMember member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
+        public async Task AddNodeAsync(Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
         {
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + member.MemberId + " and Is_group=" + isGroup + " and Id_platform=" + platform.Id + " and Id_league=" + league_id + " and Id_block=" + block.Id + " and Id_age=" + age_id + " and Id_style=" + style_id);
             if (res.RowsCount == 0)

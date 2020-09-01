@@ -12,7 +12,7 @@ namespace DanceRegUltra.Models
     {
         public int EventId { get; private set; }
         public int NodeId { get; private set; }
-        public IMember Member { get; private set; }
+        public Member Member { get; private set; }
         public bool IsGroup { get; private set; }
 
         public IdTitle Platform { get; private set; }
@@ -41,7 +41,7 @@ namespace DanceRegUltra.Models
             }
         }
 
-        public DanceNode(int eventId, int nodeId, IMember member, bool isGroup, IdTitle platform, int leagueId, IdTitle block, int ageId, int styleId, int position = -1)
+        public DanceNode(int eventId, int nodeId, Member member, bool isGroup, IdTitle platform, int leagueId, IdTitle block, int ageId, int styleId, int position = -1)
         {
             this.EventId = eventId;
             this.NodeId = nodeId;

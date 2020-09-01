@@ -43,6 +43,7 @@ namespace DanceRegUltra.Models
         {
             this.EventId = eventId;
             this.MemberId = memberId;
+            this.MemberNum = 0;
         }
 
         public void SetSchool(IdTitle school)

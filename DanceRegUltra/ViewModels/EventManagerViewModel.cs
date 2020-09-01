@@ -25,7 +25,16 @@ namespace DanceRegUltra.ViewModels
         private TimerCallback TitleUpdate_Callback;
         private Timer TitleUpdate_Timer;
 
-
+        private DanceNode select_node;
+        public DanceNode Select_node
+        {
+            get => this.select_node;
+            set
+            {
+                this.select_node = value;
+                this.OnPropertyChanged("Select_node");
+            }
+        }
 
         public DanceEvent EventInWork { get; private set; }
 
@@ -138,7 +147,7 @@ namespace DanceRegUltra.ViewModels
 
                     if (!isGroup)
                     {
-                        tmp_member = new MemberDancer(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Firstname"].ToString(), res_member["Surname"].ToString());
+                        tmp_member = new MemberDancer(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Firstname", 0].ToString(), res_member["Surname", 0].ToString());
                     }
                     else
                     {

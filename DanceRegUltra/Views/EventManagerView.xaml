@@ -4,22 +4,144 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:convert="clr-namespace:CoreWPF.Utilites;assembly=CoreWPF"
+        xmlns:category="clr-namespace:DanceRegUltra.Utilites.Converters"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
+    <window:WindowExt.Resources>
+        <convert:VisibilityBoolConverter x:Key="BoolVisibility"/>
+        <category:CategoryNameByIdConvert x:Key="CategoryName"/>
+    </window:WindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" LastChildFill="True">
-            <xctk:DateTimePicker 
+        <!--Menu-->
+        <ToolBar Grid.Row="0" >
+            <Button Content="Add Dancer" Command="{Binding Path=Command_AddDancer}"/>
+        </ToolBar>
+        <!--end Menu-->
+        <!--Event edit-->
+        <DockPanel Grid.Row="1" LastChildFill="True">
+            <GroupBox Header="Date Time">
+                <xctk:DateTimePicker 
                     Format="Custom" 
                     FormatString="dd.MMM.yyyy HH:mm" 
                     ClipValueToMinMax="True" 
                     Value="{Binding Path=StartDateEvent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Text="{Binding Path=EventEditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
+            <GroupBox Header="Event name">
+                <TextBox Text="{Binding Path=EventEditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
         </DockPanel>
-        <Button Grid.Row="1" Content="Add Dancer" Command="{Binding Path=Command_AddDancer}"/>
+        <!--end Event edit-->
+        <!--Search-->
+        
+        <!--end Search-->
+        <!--Nodes and members-->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--Nodes-->
+            <GroupBox Grid.Column="0" Header="Nodes">
+                <ListBox ItemsSource="{Binding Path=EventInWork.Nodes}" SelectedItem="{Binding Path=Select_node}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="DarkGray"/>
+                            <Setter Property="Margin" Value="5 2.5 5 2.5"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                
+                                <GroupBox Header="Id" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
+                                    <TextBox TextAlignment="Center" Text="{Binding Path=NodeId, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" FontWeight="Bold"/>
+                                </GroupBox>
+
+                                <GroupBox Header="Category" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock TextAlignment="Center" Text="{Binding Path=LeagueId, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock TextAlignment="Center" Text="{Binding Path=AgeId, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock TextAlignment="Center" Text="{Binding Path=StyleId, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                                    </StackPanel>
+                                </GroupBox>
+                                <GroupBox Header="Platform" Grid.Row="0" Grid.Column="1">
+                                    <TextBlock TextAlignment="Center" Text="{Binding Path=Platform.Title}"/>
+                                </GroupBox>
+                                <GroupBox Header="Block" Grid.Row="0" Grid.Column="2">
+                                    <TextBlock TextAlignment="Center" Text="{Binding Path=Block.Title}"/>
+                                </GroupBox>
+                                <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Танцор" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding StringFormat=#{0}, Path=Member.MemberNum}" FontWeight="Bold"/>
+                                        <TextBlock Text=": "/>
+                                        <TextBlock Text="{Binding Path=Member.Surname}"/>
+                                        <Label Margin="2 0 0 0"/>
+                                        <TextBlock Text="{Binding Path=Member.Name}"/>
+                                    </StackPanel>
+                                </GroupBox>
+                                <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="{Binding Path=Member.GroupType}" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3">
+
+                                </GroupBox>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+            <!--end Nodes-->
+            <!--Members-->
+            <GroupBox Grid.Column="1" Header="Members">
+                <TabControl>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Dancers: "/>
+                                <TextBlock FontWeight="Bold" Text="{Binding Path=EventInWork.Dancers.Count}"/>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <ListBox ItemsSource="{Binding Path=EventInWork.Dancers}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding StringFormat=#{0}, Path=MemberNum}" FontWeight="Bold"/>
+                                        <TextBlock Text=": "/>
+                                        <TextBlock Text="{Binding Path=Surname}"/>
+                                        <Label Margin="2 0 0 0"/>
+                                        <TextBlock Text="{Binding Path=Name}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </TabItem>
+                    <TabItem Header="Groups">
+                        
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+            <!--end Members-->
+        </Grid>
+        <!--end Nodes and members-->
     </Grid>
 </window:WindowExt>
