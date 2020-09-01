@@ -63,9 +63,15 @@ create table "leagues"
 "IsHide" BOOLEAN DEFAULT 0
 );
 
-insert into "leagues" ("Name") values ("Лига 1");
-insert into "leagues" ("Name") values ("Лига 2");
-insert into "leagues" ("Name") values ("Лига 3");
+insert into "leagues" ("Name") values ("Дебют");
+insert into "leagues" ("Name") values ("Начинающие");
+insert into "leagues" ("Name") values ("Любители");
+insert into "leagues" ("Name") values ("Открытая лига");
+insert into "leagues" ("Name") values ("Высшая лига");
+insert into "leagues" ("Name") values ("Профессионалы");
+insert into "leagues" ("Name") values ("PRO-AM");
+insert into "leagues" ("Name") values ("Продолжающие");
+insert into "leagues" ("Name") values ("Супер лига");
 
 create table "ages"
 (
@@ -75,9 +81,28 @@ create table "ages"
 "IsHide" BOOLEAN DEFAULT 0
 );
 
-insert into "ages" ("Name") values ("Возраст 1");
-insert into "ages" ("Name") values ("Возраст 2");
-insert into "ages" ("Name") values ("Возраст 3");
+insert into "ages" ("Name") values ("Супер-бэби");
+insert into "ages" ("Name") values ("Бэби");
+insert into "ages" ("Name") values ("Дети");
+insert into "ages" ("Name") values ("Бэби 1");
+insert into "ages" ("Name") values ("Бэби 2");
+insert into "ages" ("Name") values ("Дети+Бэби");
+insert into "ages" ("Name") values ("Ювеналы");
+insert into "ages" ("Name") values ("Юниоры");
+insert into "ages" ("Name") values ("Дочки-Матери");
+insert into "ages" ("Name") values ("Ювеналы 1");
+insert into "ages" ("Name") values ("Ювеналы 2");
+insert into "ages" ("Name") values ("Молодежь+Взрослые");
+insert into "ages" ("Name") values ("Юниоры 1");
+insert into "ages" ("Name") values ("Юниоры 2");
+insert into "ages" ("Name") values ("Ювеналы+Юниоры");
+insert into "ages" ("Name") values ("Молодежь");
+insert into "ages" ("Name") values ("Взрослые");
+insert into "ages" ("Name") values ("Сеньориты");
+insert into "ages" ("Name") values ("Гранд-сеньоры");
+insert into "ages" ("Name") values ("Смешанная возрастная категория");
+insert into "ages" ("Name") values ("Юниоры+Молодежь");
+insert into "ages" ("Name") values ("Дети+Ювеналы");
 
 create table "styles"
 (
@@ -87,6 +112,18 @@ create table "styles"
 "IsHide" BOOLEAN DEFAULT 0
 );
 
-insert into "styles" ("Name") values ("Стиль 1");
-insert into "styles" ("Name") values ("Стиль 2");
-insert into "styles" ("Name") values ("Стиль 3");
+insert into "styles" ("Name") values ("Импровизация Raqs al Sharqi");
+insert into "styles" ("Name") values ("Египетский Фольклор");
+insert into "styles" ("Name") values ("Не Египетский Фольклор");
+insert into "styles" ("Name") values ("Импровизация Табла");
+insert into "styles" ("Name") values ("Импровизация Кубок");
+insert into "styles" ("Name") values ("Табла");
+insert into "styles" ("Name") values ("Эстрадная Песня");
+insert into "styles" ("Name") values ("Фьюжн");
+insert into "styles" ("Name") values ("СТК");
+insert into "styles" ("Name") values ("Индийский танец");
+insert into "styles" ("Name") values ("Цыганский танец");
+insert into "styles" ("Name") values ("Шоу");
+insert into "styles" ("Name") values ("Cценический танец");
+insert into "styles" ("Name") values ("Street Shaabi");
+insert into "styles" ("Name") values ("Импровизация Балади");
