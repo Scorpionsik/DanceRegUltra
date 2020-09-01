@@ -63,7 +63,7 @@ namespace DanceRegUltra.Models
         public void SetScores(string jsonScores)
         {
             this.HideScores = new Lazy<List<int>>();
-            this.HideScores.Value.AddRange(JsonConvert.DeserializeObject<List<int>>(jsonScores));
+            if(jsonScores != null && jsonScores.Length > 0) this.HideScores.Value.AddRange(JsonConvert.DeserializeObject<List<int>>(jsonScores));
             this.OnPropertyChanged("Scores");
             this.OnPropertyChanged("JudgeCount");
         }
