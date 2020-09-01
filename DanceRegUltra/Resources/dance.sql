@@ -17,7 +17,7 @@ create table "event_nodes"
 "Id_node" INTEGER NOT NULL,
 "Id_member" INTEGER NOT NULL,
 "Is_group" BOOLEAN NOT NULL DEFAULT 0,
-"Id_platfrorm" INTEGER NOT NULL,
+"Id_platform" INTEGER NOT NULL,
 "Id_league" INTEGER NOT NULL,
 "Id_block" INTEGER NOT NULL,
 "Id_age" INTEGER NOT NULL,
@@ -43,7 +43,8 @@ create table "dancers"
 create table "groups"
 (
 "Id_member" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-"Json_members" TEXT NOT NULL
+"Json_members" TEXT NOT NULL,
+"Id_school" INTEGER NOT NULL
 );
 
 /*Шаблоны схем для быстрого создания события*/
