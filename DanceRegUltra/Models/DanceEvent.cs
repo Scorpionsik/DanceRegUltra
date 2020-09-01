@@ -173,6 +173,18 @@ namespace DanceRegUltra.Models
             }
         }
 
+        public async Task DeleteNodeAsync(DanceNode node)
+        {
+            int position = this.HideNodes.Value.IndexOf(node);
+
+            if(position > -1)
+            {
+                this.HideNodes.Value.RemoveAt(position);
+                await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
+                if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
+            }
+        }
+
         public async Task UpdateNodePosition(int index1, int index2)
         {
             int[] minmax = new int[2] { Math.Min(index1, index2), Math.Max(index1, index2) };
