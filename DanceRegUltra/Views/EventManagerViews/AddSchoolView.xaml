@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
         mc:Ignorable="d"
-        Title="{Binding Path=Title}" Height="450" Width="800">
+        Title="{Binding Path=Title}" Height="120" MinHeight="120" MaxHeight="120" MinWidth="250" MaxWidth="250" Width="250">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="School`s name">
+        <GroupBox Grid.Row="0" Header="Название школы">
             <TextBox Text="{Binding Path=SchoolName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
         <Grid Grid.Row="1">
@@ -19,8 +19,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_save}"/>
-            <Button Grid.Column="1" Content="Cancel"  Command="{Binding Path=Command_close}"/>
+            <Button Grid.Column="0" Content="Добавить школу" Command="{Binding Path=Command_save}"/>
+            <Button Grid.Column="1" Content="Отмена"  Command="{Binding Path=Command_close}"/>
         </Grid>
     </Grid>
 </window:DialogWindowExt>

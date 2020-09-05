@@ -5,6 +5,7 @@ using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
+using DanceRegUltra.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -302,6 +303,29 @@ namespace DanceRegUltra.ViewModels
                 if (this.Schemes.Count == 0) this.Schemes.Add(new DanceScheme());
                 this.Select_scheme = this.Schemes.Last;
                 this.ChangeUpdateFlag(false);
+            });
+        }
+
+        public static RelayCommand<string> Command_OpencategoryWindow
+        {
+            get => new RelayCommand<string>(param =>
+            {
+                CategoryType type = CategoryType.League;
+                switch (param)
+                {
+                    case "league":
+                        type = CategoryType.League;
+                        break;
+                    case "age":
+                        type = CategoryType.Age;
+                        break;
+                    case "style":
+                        type = CategoryType.Style;
+                        break;
+                }
+
+                CategoryManagerView window = new CategoryManagerView(type);
+                window.Show();
             });
         }
     }

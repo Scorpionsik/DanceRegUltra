@@ -17,10 +17,18 @@
     </window:DialogWindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="27"/>
             <RowDefinition/>
             <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <ToolBar>
+            <Button Content="Лиги" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="league"/>
+            <Separator/>
+            <Button Content="Возрастные категории" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="age"/>
+            <Separator/>
+            <Button Content="Стили танца" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="style"/>
+        </ToolBar>
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="5"/>
@@ -343,7 +351,7 @@
             </Grid>
             <!--конец Выбранная схема-->
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

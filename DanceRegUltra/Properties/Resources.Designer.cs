@@ -19,7 +19,7 @@ namespace DanceRegUltra.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -62,28 +62,38 @@ namespace DanceRegUltra.Properties {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на /*Таблица событий*/
-        ///create table &apos;events&apos;
+        ///create table &quot;events&quot;
         ///(
-        ///&apos;Id_event&apos; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-        ///&apos;Title&apos; TEXT DEFAULT &apos;&apos;,
-        ///&apos;Start_timestamp&apos; LONG DEFAULT -1,
-        ///&apos;End_timestamp&apos; LONG DEFAULT -1,
-        ///&apos;Json_scheme&apos; TEXT DEFAULT &apos;&apos;,
-        ///&apos;Id_node_increment&apos; INTERER NOT NULL DEFAULT 1,
-        ///&apos;Judge_count&apos; INTEGER DEFAULT 4
+        ///&quot;Id_event&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+        ///&quot;Title&quot; TEXT DEFAULT &apos;&apos;,
+        ///&quot;Start_timestamp&quot; LONG DEFAULT -1,
+        ///&quot;End_timestamp&quot; LONG DEFAULT -1,
+        ///&quot;Json_scheme&quot; TEXT DEFAULT &apos;&apos;,
+        ///&quot;Id_node_increment&quot; INTERER NOT NULL DEFAULT 1,
+        ///&quot;Judge_count&quot; INTEGER DEFAULT 4
         ///);
         ///
         ////*Таблица узлов, связанных с определенным событием*/
-        ///create table &apos;event_nodes&apos;
+        ///create table &quot;event_nodes&quot;
         ///(
-        ///&apos;Id_event&apos; INTEGER NOT NULL,
-        ///&apos;Id_node&apos; INTEGER NOT NULL,
-        ///&apos;Id_member&apos; INTEGER NOT NULL,
-        ///&apos;Id_league&apos; [остаток строки не уместился]&quot;;.
+        ///&quot;Id_event&quot; INTEGER NOT NULL,
+        ///&quot;Id_node&quot; INTEGER NOT NULL,
+        ///&quot;Id_member&quot; INTEGER NOT NULL,
+        ///&quot;Is_group&quot;  [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string dance {
             get {
                 return ResourceManager.GetString("dance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon favicon {
+            get {
+                object obj = ResourceManager.GetObject("favicon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

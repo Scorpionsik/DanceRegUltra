@@ -7,7 +7,7 @@
         xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="{Binding Path=Title}" Height="450" Width="800">
+        Title="{Binding Path=Title}" Height="250" MinHeight="250" MaxHeight="250" Width="800">
     <window:DialogWindowExt.Resources>
         <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
     </window:DialogWindowExt.Resources>
@@ -19,9 +19,9 @@
     
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="90"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <!--Имя-фамилия-->
@@ -30,18 +30,18 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <GroupBox Grid.Column="1" Header="Name">
+                <GroupBox Grid.Column="1" Header="Имя">
                     <TextBox Text="{Binding Path=DancerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
-                <GroupBox Grid.Column="0" Header="Surname">
+                <GroupBox Grid.Column="0" Header="Фамилия">
                     <TextBox Text="{Binding Path=DancerSurname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
             </Grid>
             <!--конец Имя-фамилия-->
             <!--Школа-->
-            <GroupBox Grid.Row="1" Header="School">
+            <GroupBox Grid.Row="1" Header="Школа">
                 <DockPanel LastChildFill="True" IsEnabled="{Binding Path=IsEnableDancerEdit}">
-                    <Button DockPanel.Dock="Right" Content="Add School..." Command="{Binding Path=Command_AddSchool}"/>
+                    <Button DockPanel.Dock="Right" Content="Добавить школу..." Command="{Binding Path=Command_AddSchool}"/>
                     <ComboBox ItemsSource="{Binding Path=Schools}" DisplayMemberPath="Title" SelectedItem="{Binding Path=Select_school}"/>
                 </DockPanel>
             </GroupBox>
@@ -58,13 +58,13 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="Platform">
+                    <GroupBox Grid.Row="0" Header="Платформа">
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right" Content="Change" Command="{Binding Path=Command_ChangePlatform}"/>
+                            <Button DockPanel.Dock="Right" Content="Изменить..." Command="{Binding Path=Command_ChangePlatform}"/>
                             <TextBlock Text="{Binding Path=Select_platform.Title}"/>
                         </DockPanel>
                     </GroupBox>
-                    <GroupBox Grid.Row="1" Header="League">
+                    <GroupBox Grid.Row="1" Header="Лига">
                         <ComboBox ItemsSource="{Binding Path=EventInWork.Leagues}" SelectedItem="{Binding Path=Select_league}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -79,13 +79,13 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="Block">
+                    <GroupBox Grid.Row="0" Header="Блок">
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right" Content="Change" Command="{Binding Path=Command_ChangeBlock}"/>
+                            <Button DockPanel.Dock="Right" Content="Изменить..." Command="{Binding Path=Command_ChangeBlock}"/>
                             <TextBlock Text="{Binding Path=Select_block.Title}"/>
                         </DockPanel>
                     </GroupBox>
-                    <GroupBox Grid.Row="1" Header="Age">
+                    <GroupBox Grid.Row="1" Header="Возрастная категория">
                         <ComboBox ItemsSource="{Binding Path=EventInWork.Ages}" SelectedItem="{Binding Path=Select_age}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -100,10 +100,10 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="Selected styles">
+                    <GroupBox Grid.Row="0" Header="Выбранные стили">
                         <TextBlock Text="{Binding Path=ShowSelectStyles}" TextWrapping="WrapWithOverflow" ToolTip="{Binding Path=ShowSelectStyles}"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="1" Header="Style">
+                    <GroupBox Grid.Row="1" Header="Стили">
                         <xctk:CheckComboBox ToolTip="{Binding Path=ShowSelectStyles}" ItemsSource="{Binding Path=Styles}" SelectedValue="{Binding Path=ComboBoxTextStyle}" IsEditable="False" IsSelectAllActive="True"  SelectedMemberPath="IsChecked">
                             <xctk:CheckComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -122,13 +122,13 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" IsEnabled="{Binding Path=EnableAddButton}" Content="Add" Command="{Binding Path=Command_AddNode}"/>
-                <Button Grid.Column="1" Content="Clear" Command="{Binding Path=Command_ClearDancer}"/>
-                <Button Grid.Column="2" Content="Close" Command="{Binding Path=Command_close}"/>
+                <Button Grid.Column="0" IsEnabled="{Binding Path=EnableAddButton}" Content="Добавить номинацию" Command="{Binding Path=Command_AddNode}"/>
+                <Button Grid.Column="1" Content="Очистить" Command="{Binding Path=Command_ClearDancer}"/>
+                <Button Grid.Column="2" Content="Закрыть" Command="{Binding Path=Command_close}"/>
             </Grid>
             <!--конец Кнопки-->
         </Grid>
-        <GroupBox Grid.Column="1" Header="Find dancer">
+        <GroupBox Grid.Column="1" Header="Поиск">
             <ListBox ItemsSource="{Binding Path=FindList.FindList}" SelectedItem="{Binding Path=FindList.Select_dancer}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

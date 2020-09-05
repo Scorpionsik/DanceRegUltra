@@ -212,6 +212,11 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
+        private async void DeleteNodeMethod(DanceNode deleteNode)
+        {
+            await this.EventInWork.DeleteNodeAsync(deleteNode);
+        }
+
         public RelayCommand Command_AddDancer
         {
             get => new RelayCommand(obj =>
@@ -219,6 +224,15 @@ namespace DanceRegUltra.ViewModels
                 AddDancerView window = new AddDancerView(this.EventInWork.IdEvent);
                 window.ShowDialog();
             });
+        }
+
+        public RelayCommand<DanceNode> Command_DeleteNode
+        {
+            get => new RelayCommand<DanceNode>(deleteNode =>
+            {
+                this.DeleteNodeMethod(deleteNode);
+            },
+                (deleteNode) => deleteNode != null );
         }
     }
 }

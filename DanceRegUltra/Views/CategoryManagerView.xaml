@@ -46,8 +46,8 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_add}" CommandParameter="{Binding Path=Name_category}"/>
-                        <Button Grid.Column="1" Content="Remove" Command="{Binding Path=Command_remove}"/>
+                        <Button Grid.Column="0" Content="Добавить категорию" Command="{Binding Path=Command_add}" CommandParameter="{Binding Path=Name_category}"/>
+                        <Button Grid.Column="1" Content="Удалить категорию" Command="{Binding Path=Command_remove}"/>
                     </Grid>
                     <TextBox DockPanel.Dock="Bottom" Text="{Binding Path=Name_category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>

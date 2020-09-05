@@ -54,7 +54,7 @@ namespace DanceRegUltra.Models
         
         private async void Initialize(string group)
         {
-            List<int> group_id = JsonConvert.DeserializeObject<List<int>>(group);
+            ListExt<int> group_id = JsonConvert.DeserializeObject<ListExt<int>>(group);
             string query = "select * from dancers where ";
             for(int i = 0; i < group_id.Count; i++)
             {
@@ -97,6 +97,11 @@ namespace DanceRegUltra.Models
                     break;
                 }
             }
+        }
+
+        public string GetMembers()
+        {
+            return JsonConvert.SerializeObject(this.HideGroupMembers);
         }
 
         public int CompareTo(MemberGroup other)

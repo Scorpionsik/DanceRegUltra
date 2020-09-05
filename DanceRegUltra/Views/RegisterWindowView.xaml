@@ -6,7 +6,7 @@
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="RegisterWindowView" Height="200" Width="400">
+        Title="{Binding Path=TItle}" Height="200" Width="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Path=SchemeEvent.Title_scheme}"/>
-                    <Button Grid.Column="1" Content="SCheme" Command="{Binding Path=Command_SetScheme}"/>
+                    <Button Grid.Column="1" Content="Выбрать..." Command="{Binding Path=Command_SetScheme}"/>
                 </Grid>
             </GroupBox>
         </Grid>

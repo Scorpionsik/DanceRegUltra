@@ -18,9 +18,11 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <ToolBar>
-            <Button Content="League" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="league"/>
-            <Button Content="Age" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="age"/>
-            <Button Content="Style" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="style"/>
+            <Button Content="Лиги" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="league"/>
+            <Separator/>
+            <Button Content="Возрастные категории" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="age"/>
+            <Separator/>
+            <Button Content="Стили танца" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="style"/>
         </ToolBar>
         <ListBox Grid.Row="1" ItemsSource="{Binding Path=Events}" SelectedItem="{Binding Path=Select_event}">
             <ListBox.ItemContainerStyle>
@@ -58,10 +60,10 @@
                     <Setter Property="Margin" Value="5"/>
                 </Style>
             </Grid.Resources>
-            <Button Grid.Column="0" Content="Add" Command="{Binding Path=Command_AddEvent}"/>
-            <Button Grid.Column="1" Content="Edit" Command="{Binding Path=Command_EditEvent}" CommandParameter="{Binding Path=Select_event}"/>
-            <Button Grid.Column="2" Content="Delete" Command="{Binding Path=Command_DeleteEvent}" CommandParameter="{Binding Path=Select_event}"/>
-            <Button Grid.Column="4" Content="Schemes" Command="{Binding Path=Command_LoadSchemeManager}"/>
+            <Button Grid.Column="0" Content="Добавить событие..." Command="{Binding Path=Command_AddEvent}"/>
+            <Button Grid.Column="1" Content="Изменить событие..." Command="{Binding Path=Command_EditEvent}" CommandParameter="{Binding Path=Select_event}"/>
+            <Button Grid.Column="2" Content="Удалить событие" Command="{Binding Path=Command_DeleteEvent}" CommandParameter="{Binding Path=Select_event}"/>
+            <Button Grid.Column="4" Content="Шаблоны схем" Command="{Binding Path=Command_LoadSchemeManager}"/>
         </Grid>
         <StatusBar Grid.Row="3">
             <StatusBarItem>

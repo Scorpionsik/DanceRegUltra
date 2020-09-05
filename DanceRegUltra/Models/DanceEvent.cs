@@ -20,8 +20,6 @@ namespace DanceRegUltra.Models
 
     public class DanceEvent : INotifyPropertyChanged, IComparable<DanceEvent>
     {
-        //public static DanceEvent Empty { get; }
-
         private int nodeId;
         public int NodeId
         {
@@ -38,7 +36,7 @@ namespace DanceRegUltra.Models
         public int JudgeCount
         {
             get => this.judgeCount;
-            private set
+            set
             {
                 this.judgeCount = value;
                 this.OnPropertyChanged("JudgeCount");
@@ -182,6 +180,16 @@ namespace DanceRegUltra.Models
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
                 if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + node.Member.MemberId);
+                if (res.RowsCount == 0)
+                {
+                    if (node.IsGroup)
+                    {
+                        this.HideGroups.Value.Remove((MemberGroup)node.Member);
+                    }
+                    else this.HideDancers.Value.Remove((MemberDancer)node.Member);
+                }
+
             }
         }
 
