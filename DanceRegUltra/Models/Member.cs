@@ -35,7 +35,7 @@ namespace DanceRegUltra.Models
             {
                 this.memberNum = value;
                 this.OnPropertyChanged("MemberNum");
-                this.InvokeUpdate("MemberNum");
+                this.InvokeUpdate("MemberNum", value, UpdateStatus.Edit);
             }
         }
 
@@ -54,7 +54,7 @@ namespace DanceRegUltra.Models
 
         protected void InvokeUpdate(string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null)
         {
-            this.event_UpdateMember?.Invoke(this.EventId, this.MemberId, dataColumn);
+            this.event_UpdateMember?.Invoke(this.EventId, this.MemberId, dataColumn, currentData, status);
         }
     }
 }
