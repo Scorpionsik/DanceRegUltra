@@ -62,10 +62,16 @@ namespace DanceRegUltra.Models
                 if (i != group_id.Count - 1) query += " or ";
             }
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync(query);
-
-            foreach(DbRow row in res)
+            MemberDancer tmp_dancer = null;
+            foreach (DbRow row in res)
             {
-                this.HideGroupMembers.Value.Add(new MemberDancer(this.EventId, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString()));
+                tmp_dancer = DanceRegCollections.GetGroupDancerById(row["Id_dancer"].ToInt32());
+                if (tmp_dancer == null)
+                {
+                    tmp_dancer = new MemberDancer(-1, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                    DanceRegCollections.AddGroupDancer(tmp_dancer);
+                }
+                this.HideGroupMembers.Value.Add(tmp_dancer);
             }
         }
 
@@ -84,7 +90,14 @@ namespace DanceRegUltra.Models
                     return;
                 }
             }
-            this.HideGroupMembers.Value.Add(new MemberDancer(this.EventId, id_member, name, surname));
+
+            MemberDancer tmp_dancer = DanceRegCollections.GetGroupDancerById(id_member);
+            if (tmp_dancer == null)
+            {
+                tmp_dancer = new MemberDancer(-1, id_member, name, surname);
+                DanceRegCollections.AddGroupDancer(tmp_dancer);
+            }
+            this.HideGroupMembers.Value.Add(tmp_dancer);
         }
 
         public void RemoveMember(MemberDancer dancer)
@@ -109,23 +122,23 @@ namespace DanceRegUltra.Models
             return this.GroupType.CompareTo(other.GroupType);
         }
         /*
-public void AddGroupMember(int memberId)
-{
-   if (!this.HideGroupMembers.Contains(memberId))
-   {
-       this.HideGroupMembers.Add(memberId);
-       this.InvokeUpdate("MembersId", memberId, UpdateStatus.Add);
-   }
-}
+        public void AddGroupMember(int memberId)
+        {
+           if (!this.HideGroupMembers.Contains(memberId))
+           {
+               this.HideGroupMembers.Add(memberId);
+               this.InvokeUpdate("MembersId", memberId, UpdateStatus.Add);
+           }
+        }
 
-public void RemoveGroupMember(int memberId)
-{
-   if (this.HideGroupMembers.Contains(memberId))
-   {
-       this.HideGroupMembers.Remove(memberId);
-       this.InvokeUpdate("MembersId", memberId, UpdateStatus.Delete);
-   }
-}
-*/
+        public void RemoveGroupMember(int memberId)
+        {
+           if (this.HideGroupMembers.Contains(memberId))
+           {
+               this.HideGroupMembers.Remove(memberId);
+               this.InvokeUpdate("MembersId", memberId, UpdateStatus.Delete);
+           }
+        }
+        */
     }
 }

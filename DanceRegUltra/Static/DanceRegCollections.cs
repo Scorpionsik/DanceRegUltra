@@ -20,7 +20,7 @@ namespace DanceRegUltra.Static
 
         public static Lazy<ListExt<CategoryString>> Styles { get; private set; }
 
-        //public static Lazy<ListExt<MemberDancer>> Dancers { get; private set; }
+        private static Lazy<ListExt<MemberDancer>> Group_dancers { get; set; }
 
         public static Lazy<ListExt<IdTitle>> Schools { get; private set; }
 
@@ -29,7 +29,7 @@ namespace DanceRegUltra.Static
 
         static DanceRegCollections()
         {
-            //Dancers = new Lazy<ListExt<MemberDancer>>();
+            Group_dancers = new Lazy<ListExt<MemberDancer>>();
             Events = new ListExt<DanceEvent>();
             Active_events_windows = new Lazy<Dictionary<int, EventManagerView>>();
             Leagues = new Lazy<ListExt<CategoryString>>();
@@ -38,6 +38,34 @@ namespace DanceRegUltra.Static
 
             ClearCategories();
         }
+
+        internal static void AddGroupDancer(MemberDancer dancer)
+        {
+            //if (!IsExistGroupDancer(dancer.MemberId))
+            //{
+                Group_dancers.Value.Add(dancer);
+           // }
+        }
+
+        internal static MemberDancer GetGroupDancerById(int id_dancer)
+        {
+            foreach (MemberDancer dancer in Group_dancers.Value)
+            {
+                if (dancer.MemberId == id_dancer) return dancer;
+            }
+            return null;
+        }
+
+        /*
+        private static bool IsExistGroupDancer(int id_dancer)
+        {
+            foreach(MemberDancer dancer in Group_dancers.Value)
+            {
+                if (dancer.MemberId == id_dancer) return true;
+            }
+            return false;
+        }
+        */
 
         internal async static void ClearCategories()
         {
