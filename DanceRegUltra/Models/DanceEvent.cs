@@ -68,6 +68,9 @@ namespace DanceRegUltra.Models
         private Lazy<ListExt<DanceNode>> HideNodes;
         public ListExt<DanceNode> Nodes { get => this.HideNodes?.Value; }
 
+        private Lazy<ListExt<DanceNomination>> HideNominations;
+        public ListExt<DanceNomination> Nominations { get => this.HideNominations?.Value; }
+
         public int IdEvent { get; private set; }
 
         private string title;
@@ -110,6 +113,7 @@ namespace DanceRegUltra.Models
             this.HideDancers = new Lazy<ListExt<MemberDancer>>();
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
+            this.HideNominations = new Lazy<ListExt<DanceNomination>>();
 
             this.IdEvent = id;
             this.title = title;
@@ -136,6 +140,27 @@ namespace DanceRegUltra.Models
             this.Leagues = new Dictionary<int, List<IdTitle>>();
             this.Ages = new Dictionary<int, List<IdTitle>>();
             this.Styles = new List<int>();
+        }
+
+        private void AddNominationMember(DanceNode node)
+        {
+            DanceNomination tmp_nomination = null;
+            foreach(DanceNomination nomination in this.HideNominations.Value)
+            {
+                if(nomination.League_id == node.LeagueId &&
+                    nomination.Age_id == node.AgeId &&
+                    nomination.Block_info.Id == node.Block.Id &&
+                    nomination.Style_id == node.StyleId)
+                {
+                    tmp_nomination = nomination;
+                    break;
+                }
+            }
+            if(tmp_nomination == null)
+            {
+                //add new nomination code here
+            }
+            //use tmp_nomination code here
         }
 
         public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)
