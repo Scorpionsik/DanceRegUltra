@@ -26,12 +26,14 @@ create table "event_nodes"
 "Position" INTEGER DEFAULT 0
 );
 
+/*Коллекция школ*/
 create table "schools"
 (
 "Id_school" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 "Name" TEXT NOT NULL
 );
 
+/*Коллекция танцоров*/
 create table "dancers"
 (
 "Id_member" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -40,11 +42,21 @@ create table "dancers"
 "Id_school" INTEGER NOT NULL
 );
 
+/*Коллекция групп участников*/
 create table "groups"
 (
 "Id_member" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 "Json_members" TEXT NOT NULL,
 "Id_school" INTEGER NOT NULL
+);
+
+/*Номера участников событий*/
+create table "nums_for_members"
+(
+"Id_event" INTEGER NOT NULL,
+"Id_member" INTEGER NOT NULL,
+"Is_group" BOOLEAN NOT NULL,
+"Number" INTEGER DEFAULT 0
 );
 
 /*Шаблоны схем для быстрого создания события*/
@@ -55,6 +67,7 @@ create table "template_schemes"
 "Json_scheme" TEXT NOT NULL
 );
 
+/*Коллекция лиг*/
 create table "leagues"
 (
 "Id_league" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -73,6 +86,7 @@ insert into "leagues" ("Name") values ("PRO-AM");
 insert into "leagues" ("Name") values ("Продолжающие");
 insert into "leagues" ("Name") values ("Супер лига");
 
+/*Коллекция возрастных категорий*/
 create table "ages"
 (
 "Id_age" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -104,6 +118,7 @@ insert into "ages" ("Name") values ("Смешанная возрастная категория");
 insert into "ages" ("Name") values ("Юниоры+Молодежь");
 insert into "ages" ("Name") values ("Дети+Ювеналы");
 
+/*Коллекция стилей танца*/
 create table "styles"
 (
 "Id_style" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
