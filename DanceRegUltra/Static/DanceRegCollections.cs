@@ -94,6 +94,7 @@ namespace DanceRegUltra.Static
                         UnloadStyle(Styles.Value[0]);
                     }
                 });
+                Group_dancers = new Lazy<ListExt<MemberDancer>>();
             }
             /*
             else

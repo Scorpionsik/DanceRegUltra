@@ -29,21 +29,47 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         }
         public bool IsEnableDancerEdit
         {
-            get => this.GroupInWork?.MemberId > 0 ? false : true;
+            get => this.DancerInWork?.MemberId > 0 ? false : true;
         }
         public DanceEvent EventInWork { get; private set; }
 
         public FindDancer FindList { get; private set; }
 
-        private MemberGroup groupInWork;
-        public MemberGroup GroupInWork
+        public ListExt<MemberDancer> GroupMembers { get; private set; } 
+
+        private MemberDancer dancerInWork;
+        public MemberDancer DancerInWork
         {
-            get => this.groupInWork;
+            get => this.dancerInWork;
             private set
             {
-                this.groupInWork = value;
-                this.OnPropertyChanged("MemberGroup");
+                this.dancerInWork = value;
+                this.OnPropertyChanged("DancerInWork");
+                this.OnPropertyChanged("DancerName");
+                this.OnPropertyChanged("DancerSurname");
                 this.OnPropertyChanged("IsEnableDancerEdit");
+            }
+        }
+
+        public string DancerName
+        {
+            get => this.DancerInWork.Name;
+            set
+            {
+                this.DancerInWork.SetName(value);
+                this.OnPropertyChanged("DancerName");
+                this.FindList.Find(this.DancerInWork.Name, this.DancerInWork.Surname);
+            }
+        }
+
+        public string DancerSurname
+        {
+            get => this.DancerInWork.Surname;
+            set
+            {
+                this.DancerInWork.SetSurname(value);
+                this.OnPropertyChanged("DancerSurname");
+                this.FindList.Find(this.DancerInWork.Name, this.DancerInWork.Surname);
             }
         }
 
@@ -147,7 +173,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             this.EnableAddButton = true;
             this.ComboBoxTextStyle = "";
             this.EventInWork = DanceRegCollections.GetEventById(event_id);
-            this.GroupInWork = new MemberGroup(event_id, -1, new MemberDancer[0]);
+            this.GroupMembers = new ListExt<MemberDancer>();
             this.FindList = new FindDancer(1000);
             //this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
             this.FindList.Event_FinishSearch += this.UpdateFindList;
@@ -156,7 +182,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 this.Styles.Add(new IdCheck(style));
             }
-            this.Title = "[" + this.EventInWork.Title + "] Добавить нового танцора - " + App.AppTitle;
+            this.Title = "[" + this.EventInWork.Title + "] Добавить новую группу - " + App.AppTitle;
         }
 
         private void UpdateFindList()
