@@ -152,8 +152,9 @@ namespace DanceRegUltra.ViewModels
                     else
                     {
                         tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Json_members", 0].ToString());
+                        
                     }
-
+                    tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member["Id_school", 0].ToInt32()));
                     this.EventInWork.AddMember(tmp_member);
                 }
 
@@ -222,6 +223,15 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand(obj =>
             {
                 AddDancerView window = new AddDancerView(this.EventInWork.IdEvent);
+                window.ShowDialog();
+            });
+        }
+
+        public RelayCommand Command_AddGroup
+        {
+            get => new RelayCommand(obj =>
+            {
+                AddGroupView window = new AddGroupView(this.EventInWork.IdEvent);
                 window.ShowDialog();
             });
         }

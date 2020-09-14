@@ -9,6 +9,7 @@ using DanceRegUltra.Utilites.Converters;
 using DanceRegUltra.Views.EventManagerViews;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,11 +32,42 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         {
             get => this.DancerInWork?.MemberId > 0 ? false : true;
         }
+
+        public bool IsEnableGroupEdit
+        {
+            get => this.Select_group?.MemberId > 0 ? false : true;
+        }
+
         public DanceEvent EventInWork { get; private set; }
 
         public FindDancer FindList { get; private set; }
 
-        public ListExt<MemberDancer> GroupMembers { get; private set; } 
+        public ListExt<MemberGroup> Groups { get; private set; }
+
+        private MemberGroup select_group;
+        public MemberGroup Select_group
+        {
+            get => this.select_group;
+            set
+            {
+                this.select_group = value;
+                this.Select_dancer = null;
+                this.Select_school = value.School == null ? null : DanceRegCollections.GetSchoolById(value.School.Id);
+                this.OnPropertyChanged("Select_group");
+                this.OnPropertyChanged("IsEnableGroupEdit");
+            }
+        }
+
+        private MemberDancer select_dancer;
+        public MemberDancer Select_dancer
+        {
+            get => this.select_dancer;
+            set
+            {
+                this.select_dancer = value;
+                this.OnPropertyChanged("Select_dancer");
+            }
+        }
 
         private MemberDancer dancerInWork;
         public MemberDancer DancerInWork
@@ -160,7 +192,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     {
                         if (style.IsChecked)
                         {
-                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + ", ";
+                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + "\r\n";
                         }
                     }
                     if (this.ShowSelectStyles.Length - 2 >= 0) this.ShowSelectStyles = this.ShowSelectStyles.Remove(this.ShowSelectStyles.Length - 2);
@@ -171,12 +203,20 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         public AddGroupViewModel(int event_id) : base()
         {
             this.EnableAddButton = true;
+            this.DancerInWork = new MemberDancer(-1, -1, "", "");
             this.ComboBoxTextStyle = "";
             this.EventInWork = DanceRegCollections.GetEventById(event_id);
-            this.GroupMembers = new ListExt<MemberDancer>();
+            this.Groups = new ListExt<MemberGroup>();
+
+            MemberGroup tmp_group = new MemberGroup(this.EventInWork.IdEvent, -1, new List<MemberDancer>());
+            this.Groups.Add(tmp_group);
+            this.Groups.AddRange(this.EventInWork.Groups);
+            this.Select_group = tmp_group;
+
             this.FindList = new FindDancer(1000);
-            //this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
+            this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
             this.FindList.Event_FinishSearch += this.UpdateFindList;
+
             this.Styles = new List<IdCheck>();
             foreach (int style in this.EventInWork.Styles)
             {
@@ -187,14 +227,18 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
 
         private void UpdateFindList()
         {
+            this.DancerInWork.SetName(App.CapitalizeAllWords(this.DancerName));
+            this.OnPropertyChanged("DancerName");
+            this.DancerInWork.SetSurname(App.CapitalizeAllWords(this.DancerSurname));
+            this.OnPropertyChanged("DancerSurname");
             this.OnPropertyChanged("FindList");
         }
-        /*
+       
         private void SetDancerFromSearch(MemberDancer dancer)
         {
             this.DancerInWork = dancer;
-            this.Select_school = this.DancerInWork.School;
-        }*/
+            //if(this.Select_group != null) this.Select_school = this.Select_group.School;
+        }
 
         private void SetSchemeType(SchemeType type, IEnumerable<IdTitle> values)
         {
@@ -236,38 +280,61 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             }
 
         }
-        /*
+        
         private async void AddNodeMethod()
         {
             this.EnableAddButton = false;
-            MemberDancer tmp_dancer = null;
+            MemberGroup tmp_group = null;
 
-            if (this.IsEnableDancerEdit)
+            if (this.IsEnableGroupEdit)
             {
-                await DanceRegDatabase.ExecuteNonQueryAsync("insert into groups (Json_members, Id_school) values ('" + this.GroupInWork. + "', " + this.Select_school.Id + ")");
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) order by dancers.Id_member");
+                await DanceRegDatabase.ExecuteNonQueryAsync("insert into groups (Json_members, Id_school) values ('" + this.Select_group.GetMembers() + "', " + this.Select_school.Id + ")");
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select groups.Id_member, groups.Json_members, groups.Id_school, schools.Name from groups join schools using (Id_school) order by groups.Id_member");
                 DbRow row = res[res.RowsCount - 1];
-                tmp_dancer = new MemberDancer(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
-                tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
+                tmp_group = new MemberGroup(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Json_members"].ToString());
+                tmp_group.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
 
-                this.SetDancerFromSearch(tmp_dancer);
-                this.EventInWork.AddMember(tmp_dancer);
+                this.Groups.Insert(0, new MemberGroup(this.EventInWork.IdEvent, -1, new List<MemberDancer>()));
+                int update_insert = this.Groups.IndexOf(this.Select_group);
+                this.Groups[update_insert] = tmp_group;
+                this.Select_group = tmp_group;
+                this.EventInWork.AddMember(tmp_group);
             }
             else
             {
-                tmp_dancer = this.EventInWork.GetDancerById(this.DancerInWork.MemberId);
-                if (tmp_dancer == null)
-                {
-                    this.EventInWork.AddMember(this.DancerInWork);
-                    tmp_dancer = this.DancerInWork;
-                }
+                tmp_group = this.Select_group;
             }
             foreach (IdCheck style in this.Styles)
             {
-                if (style.IsChecked) await this.EventInWork.AddNodeAsync(tmp_dancer, false, this.Select_platform, this.Select_league.Key, this.Select_block, this.Select_age.Key, style.Id);
+                if (style.IsChecked) await this.EventInWork.AddNodeAsync(tmp_group, true, this.Select_platform, this.Select_league.Key, this.Select_block, this.Select_age.Key, style.Id);
             }
             this.EnableAddButton = true;
-        }*/
+        }
+
+        private async void AddMemberInGroupMethod()
+        {
+            MemberDancer tmp_dancer = DanceRegCollections.GetGroupDancerById(this.DancerInWork.MemberId); 
+
+            if (tmp_dancer == null)
+            {
+                if (this.DancerInWork.MemberId == -1)
+                {
+                    await DanceRegDatabase.ExecuteNonQueryAsync("insert into dancers (Firstname, Surname, Id_school) values ('" + this.DancerName + "', '" + this.DancerSurname + "', " + this.Select_school.Id + ")");
+                    DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) order by dancers.Id_member");
+                    DbRow row = res[res.RowsCount - 1];
+                    tmp_dancer = new MemberDancer(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                    tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
+                }
+                else tmp_dancer = this.DancerInWork;
+                DanceRegCollections.AddGroupDancer(tmp_dancer);
+            }
+
+            this.Select_group.AddMember(tmp_dancer);
+            this.Command_ClearMemberInGroup.Execute();
+            this.OnPropertyChanged("Groups");
+            this.OnPropertyChanged("Select_group");
+            
+        }
 
         public RelayCommand Command_ChangePlatform
         {
@@ -304,23 +371,38 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         {
             get => new RelayCommand(obj =>
             {
-                //this.AddNodeMethod();
+                this.AddNodeMethod();
             });
         }
 
-        public RelayCommand Command_ClearDancer
+        public RelayCommand Command_AddMemberInGroup
+        {
+            get => new RelayCommand(obj =>
+            {
+                this.AddMemberInGroupMethod();
+            },
+                (obj) => this.Select_school != null && this.DancerName != null && this.DancerName.Length > 0 && this.DancerSurname != null && this.DancerSurname.Length > 0);
+        }
+
+        public RelayCommand Command_ClearMemberInGroup
         {
             get => new RelayCommand(obj =>
             {
                 this.FindList.Clear();
 
-                foreach (IdCheck style in this.Styles)
-                {
-                    style.IsChecked = false;
-                }
-
-                //this.SetDancerFromSearch(new MemberDancer(this.EventInWork.IdEvent, -1, "", ""));
+                this.SetDancerFromSearch(new MemberDancer(-1, -1, "", ""));
             });
+        }
+
+        public RelayCommand<MemberDancer> Command_DeleteMemberInGroup
+        {
+            get => new RelayCommand<MemberDancer>(dancer =>
+            {
+                this.Select_group.RemoveMember(dancer);
+                this.OnPropertyChanged("Groups");
+                this.OnPropertyChanged("Select_group");
+            },
+                (dancer) => dancer != null);
         }
     }
 }

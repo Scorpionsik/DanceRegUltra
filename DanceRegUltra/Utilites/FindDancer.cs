@@ -82,10 +82,10 @@ namespace DanceRegUltra.Utilites
                 string whereQuery = "";
                 if(name.Length > 0)
                 {
-                    whereQuery += "dancers.Firstname like ('%" + name + "%')";
+                    whereQuery += "dancers.Firstname like ('%" + App.CapitalizeAllWords(name) + "%')";
                     if (surname.Length > 0) whereQuery += " and ";
                 }
-                if (surname.Length > 0) whereQuery += "dancers.Surname like ('%" + surname + "%')";
+                if (surname.Length > 0) whereQuery += "dancers.Surname like ('%" + App.CapitalizeAllWords(surname) + "%')";
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) where " + whereQuery);
 
                 foreach(DbRow row in res)

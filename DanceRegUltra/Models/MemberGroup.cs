@@ -15,19 +15,40 @@ namespace DanceRegUltra.Models
         private Lazy<ListExt<MemberDancer>> HideGroupMembers;
         public ListExt<MemberDancer> GroupMembers { get => this.HideGroupMembers?.Value; }
 
+        private string groupType;
         public string GroupType
         {
             get
             {
                 int countGroup = this.HideGroupMembers.Value.Count;
-                string type = "";
+                this.groupType = "";
 
-                if (countGroup < 2) type = "ошибка";
-                else if(countGroup >= 2 && countGroup <= 6) type = "группа";
-                else if (countGroup >= 7 && countGroup <= 23) type = "формейшен";
-                else if (countGroup >= 24) type = "продакшн";
+                if (countGroup < 2) this.groupType = "Группа";
+                else if(countGroup >= 2 && countGroup <= 6) this.groupType = "Группа";
+                else if (countGroup >= 7 && countGroup <= 23) this.groupType = "Формейшен";
+                else if (countGroup >= 24) this.groupType = "Продакшн";
 
-                return type;
+                return this.groupType;
+            }
+        }
+
+        public string GroupMembersString
+        {
+            get
+            {
+                string return_string = this.groupType + " (";
+                if (this.MemberId == -1) return_string += "новая";
+                else
+                {
+                    int count = 0;
+                    foreach(MemberDancer dancer in this.GroupMembers)
+                    {
+                        return_string += dancer.Surname;
+                        if (count < this.GroupMembers.Count - 1) return_string += ", ";
+                        count++;
+                    }
+                }
+                return return_string + ")";
             }
         }
 
@@ -35,6 +56,7 @@ namespace DanceRegUltra.Models
         {
             this.HideGroupMembers = new Lazy<ListExt<MemberDancer>>();
             this.HideGroupMembers.Value.CollectionChanged += this.UpdateMembersMethod;
+            this.groupType = "Группа";
         }
 
         ~MemberGroup()
@@ -58,17 +80,17 @@ namespace DanceRegUltra.Models
             string query = "select * from dancers where ";
             for(int i = 0; i < group_id.Count; i++)
             {
-                query += "Id_dancer=" + group_id[i];
+                query += "Id_member=" + group_id[i];
                 if (i != group_id.Count - 1) query += " or ";
             }
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync(query);
             MemberDancer tmp_dancer = null;
             foreach (DbRow row in res)
             {
-                tmp_dancer = DanceRegCollections.GetGroupDancerById(row["Id_dancer"].ToInt32());
+                tmp_dancer = DanceRegCollections.GetGroupDancerById(row["Id_member"].ToInt32());
                 if (tmp_dancer == null)
                 {
-                    tmp_dancer = new MemberDancer(-1, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                    tmp_dancer = new MemberDancer(-1, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
                     DanceRegCollections.AddGroupDancer(tmp_dancer);
                 }
                 this.HideGroupMembers.Value.Add(tmp_dancer);
@@ -79,6 +101,7 @@ namespace DanceRegUltra.Models
         {
             this.OnPropertyChanged("GroupMembers");
             this.OnPropertyChanged("GroupType");
+            this.OnPropertyChanged("GroupMembersString");
         }
 
         public void AddMember(int id_member, string name, string surname)
@@ -100,6 +123,19 @@ namespace DanceRegUltra.Models
             this.HideGroupMembers.Value.Add(tmp_dancer);
         }
 
+        public void AddMember(MemberDancer dancer)
+        {
+            foreach (MemberDancer d in this.HideGroupMembers.Value)
+            {
+                if (d.MemberId == dancer.MemberId)
+                {
+                    return;
+                }
+            }
+
+            this.HideGroupMembers.Value.Add(dancer);
+        }
+
         public void RemoveMember(MemberDancer dancer)
         {
             foreach(MemberDancer d in this.HideGroupMembers.Value)
@@ -114,7 +150,12 @@ namespace DanceRegUltra.Models
 
         public string GetMembers()
         {
-            return JsonConvert.SerializeObject(this.HideGroupMembers);
+            ListExt<int> result = new ListExt<int>();
+            foreach(MemberDancer dancer in this.HideGroupMembers.Value)
+            {
+                result.Add(dancer.MemberId);
+            }
+            return JsonConvert.SerializeObject(result);
         }
 
         public int CompareTo(MemberGroup other)

@@ -41,10 +41,10 @@ namespace DanceRegUltra.Static
 
         internal static void AddGroupDancer(MemberDancer dancer)
         {
-            //if (!IsExistGroupDancer(dancer.MemberId))
-            //{
+            if (!IsExistGroupDancer(dancer.MemberId))
+            {
                 Group_dancers.Value.Add(dancer);
-           // }
+            }
         }
 
         internal static MemberDancer GetGroupDancerById(int id_dancer)
@@ -55,8 +55,7 @@ namespace DanceRegUltra.Static
             }
             return null;
         }
-
-        /*
+        
         private static bool IsExistGroupDancer(int id_dancer)
         {
             foreach(MemberDancer dancer in Group_dancers.Value)
@@ -65,7 +64,7 @@ namespace DanceRegUltra.Static
             }
             return false;
         }
-        */
+        
 
         internal async static void ClearCategories()
         {

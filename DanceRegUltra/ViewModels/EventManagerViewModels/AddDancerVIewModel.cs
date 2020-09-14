@@ -161,7 +161,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     {
                         if (style.IsChecked)
                         {
-                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + ", ";
+                            this.ShowSelectStyles += CategoryNameByIdConvert.Convert(style.Id, CategoryType.Style) + "\r\n";
                         }
                     }
                     if(this.ShowSelectStyles.Length - 2 >= 0) this.ShowSelectStyles = this.ShowSelectStyles.Remove(this.ShowSelectStyles.Length - 2);
@@ -190,6 +190,10 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
 
         private void UpdateFindList()
         {
+            this.DancerInWork.SetName(App.CapitalizeAllWords(this.DancerName));
+            this.OnPropertyChanged("DancerName");
+            this.DancerInWork.SetSurname(App.CapitalizeAllWords(this.DancerSurname));
+            this.OnPropertyChanged("DancerSurname");
             this.OnPropertyChanged("FindList");
         }
 
