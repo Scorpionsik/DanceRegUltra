@@ -30,7 +30,13 @@
             <ComboBox ItemsSource="{Binding Path=Groups}" SelectedItem="{Binding Path=Select_group}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=GroupMembersString}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=GroupType, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Text=" ("/>
+                            <TextBlock Text="{Binding Path=GroupMembersString, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Text=")"/>
+                        </StackPanel>
+                        
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
@@ -112,7 +118,7 @@
             </Grid>
             <!--конец Категории-->
             <!--Список участников группы-->
-            <GroupBox  Grid.Row="3" IsEnabled="{Binding Path=IsEnableGroupEdit}">
+            <GroupBox  Grid.Row="3">
                 <GroupBox.Header>
                     <TextBlock Text="{Binding StringFormat=Участники группы: {0}, Path=Select_group.GroupMembers.Count}"/>
                 </GroupBox.Header>
