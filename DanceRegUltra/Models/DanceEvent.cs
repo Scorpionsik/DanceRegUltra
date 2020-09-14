@@ -238,6 +238,7 @@ namespace DanceRegUltra.Models
                 if (dancer.EventId != this.IdEvent)
                 {
                     tmp_add = new MemberDancer(this.IdEvent, dancer.MemberId, dancer.Name, dancer.Surname);
+                    tmp_add.SetSchool(dancer.School);
                 }
                 else tmp_add = dancer;
                 while (index_sort < this.HideDancers.Value.Count && this.HideDancers.Value[index_sort].CompareTo(tmp_add) <= 0) index_sort++;

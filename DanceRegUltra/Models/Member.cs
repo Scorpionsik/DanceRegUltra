@@ -49,7 +49,7 @@ namespace DanceRegUltra.Models
         public void SetSchool(IdTitle school)
         {
             this.School = school;
-            this.OnPropertyChanged("SetSchool");
+            this.OnPropertyChanged("School");
         }
 
         protected void InvokeUpdate(string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null)
