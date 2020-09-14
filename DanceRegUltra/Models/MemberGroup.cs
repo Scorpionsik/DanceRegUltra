@@ -36,8 +36,8 @@ namespace DanceRegUltra.Models
         {
             get
             {
-                string return_string = this.groupType + " (";
-                if (this.MemberId == -1) return_string += "новая";
+                string return_string = "";
+                if (this.MemberId == -1) return_string += "Новая";
                 else
                 {
                     int count = 0;
@@ -48,7 +48,7 @@ namespace DanceRegUltra.Models
                         count++;
                     }
                 }
-                return return_string + ")";
+                return return_string;
             }
         }
 
