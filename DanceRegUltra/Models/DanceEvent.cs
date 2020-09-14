@@ -32,18 +32,6 @@ namespace DanceRegUltra.Models
             }
         }
 
-        private int judgeCount;
-        public int JudgeCount
-        {
-            get => this.judgeCount;
-            set
-            {
-                this.judgeCount = value;
-                this.OnPropertyChanged("JudgeCount");
-                this.event_updateDanceEvent?.Invoke(this.IdEvent, "Judge_count", value);
-            }
-        }
-
         private event UpdateDanceEvent event_updateDanceEvent;
         /// <summary>
         /// Срабатывает при изменении значений события; передает в числовой переменной id данного события, в строке название столбца в таблице бд
@@ -105,10 +93,9 @@ namespace DanceRegUltra.Models
 
         //public string JsonSchemeEvent { get; private set; }
 
-        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "", int node_id = 1, int judge_count = 4)
+        public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "", int node_id = 1)
         {
             this.NodeId = node_id;
-            this.JudgeCount = judge_count;
 
             this.HideDancers = new Lazy<ListExt<MemberDancer>>();
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();

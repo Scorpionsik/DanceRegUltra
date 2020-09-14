@@ -14,16 +14,26 @@
     </window:WindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="27"/>
+            <RowDefinition Height="54"/>
             <RowDefinition Height="45"/>
             <RowDefinition Height="45"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!--Menu-->
-        <ToolBar Grid.Row="0" >
-            <Button Content="Добавить танцора" Command="{Binding Path=Command_AddDancer}"/>
-            <Button Content="Добавить группу" Command="{Binding Path=Command_AddGroup}"/>
-        </ToolBar>
+        <ToolBarTray Grid.Row="0">
+            <ToolBar>
+                <Button Content="Добавить танцора" Command="{Binding Path=Command_AddDancer}"/>
+                <Separator/>
+                <Button Content="Добавить группу" Command="{Binding Path=Command_AddGroup}"/>
+            </ToolBar>
+            <ToolBar Band="1">
+                <Button Content="Добавить площадки"/>
+                <Separator/>
+                <Button Content="Указать количество судий"/>
+                <Separator/>
+                <Button Content="Пронумеровать участников"/>
+            </ToolBar>
+        </ToolBarTray>
         <!--end Menu-->
         <!--Event edit-->
         <DockPanel Grid.Row="1" LastChildFill="True">
@@ -33,9 +43,6 @@
                     FormatString="dd.MMM.yyyy HH:mm" 
                     ClipValueToMinMax="True" 
                     Value="{Binding Path=StartDateEvent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </GroupBox>
-            <GroupBox Header="Судьи" DockPanel.Dock="Right">
-                <xctk:IntegerUpDown DockPanel.Dock="Left" Value="{Binding Path=EventInWork.JudgeCount}" Increment="1" Minimum="1"/>
             </GroupBox>
             <GroupBox Header="Название события">
                 <TextBox Text="{Binding Path=EventEditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

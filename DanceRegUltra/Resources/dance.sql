@@ -6,8 +6,7 @@ create table "events"
 "Start_timestamp" LONG DEFAULT -1,
 "End_timestamp" LONG DEFAULT -1,
 "Json_scheme" TEXT DEFAULT '',
-"Id_node_increment" INTERER NOT NULL DEFAULT 1,
-"Judge_count" INTEGER DEFAULT 4
+"Id_node_increment" INTERER NOT NULL DEFAULT 1
 );
 
 /*“аблица узлов, св€занных с определенным событием*/
