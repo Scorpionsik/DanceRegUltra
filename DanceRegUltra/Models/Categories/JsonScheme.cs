@@ -118,8 +118,8 @@ namespace DanceRegUltra.Models.Categories
                         break;
                         */
                     case 1:
-                        if (this.Platforms[0].Values[count].Id == node1.LeagueId) level1 = count + 1;
-                        if (this.Platforms[0].Values[count].Id == node2.LeagueId) level2 = count + 1;
+                        if (this.Blocks[count].IdArray == node1.Block.Id) level1 = count + 1;
+                        if (this.Blocks[count].IdArray == node2.Block.Id) level2 = count + 1;
                         if (level1 > 0 && level2 > 0)
                         {
                             if (level1 > level2) return 1;
@@ -135,8 +135,8 @@ namespace DanceRegUltra.Models.Categories
                         count++;
                         break;
                     case 2:
-                        if (this.Blocks[count].IdArray == node1.Block.Id) level1 = count + 1;
-                        if (this.Blocks[count].IdArray == node2.Block.Id) level2 = count + 1;
+                        if (this.Platforms[0].Values[count].Id == node1.LeagueId) level1 = count + 1;
+                        if (this.Platforms[0].Values[count].Id == node2.LeagueId) level2 = count + 1;
                         if (level1 > 0 && level2 > 0)
                         {
                             if (level1 > level2) return 1;
