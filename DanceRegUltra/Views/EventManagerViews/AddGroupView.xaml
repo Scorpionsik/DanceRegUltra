@@ -57,7 +57,6 @@
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="Платформа">
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right" Content="Изменить..." Command="{Binding Path=Command_ChangePlatform}"/>
                             <TextBlock Text="{Binding Path=Select_platform.Title}"/>
                         </DockPanel>
                     </GroupBox>
