@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DanceRegUltra.Enums;
+using System.Collections.Generic;
 
 namespace DanceRegUltra.Models.Categories
 {
@@ -10,17 +11,22 @@ namespace DanceRegUltra.Models.Categories
 
         public List<IdCheck> Values { get; set; }
 
+        public JudgeType ScoreType { get; set; }
+
+        public int JudgeCount { get; set; }
+
         public JsonSchemeArray()
         {
             this.Title = "";
             this.Values = new List<IdCheck>();
+            this.ScoreType = JudgeType.ThreeD;
+            this.JudgeCount = 0;
         }
 
-        public JsonSchemeArray(SchemeArray sArray)
+        public JsonSchemeArray(SchemeArray sArray) : this()
         {
             this.IdArray = sArray.IdArray;
             this.Title = sArray.TitleSchemePart;
-            this.Values = new List<IdCheck>();
             foreach(IdCheck value in sArray.SchemePartValues)
             {
                 this.Values.Add(new IdCheck(value.Id, value.IsChecked));

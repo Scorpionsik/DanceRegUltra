@@ -108,58 +108,30 @@
                 <TabControl Grid.Row="1">
                     <TabItem>
                         <TabItem.Header>
-                            <TextBlock Text="{Binding StringFormat=Платформы: {0}, Path=PlatformsCollection.Count}"/>
+                            <TextBlock Text="Лиги"/>
                         </TabItem.Header>
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="30"/>
-                            </Grid.RowDefinitions>
                             <!--Таблица платформ-->
-                            <ListBox 
-                                dd:DragDrop.IsDragSource="True"
-                                dd:DragDrop.IsDropTarget="True"
-                                Grid.Row="0" 
-                                BorderThickness="0" 
-                                VirtualizingPanel.ScrollUnit="Pixel"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ItemsSource="{Binding Path=PlatformsCollection}"
-                                SelectedItem="{Binding Path=Select_platform}"
-                                >
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="Cursor" Value="Hand"/>
-                                        <Setter Property="BorderThickness" Value="1"/>
-                                        <Setter Property="BorderBrush" Value="DarkGray"/>
-                                        <Setter Property="Margin" Value="5 2.5 5 2.5"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <DockPanel LastChildFill="True">
-                                            <GroupBox DockPanel.Dock="Top" Header="Название платформы">
-                                                <TextBox Text="{Binding Path=TitleSchemePart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </GroupBox>
-                                            <GroupBox>
-                                                <GroupBox.Header>
-                                                    <DockPanel LastChildFill="False">
-                                                        <TextBlock DockPanel.Dock="Left" Text="Выбранные лиги"/>
-                                                        <Label DockPanel.Dock="Left" Margin="5 0 0 0"/>
-                                                        <Button DockPanel.Dock="Right"  Height="20" Command="{Binding Path=Command_UncheckAll}">
-                                                            <Button.Content>
-                                                                <CheckBox IsEnabled="False" IsChecked="False"/>
-                                                            </Button.Content>
-                                                        </Button>
-                                                        <Button DockPanel.Dock="Right" Height="20" Command="{Binding Path=Command_CheckAll}">
-                                                            <Button.Content>
-                                                                <CheckBox IsEnabled="False" IsChecked="True"/>
-                                                            </Button.Content>
-                                                        </Button>
-                                                    </DockPanel>
-                                                </GroupBox.Header>
-                                                <!--Таблица лиг-->
-                                                <xctk:CheckListBox
+                            <DockPanel DataContext="{Binding Path=PlatformsCollection.First}" LastChildFill="True">
+                                <GroupBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <GroupBox.Header>
+                                        <DockPanel LastChildFill="False">
+                                            <TextBlock DockPanel.Dock="Left" Text="Выбранные лиги"/>
+                                            <Label DockPanel.Dock="Left" Margin="5 0 0 0"/>
+                                            <Button DockPanel.Dock="Right"  Height="20" Command="{Binding Path=Command_UncheckAll}">
+                                                <Button.Content>
+                                                    <CheckBox IsEnabled="False" IsChecked="False"/>
+                                                </Button.Content>
+                                            </Button>
+                                            <Button DockPanel.Dock="Right" Height="20" Command="{Binding Path=Command_CheckAll}">
+                                                <Button.Content>
+                                                    <CheckBox IsEnabled="False" IsChecked="True"/>
+                                                </Button.Content>
+                                            </Button>
+                                        </DockPanel>
+                                    </GroupBox.Header>
+                                    <!--Таблица лиг-->
+                                    <xctk:CheckListBox
                                                    dd:DragDrop.IsDragSource="True"
                                                    dd:DragDrop.IsDropTarget="True"
                                                    dd:DragDrop.DropHandler="{Binding}"
@@ -167,43 +139,25 @@
                                                    BorderThickness="0"
                                                    ItemsSource="{Binding Path=SchemePartValues}"
                                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                                    <i:Interaction.Behaviors>
-                                                        <corewpf:IgnoreMouseWheelBehavior />
-                                                    </i:Interaction.Behaviors>
-                                                    <xctk:CheckListBox.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel Orientation="Horizontal"/>
-                                                        </ItemsPanelTemplate>
-                                                    </xctk:CheckListBox.ItemsPanel>
+                                        <i:Interaction.Behaviors>
+                                            <corewpf:IgnoreMouseWheelBehavior />
+                                        </i:Interaction.Behaviors>
+                                        <xctk:CheckListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </xctk:CheckListBox.ItemsPanel>
 
-                                                    <xctk:CheckListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
-                                                        </DataTemplate>
-                                                    </xctk:CheckListBox.ItemTemplate>
-                                                </xctk:CheckListBox>
-                                                <!--конец Таблица лиг-->
-                                            </GroupBox>
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                        <xctk:CheckListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                            </DataTemplate>
+                                        </xctk:CheckListBox.ItemTemplate>
+                                    </xctk:CheckListBox>
+                                    <!--конец Таблица лиг-->
+                                </GroupBox>
+                            </DockPanel>
                             <!--конец Таблица платформ-->
-                            <!--Кнопки платформ-->
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.Resources>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Margin" Value="5"/>
-                                    </Style>
-                                </Grid.Resources>
-                                <Button Grid.Column="0" Content="Добавить платформу" Command="{Binding Path=Command_AddPlatform}"/>
-                                <Button Grid.Column="1" Content="Удалить платформу" Command="{Binding Path=Command_DeletePlatform}" CommandParameter="{Binding Path=Select_platform}"/>
-                            </Grid>
-                            <!--конец Кнопки платформ-->
                         </Grid>
                     </TabItem>
                     <TabItem>
@@ -306,8 +260,8 @@
                             <!--конец Кнопки блоков-->
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Стили">
-                        <GroupBox>
+                    <TabItem Header="Стили" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <GroupBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <GroupBox.Header>
                                 <DockPanel LastChildFill="False">
                                     <TextBlock DockPanel.Dock="Left" Text="Выбранные стили"/>
@@ -333,9 +287,14 @@
                                 SelectedMemberPath="IsChecked"
                                 ItemsSource="{Binding Path=SchemeStyles}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <xctk:CheckListBox.ItemContainerStyle>
+                                    <Style TargetType="xctk:SelectorItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </xctk:CheckListBox.ItemContainerStyle>
                                 <xctk:CheckListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
                                     </ItemsPanelTemplate>
                                 </xctk:CheckListBox.ItemsPanel>
                                 <xctk:CheckListBox.ItemTemplate>
