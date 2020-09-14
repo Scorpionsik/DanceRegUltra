@@ -93,11 +93,11 @@ namespace DanceRegUltra.Models.Categories
         public int Compare(DanceNode node1, DanceNode node2)
         {
             int level1 = 0, level2 = 0, step = 1, count = 0;
-            int category_count = 0;
-            while(step < 6)
+            while(step < 5)
             {
                 switch (step)
                 {
+                    /*
                     case 1:
                         if (this.Platforms[count].IdArray == node1.Platform.Id) level1 = count + 1;
                         if (this.Platforms[count].IdArray == node2.Platform.Id) level2 = count + 1;
@@ -116,27 +116,25 @@ namespace DanceRegUltra.Models.Categories
                         }
                         count++;
                         break;
-                    case 2:
-                        if (this.Platforms[category_count].Values[count].IsChecked)
+                        */
+                    case 1:
+                        if (this.Platforms[0].Values[count].Id == node1.LeagueId) level1 = count + 1;
+                        if (this.Platforms[0].Values[count].Id == node2.LeagueId) level2 = count + 1;
+                        if (level1 > 0 && level2 > 0)
                         {
-                            if (this.Platforms[category_count].Values[count].Id == node1.LeagueId) level1 = count + 1;
-                            if (this.Platforms[category_count].Values[count].Id == node2.LeagueId) level2 = count + 1;
-                            if (level1 > 0 && level2 > 0)
+                            if (level1 > level2) return 1;
+                            else if (level1 < level2) return -1;
+                            else
                             {
-                                if (level1 > level2) return 1;
-                                else if (level1 < level2) return -1;
-                                else
-                                {
-                                    step++;
-                                    level1 = 0;
-                                    level2 = 0;
-                                    count = -1;
-                                }
+                                step++;
+                                level1 = 0;
+                                level2 = 0;
+                                count = -1;
                             }
                         }
                         count++;
                         break;
-                    case 3:
+                    case 2:
                         if (this.Blocks[count].IdArray == node1.Block.Id) level1 = count + 1;
                         if (this.Blocks[count].IdArray == node2.Block.Id) level2 = count + 1;
                         if (level1 > 0 && level2 > 0)
@@ -145,7 +143,23 @@ namespace DanceRegUltra.Models.Categories
                             else if (level1 < level2) return -1;
                             else
                             {
-                                category_count = count;
+                                step++;
+                                level1 = 0;
+                                level2 = 0;
+                                count = -1;
+                            }
+                        }
+                        count++;
+                        break;
+                    case 3:
+                        if (this.Blocks[0].Values[count].Id == node1.AgeId) level1 = count + 1;
+                        if (this.Blocks[0].Values[count].Id == node2.AgeId) level2 = count + 1;
+                        if (level1 > 0 && level2 > 0)
+                        {
+                            if (level1 > level2) return 1;
+                            else if (level1 < level2) return -1;
+                            else
+                            {
                                 step++;
                                 level1 = 0;
                                 level2 = 0;
@@ -155,26 +169,6 @@ namespace DanceRegUltra.Models.Categories
                         count++;
                         break;
                     case 4:
-                        if (this.Blocks[category_count].Values[count].IsChecked)
-                        {
-                            if (this.Blocks[category_count].Values[count].Id == node1.AgeId) level1 = count + 1;
-                            if (this.Blocks[category_count].Values[count].Id == node2.AgeId) level2 = count + 1;
-                            if (level1 > 0 && level2 > 0)
-                            {
-                                if (level1 > level2) return 1;
-                                else if (level1 < level2) return -1;
-                                else
-                                {
-                                    step++;
-                                    level1 = 0;
-                                    level2 = 0;
-                                    count = -1;
-                                }
-                            }
-                        }
-                        count++;
-                        break;
-                    case 5:
                         if (this.Styles[count].IsChecked)
                         {
                             if (this.Styles[count].Id == node1.StyleId) level1 = count + 1;
