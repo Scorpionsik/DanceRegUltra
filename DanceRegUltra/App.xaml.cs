@@ -1,6 +1,7 @@
 ﻿using CoreWPF.Utilites;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows;
 
@@ -43,6 +44,26 @@ namespace DanceRegUltra
         public static MessageBoxResult SetMessageBox(string text, MessageBoxButton buttons, MessageBoxImage image, string subtitle = "")
         {
             return MessageBox.Show(text, AppTitle + (subtitle != null && subtitle.Length > 0 ? ": " + subtitle : ""), buttons, image);
+        }
+
+        public static string CapitalizeAllWords(string s)
+        {
+            var sb = new StringBuilder(s.Length);
+            bool inWord = false;
+            foreach (var c in s)
+            {
+                if (char.IsLetter(c))
+                {
+                    sb.Append(inWord ? char.ToLower(c) : char.ToUpper(c));
+                    inWord = true;
+                }
+                else
+                {
+                    sb.Append(c);
+                    inWord = false;
+                }
+            }
+            return sb.ToString();
         }
     }
 }
