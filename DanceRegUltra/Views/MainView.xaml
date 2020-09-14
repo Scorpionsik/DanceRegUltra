@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:unix="clr-namespace:DanceRegUltra.Utilites.Converters"     
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
@@ -25,6 +26,11 @@
             <Button Content="Стили танца" Command="{Binding Path=Command_OpencategoryWindow}" CommandParameter="style"/>
         </ToolBar>
         <ListBox Grid.Row="1" ItemsSource="{Binding Path=Events}" SelectedItem="{Binding Path=Select_event}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding Path=Command_EditEvent}" CommandParameter="{Binding Path=Select_event}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
