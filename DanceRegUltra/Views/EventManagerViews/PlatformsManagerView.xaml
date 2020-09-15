@@ -44,7 +44,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <DockPanel LastChildFill="True">
-                                <TextBlock Text="{Binding Path=Title}" DockPanel.Dock="Top"/>
+                                <TextBlock Text="{Binding Path=Title}" FontWeight="Bold" DockPanel.Dock="Top"/>
                                 <ListBox 
                                     dd:DragDrop.IsDragSource="True"
                                     dd:DragDrop.IsDropTarget="False"
