@@ -159,8 +159,8 @@ namespace DanceRegUltra.ViewModels
                 }
 
                 //add node
-                IdTitle tmp_platform = new IdTitle(row["Id_platform"].ToInt32(), this.EventInWork.SchemeEvent.GetSchemeTypeById(row["Id_platform"].ToInt32(), SchemeType.Platform));
-                IdTitle tmp_block = new IdTitle(row["Id_block"].ToInt32(), this.EventInWork.SchemeEvent.GetSchemeTypeById(row["Id_block"].ToInt32(), SchemeType.Block));
+                IdTitle tmp_platform = new IdTitle(row["Id_platform"].ToInt32(), this.EventInWork.SchemeEvent.GetTypeTitleById(row["Id_platform"].ToInt32(), SchemeType.Platform));
+                IdTitle tmp_block = new IdTitle(row["Id_block"].ToInt32(), this.EventInWork.SchemeEvent.GetTypeTitleById(row["Id_block"].ToInt32(), SchemeType.Block));
 
                 this.EventInWork.AddNode(row["Id_node"].ToInt32(), tmp_member, isGroup, tmp_platform, row["Id_league"].ToInt32(), tmp_block, row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Json_scores"].ToString());
             }
@@ -245,6 +245,15 @@ namespace DanceRegUltra.ViewModels
                 {
                     this.OnPropertyChanged("Nodes");
                 }
+            });
+        }
+
+        public RelayCommand Command_EditJudge
+        {
+            get => new RelayCommand(obj =>
+            {
+                JudgeManagerView window = new JudgeManagerView(this.EventInWork.IdEvent);
+                window.ShowDialog();
             });
         }
 

@@ -1,0 +1,85 @@
+﻿<windows:DialogWindowExt x:Class="DanceRegUltra.Views.EventManagerViews.JudgeManagerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:convert="clr-namespace:DanceRegUltra.Utilites.Converters"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="{Binding Path=Title}" Height="450" Width="800">
+    <windows:DialogWindowExt.Resources>
+        <convert:JudgeTypeConvert x:Key="JudgeType"/>
+    </windows:DialogWindowExt.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Установить для всех блоков">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="0" Header="Количество судий">
+                    <xctk:IntegerUpDown Value="{Binding Path=CommonJudgeCount}" Minimum="1" Increment="1"/>
+                </GroupBox>
+                <GroupBox Grid.Column="1" Header="Тип оценивания">
+                    <ComboBox ItemsSource="{Binding Path=ScoreTypes}" SelectedItem="{Binding Path=CommonScoreType}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource JudgeType}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </GroupBox>
+                <Button Content="Прменить" Grid.Column="2" Command="{Binding Path=Command_SetCommon}"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Установить для конкретных блоков">
+            <ListBox ItemsSource="{Binding Path=Blocks}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel LastChildFill="True">
+                            <TextBlock Text="{Binding Path=Title}" FontWeight="Bold" DockPanel.Dock="Top"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="Количество судий">
+                                    <xctk:IntegerUpDown Value="{Binding Path=JudgeCount}" Minimum="1" Increment="1"/>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="Тип оценивания">
+                                    <ComboBox ItemsSource="{Binding Path=ScoreTypes}" SelectedItem="{Binding Path=ScoreType}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource JudgeType}}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </GroupBox>
+                            </Grid>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Сохранить" Command="{Binding Path=Command_save}"/>
+            <Button Grid.Column="1" Content="Отмена" Command="{Binding Path=Command_close}"/>
+        </Grid>
+    </Grid>
+</windows:DialogWindowExt>

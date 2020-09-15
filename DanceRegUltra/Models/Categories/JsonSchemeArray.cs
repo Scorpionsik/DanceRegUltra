@@ -1,7 +1,9 @@
 ﻿using CoreWPF.MVVM;
 using DanceRegUltra.Enums;
 using GongSolutions.Wpf.DragDrop;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace DanceRegUltra.Models.Categories
@@ -23,9 +25,34 @@ namespace DanceRegUltra.Models.Categories
 
         public List<IdCheck> Values { get; set; }
 
-        public JudgeType ScoreType { get; set; }
+        public static List<JudgeType> ScoreTypes { get; private set; }
 
-        public int JudgeCount { get; set; }
+        private JudgeType scoreType;
+        public JudgeType ScoreType
+        {
+            get => this.scoreType;
+            set
+            {
+                this.scoreType = value;
+                this.OnPropertyChanged("ScoreType");
+            }
+        }
+
+        private int judgeCount;
+        public int JudgeCount
+        {
+            get => this.judgeCount;
+            set
+            {
+                this.judgeCount = value;
+                this.OnPropertyChanged("JudgeCount");
+            }
+        }
+
+        static JsonSchemeArray()
+        {
+            ScoreTypes = new List<JudgeType>(Enum.GetValues(typeof(JudgeType)).Cast<JudgeType>());
+        }
 
         public JsonSchemeArray()
         {

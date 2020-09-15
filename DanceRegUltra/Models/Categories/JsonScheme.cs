@@ -64,7 +64,7 @@ namespace DanceRegUltra.Models.Categories
             return JsonConvert.DeserializeObject<JsonScheme>(jsonScheme);
         }
 
-        public string GetSchemeTypeById(int id, SchemeType type)
+        public string GetTypeTitleById(int id, SchemeType type)
         {
             switch (type)
             {
@@ -78,6 +78,26 @@ namespace DanceRegUltra.Models.Categories
                     foreach(JsonSchemeArray block in this.Blocks)
                     {
                         if (block.IdArray == id) return block.Title;
+                    }
+                    break;
+            }
+            return null;
+        }
+
+        public JsonSchemeArray GetSchemeArrayById(int id, SchemeType type)
+        {
+            switch (type)
+            {
+                case SchemeType.Platform:
+                    foreach (JsonSchemeArray platform in this.Platforms)
+                    {
+                        if (platform.IdArray == id) return platform;
+                    }
+                    break;
+                case SchemeType.Block:
+                    foreach (JsonSchemeArray block in this.Blocks)
+                    {
+                        if (block.IdArray == id) return block;
                     }
                     break;
             }
