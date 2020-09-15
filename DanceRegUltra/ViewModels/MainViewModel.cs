@@ -96,6 +96,7 @@ namespace DanceRegUltra.ViewModels
         {
             DanceRegCollections.Events.Remove(deleteEvent);
             await DanceRegDatabase.ExecuteNonQueryAsync("delete from events where Id_event=" + deleteEvent.IdEvent);
+            await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + deleteEvent.IdEvent);
         }
 
         private async void InitializeEvent(DanceEvent init_event)
