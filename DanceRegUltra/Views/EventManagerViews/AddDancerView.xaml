@@ -31,18 +31,18 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <GroupBox Grid.Column="1" Header="Имя">
-                    <TextBox Text="{Binding Path=DancerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox TabIndex="2" Text="{Binding Path=DancerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
                 <GroupBox Grid.Column="0" Header="Фамилия">
-                    <TextBox Text="{Binding Path=DancerSurname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox TabIndex="1" Text="{Binding Path=DancerSurname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
             </Grid>
             <!--конец Имя-фамилия-->
             <!--Школа-->
-            <GroupBox Grid.Row="1" Header="Школа">
+            <GroupBox  Grid.Row="1" Header="Школа">
                 <DockPanel LastChildFill="True" IsEnabled="{Binding Path=IsEnableDancerEdit}">
-                    <Button DockPanel.Dock="Right" Content="Добавить школу..." Command="{Binding Path=Command_AddSchool}"/>
-                    <ComboBox ItemsSource="{Binding Path=Schools}" DisplayMemberPath="Title" SelectedItem="{Binding Path=Select_school}"/>
+                    <Button IsTabStop="False" DockPanel.Dock="Right" Content="Добавить школу..." Command="{Binding Path=Command_AddSchool}"/>
+                    <ComboBox TabIndex="3" ItemsSource="{Binding Path=Schools}" DisplayMemberPath="Title" SelectedItem="{Binding Path=Select_school}"/>
                 </DockPanel>
             </GroupBox>
             <!--конец Школа-->
@@ -64,7 +64,7 @@
                         </DockPanel>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Лига">
-                        <ComboBox ItemsSource="{Binding Path=EventInWork.Leagues}" SelectedItem="{Binding Path=Select_league}">
+                        <ComboBox TabIndex="4" ItemsSource="{Binding Path=EventInWork.Leagues}" SelectedItem="{Binding Path=Select_league}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
@@ -80,12 +80,12 @@
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="Блок">
                         <DockPanel LastChildFill="True">
-                            <Button DockPanel.Dock="Right" Content="Изменить..." Command="{Binding Path=Command_ChangeBlock}"/>
+                            <Button DockPanel.Dock="Right" IsTabStop="False" Content="Изменить..." Command="{Binding Path=Command_ChangeBlock}"/>
                             <TextBlock Text="{Binding Path=Select_block.Title}"/>
                         </DockPanel>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Возрастная категория">
-                        <ComboBox ItemsSource="{Binding Path=EventInWork.Ages}" SelectedItem="{Binding Path=Select_age}">
+                        <ComboBox TabIndex="5" ItemsSource="{Binding Path=EventInWork.Ages}" SelectedItem="{Binding Path=Select_age}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Key, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
@@ -103,7 +103,7 @@
                         <TextBlock Text="{Binding Path=ShowSelectStyles}" TextWrapping="WrapWithOverflow" ToolTip="{Binding Path=ShowSelectStyles}"/>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Стили">
-                        <xctk:CheckComboBox ToolTip="{Binding Path=ShowSelectStyles}" ItemsSource="{Binding Path=Styles}" SelectedValue="{Binding Path=ComboBoxTextStyle}" IsEditable="False" IsSelectAllActive="True"  SelectedMemberPath="IsChecked">
+                        <xctk:CheckComboBox TabIndex="6" ToolTip="{Binding Path=ShowSelectStyles}" ItemsSource="{Binding Path=Styles}" SelectedValue="{Binding Path=ComboBoxTextStyle}" IsEditable="False" IsSelectAllActive="True"  SelectedMemberPath="IsChecked">
                             <xctk:CheckComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
@@ -121,14 +121,14 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" IsEnabled="{Binding Path=EnableAddButton}" Content="Добавить номинацию" Command="{Binding Path=Command_AddNode}"/>
-                <Button Grid.Column="1" Content="Очистить" Command="{Binding Path=Command_ClearDancer}"/>
-                <Button Grid.Column="2" Content="Закрыть" Command="{Binding Path=Command_close}"/>
+                <Button Grid.Column="0" TabIndex="7" IsEnabled="{Binding Path=EnableAddButton}" Content="Добавить номинацию" Command="{Binding Path=Command_AddNode}"/>
+                <Button Grid.Column="1" IsTabStop="False" Content="Очистить" Command="{Binding Path=Command_ClearDancer}"/>
+                <Button Grid.Column="2" IsTabStop="False" Content="Закрыть" Command="{Binding Path=Command_close}"/>
             </Grid>
             <!--конец Кнопки-->
         </Grid>
         <GroupBox Grid.Column="1" Header="Поиск">
-            <ListBox ItemsSource="{Binding Path=FindList.FindList}" SelectedItem="{Binding Path=FindList.Select_dancer}">
+            <ListBox IsTabStop="False" ItemsSource="{Binding Path=FindList.FindList}" SelectedItem="{Binding Path=FindList.Select_dancer}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
