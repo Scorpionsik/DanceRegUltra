@@ -1,13 +1,25 @@
-﻿using DanceRegUltra.Enums;
+﻿using CoreWPF.MVVM;
+using DanceRegUltra.Enums;
+using GongSolutions.Wpf.DragDrop;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace DanceRegUltra.Models.Categories
 {
-    public class JsonSchemeArray
+    public class JsonSchemeArray : NotifyPropertyChanged
     {
         public int IdArray { get; set; }
 
-        public string Title { get; set; }
+        private string title;
+        public string Title
+        {
+            get => this.title;
+            set
+            {
+                this.title = value;
+                this.OnPropertyChanged("Title");
+            }
+        }
 
         public List<IdCheck> Values { get; set; }
 
@@ -32,5 +44,9 @@ namespace DanceRegUltra.Models.Categories
                 this.Values.Add(new IdCheck(value.Id, value.IsChecked));
             }
         }
+
+       
+       
+
     }
 }

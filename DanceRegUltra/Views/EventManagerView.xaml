@@ -27,7 +27,7 @@
                 <Button Content="Добавить группу" Command="{Binding Path=Command_AddGroup}"/>
             </ToolBar>
             <ToolBar Band="1">
-                <Button Content="Добавить площадки"/>
+                <Button Content="Добавить площадки" Command="{Binding Path=Command_EditPlatforms}"/>
                 <Separator/>
                 <Button Content="Указать количество судий"/>
                 <Separator/>

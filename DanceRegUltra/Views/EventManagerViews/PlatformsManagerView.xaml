@@ -4,9 +4,84 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:convert="clr-namespace:DanceRegUltra.Utilites.Converters"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
-        Title="PlatformsManagerView" Height="450" Width="800">
+        Title="{Binding Path=Title}" Height="450" Width="800">
+    <window:DialogWindowExt.Resources>
+        <convert:VisibilityBoolConvert x:Key="BoolVisibility"/>
+        <convert:CategoryNameByIdConvert x:Key="CategoryName"/>
+    </window:DialogWindowExt.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Платформы: "/>
+                    <TextBlock Text="{Binding Path=Platforms.Count}" FontWeight="Bold"/>
+                </StackPanel>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <ListBox      
+                    dd:DragDrop.IsDragSource="False"
+                    dd:DragDrop.IsDropTarget="True"
+                    dd:DragDrop.DropHandler="{Binding}"
+                    Grid.Row="0" 
+                    ItemsSource="{Binding Path=Platforms}" 
+                    SelectedItem="{Binding Path=Select_platform}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{Binding Path=Title}" DockPanel.Dock="Top"/>
+                                <ListBox 
+                                    dd:DragDrop.IsDragSource="True"
+                                    dd:DragDrop.IsDropTarget="False"
+                                    MinHeight="20"
+                                    ItemsSource="{Binding Path=Values}">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Visibility" Value="{Binding Path=IsChecked, Converter={StaticResource BoolVisibility}}"/>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Добавить платформу" Command="{Binding Path=Command_AddPlatform}"/>
+                    <Button Grid.Column="1" Content="Удалить платформу" Command="{Binding Path=Command_RemovePlatform}" CommandParameter="{Binding Path=Select_platform}"/>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Сохранить" Command="{Binding Path=Command_save}"/>
+            <Button Grid.Column="1" Content="Отмена" Command="{Binding Path=Command_close}"/>
+        </Grid>
     </Grid>
 </window:DialogWindowExt>

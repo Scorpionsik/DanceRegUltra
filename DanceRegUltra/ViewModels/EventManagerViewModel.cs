@@ -236,6 +236,18 @@ namespace DanceRegUltra.ViewModels
             });
         }
 
+        public RelayCommand Command_EditPlatforms
+        {
+            get => new RelayCommand(obj =>
+            {
+                PlatformsManagerView window = new PlatformsManagerView(this.EventInWork.IdEvent);
+                if ((bool)window.ShowDialog())
+                {
+                    this.OnPropertyChanged("Nodes");
+                }
+            });
+        }
+
         public RelayCommand<DanceNode> Command_DeleteNode
         {
             get => new RelayCommand<DanceNode>(deleteNode =>

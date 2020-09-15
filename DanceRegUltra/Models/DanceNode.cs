@@ -15,7 +15,16 @@ namespace DanceRegUltra.Models
         public Member Member { get; private set; }
         public bool IsGroup { get; private set; }
 
-        public IdTitle Platform { get; private set; }
+        private IdTitle platform;
+        public IdTitle Platform
+        {
+            get => this.platform;
+            private set
+            {
+                this.platform = value;
+                this.OnPropertyChanged("Platform");
+            }
+        }
         public IdTitle Block { get; private set; }
 
         public int LeagueId { get; private set; }
@@ -66,6 +75,11 @@ namespace DanceRegUltra.Models
             if(jsonScores != null && jsonScores.Length > 0) this.HideScores.Value.AddRange(JsonConvert.DeserializeObject<List<int>>(jsonScores));
             this.OnPropertyChanged("Scores");
             this.OnPropertyChanged("JudgeCount");
+        }
+
+        public void SetPlatform(IdTitle platform)
+        {
+            this.Platform = platform;
         }
 
         public string GetScores()
