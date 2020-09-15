@@ -1,4 +1,5 @@
-﻿using DanceRegUltra.Interfaces;
+﻿using DanceRegUltra.Enums;
+using DanceRegUltra.Interfaces;
 using DanceRegUltra.Models.Categories;
 using Newtonsoft.Json;
 using System;
@@ -8,12 +9,24 @@ using System.Runtime.CompilerServices;
 
 namespace DanceRegUltra.Models
 {
+    public delegate void UpdateDanceNode(int event_id, int node_id, string column_name, object value);
+
     public class DanceNode : INotifyPropertyChanged
     {
         public int EventId { get; private set; }
         public int NodeId { get; private set; }
         public Member Member { get; private set; }
         public bool IsGroup { get; private set; }
+
+        public NodeStatus Status
+        {
+            get
+            {
+                NodeStatus result = NodeStatus.Default;
+                if (this.PrizePlace > 0) result = this.IsPrintPrize ? NodeStatus.Print : NodeStatus.GetScores;
+                return result;
+            }
+        }
 
         private IdTitle platform;
         public IdTitle Platform
@@ -22,6 +35,7 @@ namespace DanceRegUltra.Models
             private set
             {
                 this.platform = value;
+                this.event_UpdateDanceNode?.Invoke(this.EventId, this.NodeId, "Id_platform", value.Id);
                 this.OnPropertyChanged("Platform");
             }
         }
@@ -33,6 +47,41 @@ namespace DanceRegUltra.Models
 
         private Lazy<List<int>> HideScores;
         public int[] Scores { get => this.HideScores.Value.ToArray(); }
+
+        private int prizePlace;
+        public int PrizePlace
+        {
+            get => this.prizePlace;
+            private set
+            {
+                this.prizePlace = value;
+                this.event_UpdateDanceNode?.Invoke(this.EventId, this.NodeId, "Prize_place", value);
+                this.OnPropertyChanged("PrizePlace");
+            }
+        }
+
+        private event UpdateDanceNode event_UpdateDanceNode;
+        public event UpdateDanceNode Event_UpdateDanceNode
+        {
+            add
+            {
+                this.event_UpdateDanceNode -= value;
+                this.event_UpdateDanceNode += value;
+            }
+            remove => this.event_UpdateDanceNode -= value;
+        }
+
+        private bool isPrintPrize;
+        public bool IsPrintPrize
+        {
+            get => this.isPrintPrize;
+            private set
+            {
+                this.isPrintPrize = value;
+                this.event_UpdateDanceNode?.Invoke(this.EventId, this.NodeId, "Is_print_prize", value);
+                this.OnPropertyChanged("IsPrintPrize");
+            }
+        }
 
         public int JudgeCount
         {
@@ -67,6 +116,22 @@ namespace DanceRegUltra.Models
             this.HideScores = new Lazy<List<int>>();
 
             this.position = position;
+        }
+
+        public void SetPrizePlace(int place)
+        {
+            if (place != this.PrizePlace)
+            {
+                this.IsPrintPrize = false;
+                this.PrizePlace = place;
+                this.OnPropertyChanged("Status");
+            }
+        }
+
+        public void Print()
+        {
+            this.IsPrintPrize = true;
+            this.OnPropertyChanged("Status");
         }
 
         public void SetScores(string jsonScores)

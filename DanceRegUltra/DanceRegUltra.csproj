@@ -106,6 +106,7 @@
     </ApplicationDefinition>
     <Compile Include="Enums\CategoryType.cs" />
     <Compile Include="Enums\JudgeType.cs" />
+    <Compile Include="Enums\NodeStatus.cs" />
     <Compile Include="Enums\SchemeType.cs" />
     <Compile Include="Enums\UpdateStatus.cs" />
     <Compile Include="Interfaces\ICategoriesMenu.cs" />

@@ -59,7 +59,13 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!--Nodes-->
-            <GroupBox Grid.Column="0" Header="Номинации">
+            <GroupBox Grid.Column="0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Номинанты: "/>
+                        <TextBlock Text="{Binding Path=EventInWork.Nodes.Count}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <DockPanel LastChildFill="True">
                     <Button Content="Удалить номинацию" DockPanel.Dock="Bottom" Command="{Binding Path=Command_DeleteNode}" CommandParameter="{Binding Path=Select_node}"/>
                     <ListBox ItemsSource="{Binding Path=EventInWork.Nodes}" SelectedItem="{Binding Path=Select_node}">

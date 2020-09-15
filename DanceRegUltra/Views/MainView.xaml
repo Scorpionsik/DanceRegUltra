@@ -46,10 +46,15 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock FontWeight="Bold" Text="{Binding Path=Title}"/>
-                        <TextBlock Text="{Binding StringFormat=Начало: {0}, Path=StartEventTimestamp, Converter={StaticResource Timestamp}}"/>
-                    </StackPanel>
+                    <DockPanel LastChildFill="False">
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                            <TextBlock FontWeight="Bold" Text="{Binding Path=Title}"/>
+                            <TextBlock Text="{Binding StringFormat=Начало: {0}, Path=StartEventTimestamp, Converter={StaticResource Timestamp}}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Right">
+                            <TextBlock Text="{Binding StringFormat=Участников: {0}, Path=All_members_count}"/>
+                        </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

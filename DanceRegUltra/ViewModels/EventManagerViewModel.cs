@@ -174,6 +174,7 @@ namespace DanceRegUltra.ViewModels
 
         public override WindowClose CloseMethod()
         {
+            this.EventInWork.All_members_count = this.EventInWork.Dancers.Count + this.EventInWork.Groups.Count;
             this.EventInWork.Event_UpdateDanceEvent -= UpdateEvent;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();

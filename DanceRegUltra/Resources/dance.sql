@@ -6,7 +6,8 @@ create table "events"
 "Start_timestamp" LONG DEFAULT -1,
 "End_timestamp" LONG DEFAULT -1,
 "Json_scheme" TEXT DEFAULT '',
-"Id_node_increment" INTERER NOT NULL DEFAULT 1
+"Id_node_increment" INTERER NOT NULL DEFAULT 1,
+"All_member_count" INTEGER DEFAULT 0
 );
 
 /*“аблица узлов, св€занных с определенным событием*/
@@ -22,6 +23,8 @@ create table "event_nodes"
 "Id_age" INTEGER NOT NULL,
 "Id_style" INTEGER NOT NULL,
 "Json_scores" TEXT DEFAULT '',
+"Prize_place" INTEGER DEFAULT 0,
+"Is_print_prize" BOOLEAN DEFAULT 0,
 "Position" INTEGER DEFAULT 0
 );
 

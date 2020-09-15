@@ -77,7 +77,9 @@ namespace DanceRegUltra.ViewModels
             DbResult db_events = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from events order by Start_timestamp");
             foreach(DbRow row in db_events)
             {
-                DanceRegCollections.Events.Add(new DanceEvent(row["Id_event"].ToInt32(), row["Title"].ToString(), row["Start_timestamp"].ToDouble(), row["End_timestamp"].ToDouble(), row["Json_scheme"].ToString(), row["Id_node_increment"].ToInt32()));
+                DanceEvent tmp_add = new DanceEvent(row["Id_event"].ToInt32(), row["Title"].ToString(), row["Start_timestamp"].ToDouble(), row["End_timestamp"].ToDouble(), row["Json_scheme"].ToString(), row["Id_node_increment"].ToInt32());
+                tmp_add.All_members_count = row["All_member_count"].ToInt32();
+                DanceRegCollections.Events.Add(tmp_add);
             }
             DanceRegCollections.Events.CollectionChanged += this.UpdateEvents;
 

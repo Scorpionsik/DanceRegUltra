@@ -134,7 +134,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                                 }
                             }
                             node.SetPlatform(new IdTitle(platform.IdArray, platform.Title));
-                            await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Id_platform=" + platform.IdArray + " where Id_event=" + this.EventInWork.IdEvent + " and Id_node=" + node.NodeId);
+                            //await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Id_platform=" + platform.IdArray + " where Id_event=" + this.EventInWork.IdEvent + " and Id_node=" + node.NodeId);
                             next = true;
                             break;
                         }

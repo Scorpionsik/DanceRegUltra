@@ -32,6 +32,46 @@ namespace DanceRegUltra.Models
             }
         }
 
+        private int all_members_count;
+        public int All_members_count
+        {
+            get => this.all_members_count;
+            set
+            {
+                this.all_members_count = value;
+                this.OnPropertyChanged("All_members_count");
+                this.event_updateDanceEvent?.Invoke(this.IdEvent, "All_member_count", value);
+            }
+        }
+        /*
+        private int member_finish_count;
+        public int Member_finish_count
+        {
+            get => this.member_finish_count;
+            set
+            {
+                this.member_finish_count = value;
+                this.OnPropertyChanged("Member_finish_count");
+                this.OnPropertyChanged("Member_finish_percent");
+                this.event_updateDanceEvent?.Invoke(this.IdEvent, "Member_finish_count", value);
+            }
+        }
+
+        public string Member_finish_percent
+        {
+            get
+            {
+                if (this.HideNodes.Value.Count == 0) return "0";
+                else
+                {
+                    double percent = this.HideNodes.Value.Count / 100 * this.Member_finish_count;
+                    string str_percent = percent.ToString();
+                    if (str_percent.Length > 4) str_percent = str_percent.Remove(3);
+                    return str_percent;
+                }
+            }
+        }*/
+
         private event UpdateDanceEvent event_updateDanceEvent;
         /// <summary>
         /// Срабатывает при изменении значений события; передает в числовой переменной id данного события, в строке название столбца в таблице бд
@@ -150,9 +190,15 @@ namespace DanceRegUltra.Models
             //use tmp_nomination code here
         }
 
+        private async void UpdateDanceNode(int event_id, int node_id, string column_name, object value)
+        {
+            await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set " + column_name + "='" + value + "' where Id_event=" + event_id + " and Id_node=" + node_id);
+        }
+
         public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)
         {
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
+            newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
             this.HideNodes.Value.Add(newNode);
         }
@@ -163,6 +209,7 @@ namespace DanceRegUltra.Models
             if (res.RowsCount == 0)
             {
                 DanceNode newNode = new DanceNode(this.IdEvent, this.NodeId++, member, isGroup, platform, league_id, block, age_id, style_id);
+                newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
                 bool getPosition = false;
                 int position = 0;
                 for (; position < this.HideNodes.Value.Count; position++)
@@ -177,7 +224,7 @@ namespace DanceRegUltra.Models
 
                 if (!getPosition) this.HideNodes.Value.Add(newNode);
 
-                await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', " + position + ")");
+                await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
                 if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
                 //this.HideNodes.Value.Add(newNode);
             }
@@ -186,9 +233,10 @@ namespace DanceRegUltra.Models
         public async Task DeleteNodeAsync(DanceNode node)
         {
             int position = this.HideNodes.Value.IndexOf(node);
-
-            if(position > -1)
+            if (position > -1)
             {
+                //if (node.IsPrintPrice) this.Member_finish_count--;
+                node.Event_UpdateDanceNode -= this.UpdateDanceNode;
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
                 if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
@@ -200,6 +248,8 @@ namespace DanceRegUltra.Models
                         this.HideGroups.Value.Remove((MemberGroup)node.Member);
                     }
                     else this.HideDancers.Value.Remove((MemberDancer)node.Member);
+                    
+                    this.All_members_count--;
                 }
 
             }
@@ -244,6 +294,7 @@ namespace DanceRegUltra.Models
                 this.HideGroups.Value.Insert(index_sort, tmp_add);
                 this.OnPropertyChanged("Groups");
             }
+            //this.All_members_count++;
         }
 
         public MemberDancer GetDancerById(int id_dancer)
