@@ -28,6 +28,16 @@ create table "event_nodes"
 "Position" INTEGER DEFAULT 0
 );
 
+create table "nominations"
+(
+"Id_event" INTEGER NOT NULL,
+"Id_block" INTEGER NOT NULL,
+"Id_league" INTEGER NOT NULL,
+"Id_age" INTEGER NOT NULL,
+"Id_style" INTEGER NOT NULL,
+"Json_judge_ignore" TEXT DEFAULT ''
+);
+
 /*Коллекция школ*/
 create table "schools"
 (

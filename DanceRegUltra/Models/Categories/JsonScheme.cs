@@ -108,7 +108,7 @@ namespace DanceRegUltra.Models.Categories
         /// Проверка двух узлов, возвращает 1 если можно внедрять
         /// </summary>
         /// <param name="node1">Узел-опора</param>
-        /// <param name="node2">УзелЮ который надо внедрить</param>
+        /// <param name="node2">Узел который надо внедрить</param>
         /// <returns></returns>
         public int Compare(DanceNode node1, DanceNode node2)
         {
@@ -193,6 +193,113 @@ namespace DanceRegUltra.Models.Categories
                         {
                             if (this.Styles[count].Id == node1.StyleId) level1 = count + 1;
                             if (this.Styles[count].Id == node2.StyleId) level2 = count + 1;
+                            if (level1 > 0 && level2 > 0)
+                            {
+                                if (level1 > level2) return 1;
+                                else if (level1 < level2) return -1;
+                                else
+                                {
+                                    step++;
+                                }
+                            }
+                        }
+                        count++;
+                        break;
+
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Проверка двух номинаций, возвращает 1 если можно внедрять
+        /// </summary>
+        /// <param name="nomination1">номинация-опора</param>
+        /// <param name="nomination2">Номинация которую надо внедрить</param>
+        /// <returns></returns>
+        public int Compare(DanceNomination nomination1, DanceNomination nomination2)
+        {
+            int level1 = 0, level2 = 0, step = 1, count = 0;
+            while (step < 5)
+            {
+                switch (step)
+                {
+                    /*
+                    case 1:
+                        if (this.Platforms[count].IdArray == node1.Platform.Id) level1 = count + 1;
+                        if (this.Platforms[count].IdArray == node2.Platform.Id) level2 = count + 1;
+                        if (level1 > 0 && level2 > 0)
+                        {
+                            if (level1 > level2) return 1;
+                            else if (level1 < level2) return -1;
+                            else
+                            {
+                                category_count = count;
+                                step++;
+                                level1 = 0;
+                                level2 = 0;
+                                count = -1;
+                            }
+                        }
+                        count++;
+                        break;
+                        */
+                    case 1:
+                        if (this.Blocks[count].IdArray == nomination1.Block_info.Id) level1 = count + 1;
+                        if (this.Blocks[count].IdArray == nomination2.Block_info.Id) level2 = count + 1;
+                        if (level1 > 0 && level2 > 0)
+                        {
+                            if (level1 > level2) return 1;
+                            else if (level1 < level2) return -1;
+                            else
+                            {
+                                step++;
+                                level1 = 0;
+                                level2 = 0;
+                                count = -1;
+                            }
+                        }
+                        count++;
+                        break;
+                    case 2:
+                        if (this.Platforms[0].Values[count].Id == nomination1.League_id) level1 = count + 1;
+                        if (this.Platforms[0].Values[count].Id == nomination2.League_id) level2 = count + 1;
+                        if (level1 > 0 && level2 > 0)
+                        {
+                            if (level1 > level2) return 1;
+                            else if (level1 < level2) return -1;
+                            else
+                            {
+                                step++;
+                                level1 = 0;
+                                level2 = 0;
+                                count = -1;
+                            }
+                        }
+                        count++;
+                        break;
+                    case 3:
+                        if (this.Blocks[0].Values[count].Id == nomination1.Age_id) level1 = count + 1;
+                        if (this.Blocks[0].Values[count].Id == nomination2.Age_id) level2 = count + 1;
+                        if (level1 > 0 && level2 > 0)
+                        {
+                            if (level1 > level2) return 1;
+                            else if (level1 < level2) return -1;
+                            else
+                            {
+                                step++;
+                                level1 = 0;
+                                level2 = 0;
+                                count = -1;
+                            }
+                        }
+                        count++;
+                        break;
+                    case 4:
+                        if (this.Styles[count].IsChecked)
+                        {
+                            if (this.Styles[count].Id == nomination1.Style_id) level1 = count + 1;
+                            if (this.Styles[count].Id == nomination2.Style_id) level2 = count + 1;
                             if (level1 > 0 && level2 > 0)
                             {
                                 if (level1 > level2) return 1;

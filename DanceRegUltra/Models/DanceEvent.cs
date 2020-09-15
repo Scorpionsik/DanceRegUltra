@@ -169,7 +169,7 @@ namespace DanceRegUltra.Models
             this.Styles = new List<int>();
         }
 
-        private void AddNominationMember(DanceNode node)
+        private async void AddNominationMember(DanceNode node)
         {
             DanceNomination tmp_nomination = null;
             foreach(DanceNomination nomination in this.HideNominations.Value)
@@ -185,9 +185,21 @@ namespace DanceRegUltra.Models
             }
             if(tmp_nomination == null)
             {
-                //add new nomination code here
+                await DanceRegDatabase.ExecuteNonQueryAsync("insert into nominations values (" + this.IdEvent + ", " + node.Block.Id + ", " + node.LeagueId + ", " + node.AgeId + ", " + node.StyleId +", '')");
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.IdEvent + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
+                DanceNomination nomination = new DanceNomination(this.IdEvent, node.Block, this.SchemeEvent.GetSchemeArrayById(node.Block.Id, Enums.SchemeType.Block).ScoreType, node.LeagueId, node.AgeId, node.StyleId, res.HasRows ? false : true);
+                this.AddNomination(nomination);
+                tmp_nomination = nomination;
             }
-            //use tmp_nomination code here
+            tmp_nomination.AddNominant(node);
+        }
+
+        public void AddNomination(DanceNomination nomination)
+        {
+            int index = 0;
+            while (this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1 && index < this.HideNominations.Value.Count) index++;
+            this.HideNominations.Value.Insert(index, nomination);
+            this.OnPropertyChanged("Nominations");
         }
 
         private async void UpdateDanceNode(int event_id, int node_id, string column_name, object value)

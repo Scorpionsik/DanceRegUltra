@@ -20,7 +20,7 @@ using System.Windows;
 
 namespace DanceRegUltra.ViewModels
 {
-    public class EventManagerViewModel : ViewModel, IDropTarget
+    public class EventManagerViewModel : ViewModel//, IDropTarget
     {
         private TimerCallback TitleUpdate_Callback;
         private Timer TitleUpdate_Timer;
@@ -129,6 +129,10 @@ namespace DanceRegUltra.ViewModels
 
             await DanceRegCollections.LoadSchools();
 
+            //add load nominations code, bitch!
+            /*
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.EventInWork.IdEvent)
+            */
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.EventInWork.IdEvent + " order by Position");
             foreach(DbRow row in res)
             {
@@ -187,7 +191,7 @@ namespace DanceRegUltra.ViewModels
                 await DanceRegDatabase.ExecuteNonQueryAsync("update events set " + column_name + "='" + value_update + "' where Id_event=" + event_id);
             }
         }
-
+        /*
         public void DragOver(IDropInfo dropInfo)
         {
             dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
@@ -213,7 +217,7 @@ namespace DanceRegUltra.ViewModels
 
             }
         }
-
+        */
         private async void DeleteNodeMethod(DanceNode deleteNode)
         {
             await this.EventInWork.DeleteNodeAsync(deleteNode);
