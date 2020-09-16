@@ -14,6 +14,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -69,15 +70,224 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
+        #region Search
+        private bool isShowNodes;
+        /// <summary>
+        /// Флаг для смены интерфейса узлов; true - показывать Nodes, false - Nominations
+        /// </summary>
+        public bool IsShowNodes
+        {
+            get => this.isShowNodes;
+            private set
+            {
+                this.isShowNodes = value;
+                this.OnPropertyChanged("IsShowNodes");
+            }
+        }
+
+        private string searchByNodeId;
+        /// <summary>
+        /// Поле для поиска по ID узла
+        /// </summary>
+        public string SearchByNodeId
+        {
+            get => this.searchByNodeId;
+            set
+            {
+                this.searchByNodeId = value;
+                if(this.searchByMemberNum.Length > 0 && value.Length > 0)
+                {
+                    this.searchByMemberNum = "";
+                    this.OnPropertyChanged("SearchByMemberNum");
+                }
+                this.OnPropertyChanged("SearchByNodeId");
+            }
+        }
+
+        private string searchByMemberNum;
+        /// <summary>
+        /// Поле для поиска по номеру участника
+        /// </summary>
+        public string SearchByMemberNum
+        {
+            get => this.searchByMemberNum;
+            set
+            {
+                this.searchByMemberNum = value;
+                if(this.searchByNodeId.Length > 0 && value.Length > 0)
+                {
+                    this.searchByNodeId = "";
+                    this.OnPropertyChanged("SearchByNodeId");
+                }
+                this.OnPropertyChanged("SearchByMemberNum");
+            }
+        }
+
+        private JsonSchemeArray select_search_block;
+        /// <summary>
+        /// Выбранный блок в поиске
+        /// </summary>
+        public JsonSchemeArray Select_search_block
+        {
+            get => this.select_search_block;
+            set
+            {
+                this.select_search_block = value;
+                this.OnPropertyChanged("Select_search_block");
+            }
+        }
+
+        private DanceNomination select_search_nomination;
+        /// <summary>
+        /// Выбранная номинация в поиске
+        /// </summary>
+        public DanceNomination Select_search_nomination
+        {
+            get => this.select_search_nomination;
+            set
+            {
+                this.select_search_nomination = value;
+                this.OnPropertyChanged("Select_search_nomination");
+            }
+        }
+
+        private IdTitle select_search_school;
+        /// <summary>
+        /// Выбранная школа в поиске
+        /// </summary>
+        public IdTitle Select_search_school
+        {
+            get => this.select_search_school;
+            set
+            {
+                this.select_search_school = value;
+                this.OnPropertyChanged("Select_search_school");
+            }
+        }
+
+        private int result_search_nodes_count;
+        public int Result_search_nodes_count
+        {
+            get => this.result_search_nodes_count == -1 ? this.EventInWork.Nodes.Count : this.result_search_nodes_count;
+            private set
+            {
+                this.result_search_nodes_count = value;
+                this.OnPropertyChanged("Result_search_nodes_count");
+            }
+        }
+
+        public ListExt<DanceNode> Result_search_nodes
+        {
+            get
+            {
+                ListExt<DanceNode> result = new ListExt<DanceNode>();
+                if (this.SearchByNodeId != null && new Regex(@"\d+").IsMatch(this.SearchByNodeId))
+                {
+                    int search_node = Convert.ToInt32(this.SearchByNodeId);
+                    foreach(DanceNode node in this.EventInWork.Nodes)
+                    {
+                        if(node.NodeId == search_node)
+                        {
+                            result.Add(node);
+                            break;
+                        }
+                    }
+                }
+                else if(this.SearchByMemberNum != null && new Regex(@"\d+").IsMatch(this.SearchByMemberNum))
+                {
+                    int search_num = Convert.ToInt32(this.SearchByNodeId);
+                    foreach (DanceNode node in this.EventInWork.Nodes)
+                    {
+                        if (node.Member.MemberNum == search_num)
+                        {
+                            result.Add(node);
+                        }
+                    }
+                }
+                else if(this.Select_search_school != null)
+                {
+                    foreach (DanceNode node in this.EventInWork.Nodes)
+                    {
+                        if (node.Member.School == this.Select_search_school)
+                        {
+                            result.Add(node);
+                        }
+                    }
+                }
+                this.Result_search_nodes_count = result.Count == 0 ? -1 : result.Count;
+                return result.Count == 0 ? this.EventInWork.Nodes : result;
+            }
+        }
+
+        private int result_search_nomination_count;
+        public int Result_search_nomination_count
+        {
+            get => this.result_search_nomination_count == -1 ? this.EventInWork.Nominations.Count : this.result_search_nomination_count;
+            private set
+            {
+                this.result_search_nomination_count = value;
+                this.OnPropertyChanged("Result_search_nomination_count");
+            }
+        }
+
+
+        public ListExt<DanceNomination> Result_search_nomination
+        {
+            get
+            {
+                ListExt<DanceNomination> result = new ListExt<DanceNomination>();
+
+                if(this.Select_search_block != null)
+                {
+                    foreach(DanceNomination nomination in this.EventInWork.Nominations)
+                    {
+                        if (nomination.Block_info.Id == this.Select_search_block.IdArray) result.Add(nomination);
+                    }
+                }
+                else if(this.Select_search_nomination != null)
+                {
+                    foreach (DanceNomination nomination in this.EventInWork.Nominations)
+                    {
+                        if (nomination.League_id == this.Select_search_nomination.League_id &&
+                            nomination.Age_id == this.Select_search_nomination.Age_id &&
+                            nomination.Style_id == this.Select_search_nomination.Style_id) result.Add(nomination);
+                    }
+                }
+                this.Result_search_nomination_count = result.Count == 0 ? -1 : result.Count;
+                return result.Count == 0 ? this.EventInWork.Nominations : result;
+            }
+        }
+
+        /// <summary>
+        /// Очистить поля поиска
+        /// </summary>
+        public void ClearSearch()
+        {
+            this.IsShowNodes = false;
+            this.searchByNodeId = "";
+            this.searchByMemberNum = "";
+            this.select_search_block = null;
+            this.select_search_nomination = null;
+            this.select_search_school = null;
+            this.OnPropertyChanged("SearchByNodeId");
+            this.OnPropertyChanged("SearchByMemberNum");
+            this.OnPropertyChanged("Select_search_block");
+            this.OnPropertyChanged("Select_search_nomination");
+            this.OnPropertyChanged("Select_search_school");
+        }
+        #endregion
+
         public EventManagerViewModel(int idEventLoad)
         {
             this.EventInWork = DanceRegCollections.GetEventById(idEventLoad);
             this.EventInWork.Event_UpdateDanceEvent += UpdateEvent;
+            this.EventInWork.Event_addNodes += UpdateCountsForSearchList;
             this.eventEditTitle = this.EventInWork.Title;
             this.startDateEvent = UnixTime.ToDateTimeOffset(this.EventInWork.StartEventTimestamp, App.Locality).DateTime;
             this.Title = "Менеджер событий - " + App.AppTitle;
             this.TitleUpdate_Callback = new TimerCallback(this.UpdateEventTitleMethod);
             this.Initialize();
+            this.ClearSearch();
         }
 
         private async void Initialize()
@@ -183,6 +393,12 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
+        private void UpdateCountsForSearchList()
+        {
+            this.OnPropertyChanged("Result_search_nodes_count");
+            this.OnPropertyChanged("Result_search_nomination_count");
+        }
+
         private void UpdateEventTitleMethod(object obj)
         {
             if (this.TitleUpdate_Timer != null) this.TitleUpdate_Timer.Dispose();
@@ -193,6 +409,7 @@ namespace DanceRegUltra.ViewModels
         {
             this.EventInWork.All_members_count = this.EventInWork.Dancers.Count + this.EventInWork.Groups.Count;
             this.EventInWork.Event_UpdateDanceEvent -= UpdateEvent;
+            this.EventInWork.Event_addNodes -= UpdateCountsForSearchList;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }

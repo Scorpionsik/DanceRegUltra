@@ -87,6 +87,17 @@ namespace DanceRegUltra.Models
             remove => this.event_updateDanceEvent -= value;
         }
 
+        private event Action event_addNodes;
+        public event Action Event_addNodes
+        {
+            add
+            {
+                this.event_addNodes -= value;
+                this.event_addNodes += value;
+            }
+            remove => this.event_addNodes -= value;
+        }
+
 
         private Lazy<ListExt<MemberDancer>> HideDancers;
         public ListExt<MemberDancer> Dancers { get => this.HideDancers?.Value; }
@@ -199,6 +210,7 @@ namespace DanceRegUltra.Models
                 tmp_nomination = nomination;
             }
             tmp_nomination.AddNominant(node);
+            this.event_addNodes?.Invoke();
         }
 
         public void AddNomination(DanceNomination nomination)

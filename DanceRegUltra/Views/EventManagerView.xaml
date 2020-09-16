@@ -52,24 +52,17 @@
         </DockPanel>
         <!--end Event edit-->
         <!--Search-->
-        <ComboBox Grid.Row="2" ItemsSource="{Binding Path=EventInWork.Nominations}">
-            <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Visibility" Value="{Binding Path=IsShowInList, Converter={StaticResource BoolVisibility}}"/>
-                </Style>
-            </ComboBox.ItemContainerStyle>
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=League_id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
-                        <TextBlock Text=" - "/>
-                        <TextBlock Text="{Binding Path=Age_id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
-                        <TextBlock Text=" - "/>
-                        <TextBlock Text="{Binding Path=Style_id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <Grid Grid.Row="2">
+            <ComboBox  ItemsSource="{Binding Path=EventInWork.Schools}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Title}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
         <!--end Search-->
         <!--Nodes and members-->
         <Grid Grid.Row="3">
@@ -78,14 +71,14 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!--Nominations-->
-            <GroupBox Grid.Column="0">
+            <GroupBox Visibility="{Binding Path=IsShowNodes, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Grid.Column="0">
                 <GroupBox.Header>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Номинации: "/>
-                        <TextBlock Text="{Binding Path=EventInWork.Nominations.Count}" FontWeight="Bold"/>
+                        <TextBlock Text="Найдено номинаций: "/>
+                        <TextBlock Text="{Binding Path=Result_search_nomination_count}" FontWeight="Bold"/>
                     </StackPanel>
                 </GroupBox.Header>
-                <ListBox ItemsSource="{Binding Path=EventInWork.Nominations}" VirtualizingPanel.ScrollUnit="Pixel">
+                <ListBox ItemsSource="{Binding Path=Result_search_nomination}" VirtualizingPanel.ScrollUnit="Pixel">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -189,16 +182,16 @@
             </GroupBox>
             <!--end Nominations-->
             <!--Nodes-->
-            <GroupBox Visibility="Collapsed" Grid.Column="0">
+            <GroupBox Visibility="{Binding Path=IsShowNodes, Converter={StaticResource BoolVisibility}}"  Grid.Column="0">
                 <GroupBox.Header>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Номинанты: "/>
-                        <TextBlock Text="{Binding Path=EventInWork.Nodes.Count}" FontWeight="Bold"/>
+                        <TextBlock Text="Найдено номинантов: "/>
+                        <TextBlock Text="{Binding Path=Result_search_nodes_count}" FontWeight="Bold"/>
                     </StackPanel>
                 </GroupBox.Header>
                 <DockPanel LastChildFill="True">
                     <Button Content="Удалить номинанта" DockPanel.Dock="Bottom" Command="{Binding Path=Command_DeleteNode}" CommandParameter="{Binding Path=Select_node}"/>
-                    <ListBox ItemsSource="{Binding Path=EventInWork.Nodes}" SelectedItem="{Binding Path=Select_node}">
+                    <ListBox ItemsSource="{Binding Path=Result_search_nodes}" SelectedItem="{Binding Path=Select_node}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="BorderThickness" Value="1"/>
