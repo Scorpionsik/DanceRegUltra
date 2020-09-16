@@ -18,17 +18,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="54"/>
             <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="70"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!--Menu-->
         <ToolBarTray Grid.Row="0">
-            <ToolBar>
+            <ToolBar Band="1">
                 <Button Content="Добавить танцора" Command="{Binding Path=Command_AddDancer}"/>
                 <Separator/>
                 <Button Content="Добавить группу" Command="{Binding Path=Command_AddGroup}"/>
             </ToolBar>
-            <ToolBar Band="1">
+            <ToolBar>
                 <Button Content="Редактор площадок" Command="{Binding Path=Command_EditPlatforms}"/>
                 <Separator/>
                 <Button Content="Настройки судейства" Command="{Binding Path=Command_EditJudge}"/>
@@ -52,17 +52,75 @@
         </DockPanel>
         <!--end Event edit-->
         <!--Search-->
-        <Grid Grid.Row="2">
-            <ComboBox  ItemsSource="{Binding Path=EventInWork.Schools}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=Title}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </Grid>
+        <GroupBox Grid.Row="2" Header="Поиск">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="Поиск по ID номинантов">
+                        <TextBox Text="{Binding Path=SearchByNodeId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="Поиск по номеру участника">
+                        <TextBox Text="{Binding Path=SearchByMemberNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </GroupBox>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="Поиск по блокам">
+                        <ComboBox ItemsSource="{Binding Path=EventInWork.SchemeEvent.Blocks}" SelectedItem="{Binding Path=Select_search_block}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Title}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="Поиск по номинациям">
+                        <ComboBox ItemsSource="{Binding Path=EventInWork.Nominations}" SelectedItem="{Binding Path=Select_search_nomination}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Visibility" Value="{Binding Path=IsShowInList, Converter={StaticResource BoolVisibility}}"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                        <TextBlock Text="{Binding Path=League_id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock Text="{Binding Path=Age_id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock Text="{Binding Path=Style_id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Header="Поиск по школе" Grid.Column="2">
+                        <ComboBox ItemsSource="{Binding Path=EventInWork.Schools}" SelectedItem="{Binding Path=Select_search_school}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=Title}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </GroupBox>
+                </Grid>
+                <Button Grid.Column="2" Content="Очистить" Command="{Binding Path=Command_ClearSearch}"/>
+            </Grid>
+        </GroupBox>
         <!--end Search-->
         <!--Nodes and members-->
         <Grid Grid.Row="3">
