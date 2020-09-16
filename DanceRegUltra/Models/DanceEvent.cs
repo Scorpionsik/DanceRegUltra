@@ -132,6 +132,8 @@ namespace DanceRegUltra.Models
         public Dictionary<int, List<IdTitle>> Ages { get; private set; }
         public List<int> Styles { get; private set; }
 
+        public ListExt<IdTitle> Schools { get; private set; }
+
         //public string JsonSchemeEvent { get; private set; }
 
         public DanceEvent(int id, string title, double startTimestamp, double endTimestamp, string json = "", int node_id = 1)
@@ -142,7 +144,7 @@ namespace DanceRegUltra.Models
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
             this.HideNominations = new Lazy<ListExt<DanceNomination>>();
-
+            this.Schools = new ListExt<IdTitle>();
             this.IdEvent = id;
             this.title = title;
             this.startEventTimestamp = startTimestamp;
@@ -165,6 +167,7 @@ namespace DanceRegUltra.Models
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
             this.HideNominations = new Lazy<ListExt<DanceNomination>>();
+            this.Schools = new ListExt<IdTitle>();
 
             this.Leagues = new Dictionary<int, List<IdTitle>>();
             this.Ages = new Dictionary<int, List<IdTitle>>();
@@ -240,6 +243,28 @@ namespace DanceRegUltra.Models
             newNode.SetScores(scores);
             this.HideNodes.Value.Add(newNode);
             this.AddNominationMember(newNode);
+            this.AddSchool(member.School);
+        }
+
+        private void AddSchool(IdTitle school)
+        {
+            if (!this.Schools.Contains(school))
+            {
+                int index = 0;
+                while (index < this.Schools.Count && this.Schools[index].CompareTo(school) != 1) index++;
+                this.Schools.Insert(index, school);
+                this.OnPropertyChanged("Schools");
+            }
+        }
+
+        private async void RemoveSchool(IdTitle school)
+        {
+            DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select event_nodes.Id_node from event_nodes left join dancers on (event_nodes.Id_member=dancers.Id_member) left join groups on (event_nodes.Id_member=groups.Id_member) where event_nodes.Id_event="+ this.IdEvent +" and dancers.Id_school="+ school.Id);
+            if (!res.HasRows)
+            {
+                this.Schools.Remove(school);
+                this.OnPropertyChanged("Schools");
+            }
         }
 
         public async Task AddNodeAsync(Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
@@ -263,6 +288,7 @@ namespace DanceRegUltra.Models
 
                 if (!getPosition) this.HideNodes.Value.Add(newNode);
                 this.AddNominationMember(newNode);
+                this.AddSchool(newNode.Member.School);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
                 if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
                 //this.HideNodes.Value.Add(newNode);
@@ -297,6 +323,8 @@ namespace DanceRegUltra.Models
                     await DanceRegDatabase.ExecuteNonQueryAsync("delete from nominations where Id_event=" + this.IdEvent + " and Id_block=" + node.Block.Id + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
                     this.DeleteNomination(node.Block.Id, node.LeagueId, node.AgeId, node.StyleId);
                 }
+
+                this.RemoveSchool(node.Member.School);
             }
         }
 
