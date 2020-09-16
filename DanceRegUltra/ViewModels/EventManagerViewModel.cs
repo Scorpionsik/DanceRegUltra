@@ -438,7 +438,10 @@ namespace DanceRegUltra.ViewModels
 
                 if(tmp_member == null)
                 {
-                    DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from " + (isGroup ? "groups" : "dancers") + " where Id_member=" + row["Id_member"].ToInt32());
+                    //DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from " + (isGroup ? "groups" : "dancers") + " where Id_member=" + row["Id_member"].ToInt32());
+                    string table_name = (isGroup ? "groups" : "dancers");
+                    int id_member = row["Id_member"].ToInt32();
+                    DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from "+ table_name + " left join nums_for_members on (nums_for_members.Id_event="+ this.EventInWork.IdEvent +" and nums_for_members.Id_member="+ id_member + " and nums_for_members.Is_group="+ isGroup +") where "+ table_name + ".Id_member="+ id_member + ";");
 
                     if (!isGroup)
                     {
@@ -449,6 +452,7 @@ namespace DanceRegUltra.ViewModels
                         tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Json_members", 0].ToString());
                         
                     }
+                    tmp_member.MemberNum = res_member["Number", 0].ToInt32();
                     tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member["Id_school", 0].ToInt32()));
                     this.EventInWork.AddMember(tmp_member);
                 }
@@ -521,9 +525,9 @@ namespace DanceRegUltra.ViewModels
             await this.EventInWork.DeleteNodeAsync(deleteNode);
         }
 
-        private void SetRandomNumsMethod()
+        private async void SetRandomNumsMethod()
         {
-            this.EventInWork.SetRandomNums();
+            await this.EventInWork.SetRandomNums();
 
             int step = 0;
             foreach(DanceNomination nomination in this.EventInWork.Nominations)
@@ -531,6 +535,7 @@ namespace DanceRegUltra.ViewModels
                 nomination.SortByNums(step);
                 step += nomination.Nominants.Count;
             }
+            await this.EventInWork.UpdateNodePosition(0, this.EventInWork.Nodes.Count - 1);
         }
 
         public RelayCommand Command_AddDancer

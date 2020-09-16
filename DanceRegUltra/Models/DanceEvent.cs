@@ -299,6 +299,7 @@ namespace DanceRegUltra.Models
                 }
 
                 if (!getPosition) this.HideNodes.Value.Add(newNode);
+                newNode.Position = position;
                 this.AddNominationMember(newNode);
                 this.AddSchool(newNode.Member.School);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
@@ -356,6 +357,7 @@ namespace DanceRegUltra.Models
             int index_sort = 0;
             if(newMember is MemberDancer dancer)
             {
+                /*
                 MemberDancer tmp_add = null;
                 if (dancer.EventId != this.IdEvent)
                 {
@@ -363,20 +365,24 @@ namespace DanceRegUltra.Models
                     tmp_add.SetSchool(dancer.School);
                 }
                 else tmp_add = dancer;
-                while (index_sort < this.HideDancers.Value.Count && this.HideDancers.Value[index_sort].CompareTo(tmp_add) <= 0) index_sort++;
-                this.HideDancers.Value.Insert(index_sort, tmp_add);
+                */
+
+                while (index_sort < this.HideDancers.Value.Count && this.HideDancers.Value[index_sort].CompareTo(dancer) <= 0) index_sort++;
+                this.HideDancers.Value.Insert(index_sort, dancer);
                 this.OnPropertyChanged("Dancers");
             }
             else if(newMember is MemberGroup group)
             {
+                /*
                 MemberGroup tmp_add = null;
                 if (group.EventId != this.IdEvent)
                 {
                     tmp_add = new MemberGroup(this.IdEvent, group.MemberId, group.GroupMembers);
                 }
                 else tmp_add = group;
-                while (index_sort < this.HideGroups.Value.Count && this.HideGroups.Value[index_sort].CompareTo(tmp_add) <= 0) index_sort++;
-                this.HideGroups.Value.Insert(index_sort, tmp_add);
+                */
+                while (index_sort < this.HideGroups.Value.Count && this.HideGroups.Value[index_sort].CompareTo(group) <= 0) index_sort++;
+                this.HideGroups.Value.Insert(index_sort, group);
                 this.OnPropertyChanged("Groups");
             }
             //this.All_members_count++;
@@ -437,7 +443,7 @@ namespace DanceRegUltra.Models
         }
         //---метод OnPropertyChanged
 
-        public void SetRandomNums()
+        public async Task SetRandomNums()
         {
             ListExt<Member> result = new ListExt<Member>();
             result.AddRange(this.HideDancers.Value);
@@ -448,7 +454,15 @@ namespace DanceRegUltra.Models
             foreach(Member member in result)
             {
                 member.MemberNum = num++;
+                bool isGroup = member is MemberDancer ? false : true;
+                await this.UpdateMemberNum(member.MemberId, isGroup, member.MemberNum);
             }
+        }
+
+        private async Task UpdateMemberNum(int member_id, bool is_group, int value)
+        {
+            int check = await DanceRegDatabase.ExecuteNonQueryAsync("update nums_for_members set Number=" + value + " where Id_event=" + this.IdEvent + " and Id_member=" + member_id + " and Is_group=" + is_group);
+            if (check == 0) await DanceRegDatabase.ExecuteNonQueryAsync("insert into nums_for_members values (" + this.IdEvent + ", " + member_id + ", " + is_group + ", " + value + ")");
         }
     }
 }

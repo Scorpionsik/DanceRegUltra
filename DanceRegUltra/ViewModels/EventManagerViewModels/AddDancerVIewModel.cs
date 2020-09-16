@@ -274,8 +274,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 tmp_dancer = this.EventInWork.GetDancerById(this.DancerInWork.MemberId);
                 if (tmp_dancer == null)
                 {
-                    this.EventInWork.AddMember(this.DancerInWork);
                     tmp_dancer = this.DancerInWork;
+                    this.EventInWork.AddMember(tmp_dancer);
+                    
                 }
             }
             foreach (IdCheck style in this.Styles)
