@@ -139,7 +139,11 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                             break;
                         }
                     }
-                    if (next) break;
+                    if (next)
+                    {
+                        next = false;
+                        break;
+                    }
                 }
             }
             base.Command_save?.Execute();
