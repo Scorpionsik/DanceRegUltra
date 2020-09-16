@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DanceRegUltra.Models.Categories
 {
-    public class IdTitle
+    public class IdTitle : IComparable<IdTitle>
     {
         public int Id { get; private set; }
         public string Title { get; private set; }
@@ -15,6 +15,11 @@ namespace DanceRegUltra.Models.Categories
         {
             this.Id = id;
             this.Title = title;
+        }
+
+        public int CompareTo(IdTitle other)
+        {
+            return this.Title.CompareTo(other.Title);
         }
     }
 }
