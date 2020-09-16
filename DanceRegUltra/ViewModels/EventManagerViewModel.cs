@@ -521,6 +521,18 @@ namespace DanceRegUltra.ViewModels
             await this.EventInWork.DeleteNodeAsync(deleteNode);
         }
 
+        private void SetRandomNumsMethod()
+        {
+            this.EventInWork.SetRandomNums();
+
+            int step = 0;
+            foreach(DanceNomination nomination in this.EventInWork.Nominations)
+            {
+                nomination.SortByNums(step);
+                step += nomination.Nominants.Count;
+            }
+        }
+
         public RelayCommand Command_AddDancer
         {
             get => new RelayCommand(obj =>
@@ -567,6 +579,14 @@ namespace DanceRegUltra.ViewModels
                 this.DeleteNodeMethod(deleteNode);
             },
                 (deleteNode) => deleteNode != null );
+        }
+
+        public RelayCommand Command_SetRandomNums
+        {
+            get => new RelayCommand(obj =>
+            {
+                this.SetRandomNumsMethod();
+            });
         }
     }
 }

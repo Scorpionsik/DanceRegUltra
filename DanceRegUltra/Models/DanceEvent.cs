@@ -19,7 +19,7 @@ namespace DanceRegUltra.Models
 {
     public delegate void UpdateDanceEvent(int event_id, string column_name, object value_update);
 
-    public class DanceEvent : INotifyPropertyChanged, IComparable<DanceEvent>
+    public class DanceEvent : NotifyPropertyChanged, IComparable<DanceEvent>
     {
         private int nodeId;
         public int NodeId
@@ -428,20 +428,6 @@ namespace DanceRegUltra.Models
         public RelayCommand<DanceEvent> Command_EditEvent { get; private set; }
         public RelayCommand<DanceEvent> Command_DeleteEvent { get; private set; }
 
-        /// <summary>
-        /// Событие для обновления привязанного объекта (в XAML)
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Метод для обновления выбранного привязанного объекта (в XAML)
-        /// </summary>
-        /// <param name="prop">Принимает строку-имя объекта, который необходимо обновить</param>
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
-
         public int CompareTo(DanceEvent obj)
         {
             double res = this.StartEventTimestamp - obj.StartEventTimestamp;
@@ -450,5 +436,19 @@ namespace DanceRegUltra.Models
             else return res < 0 ? -1 : 1;
         }
         //---метод OnPropertyChanged
+
+        public void SetRandomNums()
+        {
+            ListExt<Member> result = new ListExt<Member>();
+            result.AddRange(this.HideDancers.Value);
+            result.AddRange(this.HideGroups.Value);
+            result = result.Shuffle();
+
+            int num = 1;
+            foreach(Member member in result)
+            {
+                member.MemberNum = num++;
+            }
+        }
     }
 }

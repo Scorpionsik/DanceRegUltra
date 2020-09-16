@@ -33,7 +33,7 @@
                 <Separator/>
                 <Button Content="Настройки судейства" Command="{Binding Path=Command_EditJudge}"/>
                 <Separator/>
-                <Button Content="Пронумеровать участников"/>
+                <Button Content="Пронумеровать участников" Command="{Binding Path=Command_SetRandomNums}"/>
             </ToolBar>
         </ToolBarTray>
         <!--end Menu-->

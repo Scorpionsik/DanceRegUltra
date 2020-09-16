@@ -113,7 +113,7 @@ namespace DanceRegUltra.Models.Categories
         public int Compare(DanceNode node1, DanceNode node2)
         {
             int level1 = 0, level2 = 0, step = 1, count = 0;
-            while(step < 5)
+            while(step < 6)
             {
                 switch (step)
                 {
@@ -205,6 +205,9 @@ namespace DanceRegUltra.Models.Categories
                         }
                         count++;
                         break;
+                    case 5:
+                        if (node1.Member.MemberNum > node2.Member.MemberNum) return 1;
+                        else return -1;
 
                 }
             }
