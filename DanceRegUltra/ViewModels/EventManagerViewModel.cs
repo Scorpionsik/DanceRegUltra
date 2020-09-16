@@ -129,10 +129,23 @@ namespace DanceRegUltra.ViewModels
 
             await DanceRegCollections.LoadSchools();
 
-            //add load nominations code, bitch!
-            /*
-            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.EventInWork.IdEvent)
-            */
+            res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.EventInWork.IdEvent);
+            Dictionary<int, JsonSchemeArray> tmp_blocks = new Dictionary<int, JsonSchemeArray>();
+            foreach(DbRow row in res)
+            {
+                int id_block = row["Id_block"].ToInt32();
+                string title_block = "";
+                JudgeType type_block = JudgeType.ThreeD;
+                if (!tmp_blocks.ContainsKey(id_block))
+                {
+                    tmp_blocks.Add(id_block, this.EventInWork.SchemeEvent.GetSchemeArrayById(id_block, SchemeType.Block));
+                }
+                title_block = tmp_blocks[id_block].Title;
+                type_block = tmp_blocks[id_block].ScoreType;
+
+                this.EventInWork.AddNomination(new DanceNomination(this.EventInWork.IdEvent, new IdTitle(id_block, title_block), type_block, row["Id_league"].ToInt32(), row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Is_show_in_search"].ToBoolean(), row["Json_judge_ignore"].ToString()));
+            }
+
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.EventInWork.IdEvent + " order by Position");
             foreach(DbRow row in res)
             {

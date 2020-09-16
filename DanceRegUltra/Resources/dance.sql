@@ -35,6 +35,7 @@ create table "nominations"
 "Id_league" INTEGER NOT NULL,
 "Id_age" INTEGER NOT NULL,
 "Id_style" INTEGER NOT NULL,
+"Is_show_in_search" BOOLEAN DEFAULT 1,
 "Json_judge_ignore" TEXT DEFAULT ''
 );
 

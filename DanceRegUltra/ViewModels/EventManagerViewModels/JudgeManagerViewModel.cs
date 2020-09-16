@@ -72,6 +72,11 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
 
                 event_block.JudgeCount = block.JudgeCount;
                 event_block.ScoreType = block.ScoreType;
+                foreach(DanceNomination nomination in this.EventInWork.Nominations)
+                {
+                    if (nomination.Block_info.Id != event_block.IdArray) continue;
+                    nomination.SetNewType(block.ScoreType);
+                }
             }
 
             await DanceRegDatabase.ExecuteNonQueryAsync("update events set Json_scheme='" + JsonScheme.Serialize(this.EventInWork.SchemeEvent) + "' where Id_event=" + this.EventInWork.IdEvent);

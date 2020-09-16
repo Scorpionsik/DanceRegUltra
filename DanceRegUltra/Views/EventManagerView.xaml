@@ -50,7 +50,24 @@
         </DockPanel>
         <!--end Event edit-->
         <!--Search-->
-        
+        <ComboBox Grid.Row="2" ItemsSource="{Binding Path=EventInWork.Nominations}">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Visibility" Value="{Binding Path=IsShowInList, Converter={StaticResource BoolVisibility}}"/>
+                </Style>
+            </ComboBox.ItemContainerStyle>
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=League_id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                        <TextBlock Text=" "/>
+                        <TextBlock Text="{Binding Path=Age_id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                        <TextBlock Text=" "/>
+                        <TextBlock Text="{Binding Path=Style_id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <!--end Search-->
         <!--Nodes and members-->
         <Grid Grid.Row="3">

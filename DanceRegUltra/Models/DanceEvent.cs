@@ -4,6 +4,7 @@ using DanceRegUltra.Interfaces;
 using DanceRegUltra.Models.Categories;
 using DanceRegUltra.Static;
 using DanceRegUltra.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -163,6 +164,7 @@ namespace DanceRegUltra.Models
             this.HideDancers = new Lazy<ListExt<MemberDancer>>();
             this.HideGroups = new Lazy<ListExt<MemberGroup>>();
             this.HideNodes = new Lazy<ListExt<DanceNode>>();
+            this.HideNominations = new Lazy<ListExt<DanceNomination>>();
 
             this.Leagues = new Dictionary<int, List<IdTitle>>();
             this.Ages = new Dictionary<int, List<IdTitle>>();
@@ -185,9 +187,11 @@ namespace DanceRegUltra.Models
             }
             if(tmp_nomination == null)
             {
-                await DanceRegDatabase.ExecuteNonQueryAsync("insert into nominations values (" + this.IdEvent + ", " + node.Block.Id + ", " + node.LeagueId + ", " + node.AgeId + ", " + node.StyleId +", '')");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.IdEvent + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
-                DanceNomination nomination = new DanceNomination(this.IdEvent, node.Block, this.SchemeEvent.GetSchemeArrayById(node.Block.Id, Enums.SchemeType.Block).ScoreType, node.LeagueId, node.AgeId, node.StyleId, res.HasRows ? false : true);
+
+                await DanceRegDatabase.ExecuteNonQueryAsync("insert into nominations values (" + this.IdEvent + ", " + node.Block.Id + ", " + node.LeagueId + ", " + node.AgeId + ", " + node.StyleId +", "+ !res.HasRows +",'"+ JsonConvert.SerializeObject(new List<bool>() { false, false, false, false }) +"')");
+                
+                DanceNomination nomination = new DanceNomination(this.IdEvent, node.Block, this.SchemeEvent.GetSchemeArrayById(node.Block.Id, Enums.SchemeType.Block).ScoreType, node.LeagueId, node.AgeId, node.StyleId, !res.HasRows);
                 this.AddNomination(nomination);
                 tmp_nomination = nomination;
             }
@@ -196,10 +200,32 @@ namespace DanceRegUltra.Models
 
         public void AddNomination(DanceNomination nomination)
         {
+            nomination.Event_UpdateNominant += this.UpdateNominantPosition;
             int index = 0;
-            while (this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1 && index < this.HideNominations.Value.Count) index++;
+            while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
             this.HideNominations.Value.Insert(index, nomination);
             this.OnPropertyChanged("Nominations");
+        }
+
+        public void DeleteNomination(int block_id, int league_id, int age_id, int style_id)
+        {
+            int index = 0;
+            while (index < this.HideNominations.Value.Count &&
+                this.HideNominations.Value[index].Block_info.Id != block_id &&
+                this.HideNominations.Value[index].League_id != league_id &&
+                this.HideNominations.Value[index].Age_id != age_id &&
+                this.HideNominations.Value[index].Style_id != style_id) index++;
+            if (index < this.HideNominations.Value.Count)
+            {
+                this.HideNominations.Value[index].Event_UpdateNominant -= this.UpdateNominantPosition;
+                this.HideNominations.Value.RemoveAt(index);
+            }
+        }
+
+        private async void UpdateNominantPosition(DanceNode node)
+        {
+            int index = this.HideNodes.Value.IndexOf(node);
+            await this.UpdateNodePosition(index, this.HideNodes.Value.Count - 1);
         }
 
         private async void UpdateDanceNode(int event_id, int node_id, string column_name, object value)
@@ -213,6 +239,7 @@ namespace DanceRegUltra.Models
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
             this.HideNodes.Value.Add(newNode);
+            this.AddNominationMember(newNode);
         }
 
         public async Task AddNodeAsync(Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
@@ -235,7 +262,7 @@ namespace DanceRegUltra.Models
                 }
 
                 if (!getPosition) this.HideNodes.Value.Add(newNode);
-
+                this.AddNominationMember(newNode);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
                 if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
                 //this.HideNodes.Value.Add(newNode);
@@ -261,9 +288,15 @@ namespace DanceRegUltra.Models
                     }
                     else this.HideDancers.Value.Remove((MemberDancer)node.Member);
                     
-                    this.All_members_count--;
+                    //this.All_members_count--;
                 }
 
+                res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.IdEvent + " and Id_block=" + node.Block.Id + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
+                if (!res.HasRows)
+                {
+                    await DanceRegDatabase.ExecuteNonQueryAsync("delete from nominations where Id_event=" + this.IdEvent + " and Id_block=" + node.Block.Id + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
+                    this.DeleteNomination(node.Block.Id, node.LeagueId, node.AgeId, node.StyleId);
+                }
             }
         }
 

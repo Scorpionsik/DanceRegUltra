@@ -60,7 +60,7 @@ namespace DanceRegUltra.Models
                 nominant.StyleId == this.Style_id)
             {
                 int index = 0;
-                while (this.Nominants[index].Position < nominant.Position) index++;
+                while (index < this.Nominants.Count && this.Nominants[index].Position < nominant.Position) index++;
                 this.Nominants.Insert(index, nominant);
             }
         }

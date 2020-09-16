@@ -36,7 +36,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </GroupBox>
-                <Button Content="Прменить" Grid.Column="2" Command="{Binding Path=Command_SetCommon}"/>
+                <Button Content="Применить" Grid.Column="2" Command="{Binding Path=Command_SetCommon}"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Header="Установить для конкретных блоков">
