@@ -248,9 +248,10 @@ namespace DanceRegUltra.Models
             await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set " + column_name + "='" + value + "' where Id_event=" + event_id + " and Id_node=" + node_id);
         }
 
-        public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores)
+        public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores, int position)
         {
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
+            newNode.Position = position;
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
             this.HideNodes.Value.Add(newNode);
@@ -348,7 +349,7 @@ namespace DanceRegUltra.Models
             for (int i = minmax[0]; i <= minmax[1]; i++)
             {
                 //DanceRegCollections.Ages.Value[i].Position = i + 1;
-                await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Position=" + i + " where Id_event=" + this.IdEvent + " and Id_node=" + this.Nodes[i].NodeId);
+                await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Position=" + this.Nodes[i].Position + " where Id_event=" + this.IdEvent + " and Id_node=" + this.Nodes[i].NodeId);
             }
         }
 
@@ -457,6 +458,8 @@ namespace DanceRegUltra.Models
                 bool isGroup = member is MemberDancer ? false : true;
                 await this.UpdateMemberNum(member.MemberId, isGroup, member.MemberNum);
             }
+
+
         }
 
         private async Task UpdateMemberNum(int member_id, bool is_group, int value)

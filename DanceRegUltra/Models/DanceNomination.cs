@@ -121,17 +121,22 @@ namespace DanceRegUltra.Models
 
         public void SortByNums(int step)
         {
-            for (int i = 0; i < this.Nominants.Count - 1; i++)
+            if (this.Nominants.Count > 1) 
             {
-                for (int j = 0; j < this.Nominants.Count - i - 1; j++)
+                for (int i = 0; i < this.Nominants.Count - 1; i++)
                 {
-                    if (this.Nominants[j + 1].Member.MemberNum < this.Nominants[j].Member.MemberNum)
+                    for (int j = 0; j < this.Nominants.Count - i - 1; j++)
                     {
-                        this.Nominants.Move(j, j + 1);
+                        if (this.Nominants[j + 1].Member.MemberNum < this.Nominants[j].Member.MemberNum)
+                        {
+                            this.Nominants.Move(j, j + 1);
+                        }
                     }
+                    this.Nominants[this.Nominants.Count - i - 1].Position = this.Nominants.Count - i - 1 + step;
                 }
-                this.Nominants[this.Nominants.Count - i - 1].Position = this.Nominants.Count - i - 1 + step;
             }
+            this.Nominants.First.Position = step;
+
         }
     }
 }

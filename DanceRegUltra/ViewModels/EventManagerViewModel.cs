@@ -242,10 +242,11 @@ namespace DanceRegUltra.ViewModels
         {
             get
             {
-                ListExt<DanceNomination> result = new ListExt<DanceNomination>();
+                ListExt<DanceNomination> result = null;
 
                 if(this.Select_search_block != null)
                 {
+                    result = new ListExt<DanceNomination>();
                     foreach(DanceNomination nomination in this.EventInWork.Nominations)
                     {
                         if (nomination.Block_info.Id == this.Select_search_block.IdArray) result.Add(nomination);
@@ -253,6 +254,7 @@ namespace DanceRegUltra.ViewModels
                 }
                 else if(this.Select_search_nomination != null)
                 {
+                    result = new ListExt<DanceNomination>();
                     foreach (DanceNomination nomination in this.EventInWork.Nominations)
                     {
                         if (nomination.League_id == this.Select_search_nomination.League_id &&
@@ -260,8 +262,8 @@ namespace DanceRegUltra.ViewModels
                             nomination.Style_id == this.Select_search_nomination.Style_id) result.Add(nomination);
                     }
                 }
-                this.Result_search_nomination_count = result.Count == 0 ? -1 : result.Count;
-                return result.Count == 0 ? this.EventInWork.Nominations : result;
+                this.Result_search_nomination_count = result == null ? -1 : result.Count;
+                return result == null ? this.EventInWork.Nominations : result;
             }
         }
 
@@ -452,7 +454,7 @@ namespace DanceRegUltra.ViewModels
                         tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Json_members", 0].ToString());
                         
                     }
-                    tmp_member.MemberNum = res_member["Number", 0].ToInt32();
+                    tmp_member.MemberNum = res_member["Number", 0].Value == DBNull.Value ? 0 : res_member["Number", 0].ToInt32();
                     tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member["Id_school", 0].ToInt32()));
                     this.EventInWork.AddMember(tmp_member);
                 }
@@ -461,7 +463,7 @@ namespace DanceRegUltra.ViewModels
                 IdTitle tmp_platform = new IdTitle(row["Id_platform"].ToInt32(), this.EventInWork.SchemeEvent.GetTypeTitleById(row["Id_platform"].ToInt32(), SchemeType.Platform));
                 IdTitle tmp_block = new IdTitle(row["Id_block"].ToInt32(), this.EventInWork.SchemeEvent.GetTypeTitleById(row["Id_block"].ToInt32(), SchemeType.Block));
 
-                this.EventInWork.AddNode(row["Id_node"].ToInt32(), tmp_member, isGroup, tmp_platform, row["Id_league"].ToInt32(), tmp_block, row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Json_scores"].ToString());
+                this.EventInWork.AddNode(row["Id_node"].ToInt32(), tmp_member, isGroup, tmp_platform, row["Id_league"].ToInt32(), tmp_block, row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Json_scores"].ToString(), row["Position"].ToInt32());
             }
         }
 
