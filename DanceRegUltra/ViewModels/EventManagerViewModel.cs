@@ -476,10 +476,10 @@ namespace DanceRegUltra.ViewModels
             }
             else
             {
-                if (this.Select_search_block != null || this.Select_search_nomination != null)
-                {
+                //if (this.Select_search_block != null || this.Select_search_nomination != null)
+                //{
                     this.OnPropertyChanged("Result_search_nomination");
-                }
+                //}
                 this.OnPropertyChanged("Result_search_nomination_count");
             }
         }

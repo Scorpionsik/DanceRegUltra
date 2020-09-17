@@ -224,17 +224,28 @@ namespace DanceRegUltra.Models
 
         public void DeleteNomination(int block_id, int league_id, int age_id, int style_id)
         {
+            /*
             int index = 0;
             while (index < this.HideNominations.Value.Count &&
                 this.HideNominations.Value[index].Block_info.Id != block_id &&
                 this.HideNominations.Value[index].League_id != league_id &&
                 this.HideNominations.Value[index].Age_id != age_id &&
                 this.HideNominations.Value[index].Style_id != style_id) index++;
-            if (index < this.HideNominations.Value.Count)
+                */
+
+            for (int index = 0; index < this.HideNominations.Value.Count; index++)
             {
-                this.HideNominations.Value[index].Event_UpdateNominant -= this.UpdateNominantPosition;
-                this.HideNominations.Value.RemoveAt(index);
+                if (this.HideNominations.Value[index].Block_info.Id == block_id &&
+                this.HideNominations.Value[index].League_id == league_id &&
+                this.HideNominations.Value[index].Age_id == age_id &&
+                this.HideNominations.Value[index].Style_id == style_id)
+                {
+                    this.HideNominations.Value[index].Event_UpdateNominant -= this.UpdateNominantPosition;
+                    this.HideNominations.Value.RemoveAt(index);
+                    break;
+                }
             }
+            
         }
 
         private async void UpdateNominantPosition(DanceNode node)
@@ -331,14 +342,30 @@ namespace DanceRegUltra.Models
                     //this.All_members_count--;
                 }
 
-                res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.IdEvent + " and Id_block=" + node.Block.Id + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
-                if (!res.HasRows)
+                res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_block=" + node.Block.Id + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
+                if (res.RowsCount == 0)
                 {
                     await DanceRegDatabase.ExecuteNonQueryAsync("delete from nominations where Id_event=" + this.IdEvent + " and Id_block=" + node.Block.Id + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
                     this.DeleteNomination(node.Block.Id, node.LeagueId, node.AgeId, node.StyleId);
                 }
+                else
+                {
+                    foreach(DanceNomination nomination in this.HideNominations.Value)
+                    {
+                        if (
+                            node.Block.Id == nomination.Block_info.Id &&
+                            node.LeagueId == nomination.League_id &&
+                            node.AgeId == nomination.Age_id &&
+                            node.StyleId == nomination.Style_id)
+                        {
+                            nomination.Nominants.Remove(node);
+                            break;
+                        }
+                    }
+                }
 
                 this.RemoveSchool(node.Member.School);
+                this.event_addNodes?.Invoke();
             }
         }
 
