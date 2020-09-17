@@ -183,6 +183,13 @@
                                             <Setter Property="BorderBrush" Value="DarkGray"/>
                                             <Setter Property="Margin" Value="5 2.5 5 2.5"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Удалить номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Style>
                                     </ListBox.ItemContainerStyle>
                                     <ListBox.ItemTemplate>
@@ -256,6 +263,13 @@
                                 <Setter Property="BorderBrush" Value="DarkGray"/>
                                 <Setter Property="Margin" Value="5 2.5 5 2.5"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <MenuItem Header="Удалить номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>

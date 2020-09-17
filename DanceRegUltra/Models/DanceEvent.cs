@@ -262,6 +262,7 @@ namespace DanceRegUltra.Models
         public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores, int position)
         {
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
+            newNode.Command_deleteNode = this.Command_deleteNode;
             newNode.Position = position;
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
@@ -312,6 +313,7 @@ namespace DanceRegUltra.Models
 
                 if (!getPosition) this.HideNodes.Value.Add(newNode);
                 newNode.Position = position;
+                newNode.Command_deleteNode = this.Command_deleteNode;
                 this.AddNominationMember(newNode);
                 this.AddSchool(newNode.Member.School);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
@@ -327,6 +329,7 @@ namespace DanceRegUltra.Models
             {
                 //if (node.IsPrintPrice) this.Member_finish_count--;
                 node.Event_UpdateDanceNode -= this.UpdateDanceNode;
+                node.Command_deleteNode = null;
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
                 if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
@@ -495,6 +498,17 @@ namespace DanceRegUltra.Models
             }
 
 
+        }
+
+        private RelayCommand<DanceNode> command_deleteNode;
+        public RelayCommand<DanceNode> Command_deleteNode
+        {
+            get => this.command_deleteNode;
+            set
+            {
+                this.command_deleteNode = value;
+                this.OnPropertyChanged("Command_deleteNode");
+            }
         }
 
         private async Task UpdateMemberNum(int member_id, bool is_group, int value)

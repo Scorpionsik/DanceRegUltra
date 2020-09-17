@@ -1,4 +1,6 @@
-﻿using DanceRegUltra.Enums;
+﻿using CoreWPF.MVVM;
+using CoreWPF.Utilites;
+using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.Models.Categories;
 using Newtonsoft.Json;
@@ -11,7 +13,7 @@ namespace DanceRegUltra.Models
 {
     public delegate void UpdateDanceNode(int event_id, int node_id, string column_name, object value);
 
-    public class DanceNode : INotifyPropertyChanged
+    public class DanceNode : NotifyPropertyChanged
     {
         public int EventId { get; private set; }
         public int NodeId { get; private set; }
@@ -152,19 +154,15 @@ namespace DanceRegUltra.Models
             return JsonConvert.SerializeObject(this.HideScores.Value);
         }
 
-        /// <summary>
-        /// Событие для обновления привязанного объекта (в XAML)
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Метод для обновления выбранного привязанного объекта (в XAML)
-        /// </summary>
-        /// <param name="prop">Принимает строку-имя объекта, который необходимо обновить</param>
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        private RelayCommand<DanceNode> command_deleteNode;
+        public RelayCommand<DanceNode> Command_deleteNode
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+            get => this.command_deleteNode;
+            set
+            {
+                this.command_deleteNode = value;
+                this.OnPropertyChanged("Command_deleteNode");
+            }
         }
-        //---метод OnPropertyChanged
     }
 }
