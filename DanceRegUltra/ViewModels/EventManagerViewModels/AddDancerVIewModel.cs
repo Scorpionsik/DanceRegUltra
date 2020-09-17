@@ -267,7 +267,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
                 
                 this.SetDancerFromSearch(tmp_dancer);
-                this.EventInWork.AddMember(tmp_dancer);
+                await this.EventInWork.AddMember(tmp_dancer);
             }
             else
             {
@@ -275,7 +275,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 if (tmp_dancer == null)
                 {
                     tmp_dancer = this.DancerInWork;
-                    this.EventInWork.AddMember(tmp_dancer);
+                    await this.EventInWork.AddMember(tmp_dancer);
                     
                 }
             }

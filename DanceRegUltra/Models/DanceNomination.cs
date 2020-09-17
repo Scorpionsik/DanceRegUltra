@@ -104,7 +104,7 @@ namespace DanceRegUltra.Models
             dropInfo.Effects = DragDropEffects.Move;
         }
 
-        public async void Drop(IDropInfo dropInfo)
+        public void Drop(IDropInfo dropInfo)
         {
             if (dropInfo.Data is DanceNode node)
             {

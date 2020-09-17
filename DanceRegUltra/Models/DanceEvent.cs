@@ -353,10 +353,11 @@ namespace DanceRegUltra.Models
             }
         }
 
-        public void AddMember(Member newMember)
+        public async Task AddMember(Member newMember)
         {
             int index_sort = 0;
-            if(newMember is MemberDancer dancer)
+            bool isGroup = false;
+            if (newMember is MemberDancer dancer)
             {
                 /*
                 MemberDancer tmp_add = null;
@@ -374,6 +375,7 @@ namespace DanceRegUltra.Models
             }
             else if(newMember is MemberGroup group)
             {
+                isGroup = true;
                 /*
                 MemberGroup tmp_add = null;
                 if (group.EventId != this.IdEvent)
@@ -385,6 +387,12 @@ namespace DanceRegUltra.Models
                 while (index_sort < this.HideGroups.Value.Count && this.HideGroups.Value[index_sort].CompareTo(group) <= 0) index_sort++;
                 this.HideGroups.Value.Insert(index_sort, group);
                 this.OnPropertyChanged("Groups");
+            }
+
+            if (newMember.MemberNum == 0)
+            {
+                newMember.MemberNum = this.HideDancers.Value.Count + this.HideGroups.Value.Count;
+                await this.UpdateMemberNum(newMember.MemberId, isGroup, newMember.MemberNum);
             }
             //this.All_members_count++;
         }
