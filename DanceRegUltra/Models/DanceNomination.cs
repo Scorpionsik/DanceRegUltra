@@ -1,4 +1,5 @@
-﻿using CoreWPF.Utilites;
+﻿using CoreWPF.MVVM;
+using CoreWPF.Utilites;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Models.Categories;
 using GongSolutions.Wpf.DragDrop;
@@ -13,7 +14,7 @@ using System.Windows;
 
 namespace DanceRegUltra.Models
 {
-    public class DanceNomination : IDropTarget
+    public class DanceNomination : NotifyPropertyChanged, IDropTarget
     {
         private event Action<DanceNode> event_UpdateNominant;
         public event Action<DanceNode> Event_UpdateNominant
@@ -137,6 +138,17 @@ namespace DanceRegUltra.Models
             }
             this.Nominants.First.Position = step;
 
+        }
+
+        private RelayCommand<DanceNomination> command_AddDancerUseNomination;
+        public RelayCommand<DanceNomination> Command_AddDancerUseNomination
+        {
+            get => this.command_AddDancerUseNomination;
+            set
+            {
+                this.command_AddDancerUseNomination = value;
+                this.OnPropertyChanged("Command_AddDancerUseNomination");
+            }
         }
     }
 }

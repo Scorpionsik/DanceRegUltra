@@ -133,7 +133,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             }
         }
 
-        public List<IdCheck> Styles { get; private set; }
+        public ListExt<IdCheck> Styles { get; private set; }
 
         private string showSelectStyles;
         public string ShowSelectStyles
@@ -170,22 +170,61 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             }
         }
 
-        public AddDancerViewModel(int event_id)
+        public AddDancerViewModel(int event_id, MemberDancer dancer = null)
         {
             
             this.EnableAddButton = true;
             this.ComboBoxTextStyle = "";
             this.EventInWork = DanceRegCollections.GetEventById(event_id);
-            this.DancerInWork = new MemberDancer(event_id, -1, "", "");
+            this.SetDancerFromSearch(dancer == null ? new MemberDancer(event_id, -1, "", "") : dancer);
+            
             this.FindList = new FindDancer(1000);
             this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
             this.FindList.Event_FinishSearch += this.UpdateFindList;
-            this.Styles = new List<IdCheck>();
+            this.Styles = new ListExt<IdCheck>();
             foreach(int style in this.EventInWork.Styles)
             {
                 this.Styles.Add(new IdCheck(style));
             }
             this.Title = "[" + this.EventInWork.Title + "] Добавить нового танцора - " + App.AppTitle;
+        }
+
+        public AddDancerViewModel(DanceNomination nomination) : this(nomination.Event_id, null)
+        {
+            this.Select_block = nomination.Block_info;
+
+            foreach(KeyValuePair<int, List<IdTitle>> league in this.EventInWork.Leagues)
+            {
+                if (league.Key == nomination.League_id)
+                {
+                    this.Select_league = league;
+                    break;
+                }
+            }
+
+            foreach(KeyValuePair<int, List<IdTitle>> age in this.EventInWork.Ages)
+            {
+                if(age.Key == nomination.Age_id)
+                {
+                    this.select_age = age;
+                    break;
+                }
+            }
+        }
+        
+        public void CheckStyle(int style_id)
+        {
+            if (style_id > 0)
+            {
+                foreach (IdCheck style in this.Styles)
+                {
+                    if (style.Id == style_id)
+                    {
+                        style.IsChecked = true;
+                        break;
+                    }
+                }
+            }
         }
 
         private void UpdateFindList()

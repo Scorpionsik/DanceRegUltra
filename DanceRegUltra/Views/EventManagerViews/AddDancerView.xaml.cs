@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Windows;
+using DanceRegUltra.Models;
 using DanceRegUltra.ViewModels.EventManagerViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,10 +22,32 @@ namespace DanceRegUltra.Views.EventManagerViews
     /// </summary>
     public partial class AddDancerView : DialogWindowExt
     {
-        public AddDancerView(int event_id)
+        private int style_id = -1;
+
+        private AddDancerView()
         {
             InitializeComponent();
+        }
+
+        public AddDancerView(int event_id) : this()
+        {
             this.DataContext = new AddDancerViewModel(event_id);
+        }
+
+        public AddDancerView(int event_id, MemberDancer dancer) : this()
+        {
+            this.DataContext = new AddDancerViewModel(event_id, dancer);
+        }
+
+        public AddDancerView(DanceNomination nomination) : this()
+        {
+            this.DataContext = new AddDancerViewModel(nomination);
+            this.style_id = nomination.Style_id;
+        }
+
+        private void DialogWindowExt_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((AddDancerViewModel)this.DataContext).CheckStyle(this.style_id);
         }
     }
 }

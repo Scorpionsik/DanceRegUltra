@@ -159,6 +159,11 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="100"/>
                                     </Grid.ColumnDefinitions>
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Добавить танцора в эту номинацию" Command="{Binding Path=Command_AddDancerUseNomination}" CommandParameter="{Binding}"/>
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
                                     <TextBlock Text="Блок: "/>
                                     <TextBlock FontWeight="Bold" Text="{Binding Path=Block_info.Title}"/>
@@ -186,6 +191,8 @@
                                             <Setter Property="ContextMenu">
                                                 <Setter.Value>
                                                     <ContextMenu>
+                                                        <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Добавить номинацию с этим танцором" Command="{Binding Path=Member.Command_AddDancerUseMember}" CommandParameter="{Binding Path=Member}"/>
+                                                        <Separator/>
                                                         <MenuItem Header="Удалить номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
                                                     </ContextMenu>
                                                 </Setter.Value>
@@ -266,6 +273,8 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
+                                            <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Добавить номинацию с этим танцором" Command="{Binding Path=Member.Command_AddDancerUseMember}" CommandParameter="{Binding Path=Member}"/>
+                                            <Separator/>
                                             <MenuItem Header="Удалить номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
                                         </ContextMenu>
                                     </Setter.Value>
@@ -354,6 +363,17 @@
                             </StackPanel>
                         </TabItem.Header>
                         <ListBox ItemsSource="{Binding Path=EventInWork.Dancers}">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <MenuItem Header="Добавить номинацию с этим танцором" Command="{Binding Path=Command_AddDancerUseMember}" CommandParameter="{Binding}"/>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>

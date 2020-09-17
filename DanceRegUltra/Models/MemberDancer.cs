@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreWPF.Utilites;
+using System;
 
 namespace DanceRegUltra.Models
 {
@@ -47,6 +48,17 @@ namespace DanceRegUltra.Models
         public int CompareTo(MemberDancer other)
         {
             return this.Surname.CompareTo(other.Surname);
+        }
+
+        private RelayCommand<MemberDancer> command_AddDancerUseMember;
+        public RelayCommand<MemberDancer> Command_AddDancerUseMember
+        {
+            get => this.command_AddDancerUseMember;
+            set
+            {
+                this.command_AddDancerUseMember = value;
+                this.OnPropertyChanged("Command_AddDancerUseMember");
+            }
         }
     }
 }

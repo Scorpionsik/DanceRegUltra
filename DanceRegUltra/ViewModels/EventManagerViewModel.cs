@@ -351,6 +351,8 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork = DanceRegCollections.GetEventById(idEventLoad);
             this.EventInWork.Event_UpdateDanceEvent += UpdateEvent;
             this.EventInWork.Event_AddDeleteNodes += UpdateCountsForSearchList;
+            this.EventInWork.Command_AddDancerUseMember = this.Command_AddDancerUseMember;
+            this.EventInWork.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -606,6 +608,24 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand(obj =>
             {
                 this.SetRandomNumsMethod();
+            });
+        }
+
+        public RelayCommand<MemberDancer> Command_AddDancerUseMember
+        {
+            get => new RelayCommand<MemberDancer>(dancer =>
+            {
+                AddDancerView window = new AddDancerView(this.EventInWork.IdEvent, dancer);
+                window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<DanceNomination> Command_AddDancerUseNomination
+        {
+            get => new RelayCommand<DanceNomination>(nomination =>
+            {
+                AddDancerView window = new AddDancerView(nomination);
+                window.ShowDialog();
             });
         }
     }

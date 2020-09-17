@@ -244,6 +244,7 @@ namespace DanceRegUltra.Models
         public void AddNomination(DanceNomination nomination)
         {
             nomination.Event_UpdateNominant += this.UpdateNominantPosition;
+            nomination.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
             this.HideNominations.Value.Insert(index, nomination);
@@ -269,6 +270,7 @@ namespace DanceRegUltra.Models
                 this.HideNominations.Value[index].Style_id == style_id)
                 {
                     this.HideNominations.Value[index].Event_UpdateNominant -= this.UpdateNominantPosition;
+                    this.HideNominations.Value[index].Command_AddDancerUseNomination = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
@@ -426,7 +428,7 @@ namespace DanceRegUltra.Models
                 }
                 else tmp_add = dancer;
                 */
-
+                dancer.Command_AddDancerUseMember = this.Command_AddDancerUseMember;
                 while (index_sort < this.HideDancers.Value.Count && this.HideDancers.Value[index_sort].CompareTo(dancer) <= 0) index_sort++;
                 this.HideDancers.Value.Insert(index_sort, dancer);
                 this.OnPropertyChanged("Dancers");
@@ -539,6 +541,28 @@ namespace DanceRegUltra.Models
             {
                 this.command_deleteNode = value;
                 this.OnPropertyChanged("Command_deleteNode");
+            }
+        }
+
+        private RelayCommand<MemberDancer> command_AddDancerUseMember;
+        public RelayCommand<MemberDancer> Command_AddDancerUseMember
+        {
+            get => this.command_AddDancerUseMember;
+            set
+            {
+                this.command_AddDancerUseMember = value;
+                this.OnPropertyChanged("Command_AddDancerUseMember");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_AddDancerUseNomination;
+        public RelayCommand<DanceNomination> Command_AddDancerUseNomination
+        {
+            get => this.command_AddDancerUseNomination;
+            set
+            {
+                this.command_AddDancerUseNomination = value;
+                this.OnPropertyChanged("Command_AddDancerUseNomination");
             }
         }
 

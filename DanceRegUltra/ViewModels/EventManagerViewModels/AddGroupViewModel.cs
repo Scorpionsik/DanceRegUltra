@@ -52,7 +52,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 this.select_group = value;
                 this.Select_dancer = null;
-                this.Select_school = value.School == null ? null : DanceRegCollections.GetSchoolById(value.School.Id);
+                this.Select_school = value == null || value.School == null ? null : DanceRegCollections.GetSchoolById(value.School.Id);
                 this.OnPropertyChanged("Select_group");
                 this.OnPropertyChanged("IsEnableGroupEdit");
             }

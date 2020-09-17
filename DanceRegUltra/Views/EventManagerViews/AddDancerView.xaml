@@ -7,6 +7,7 @@
         xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
+                        Loaded="DialogWindowExt_Loaded"
         Title="{Binding Path=Title}" Height="250" MinHeight="250" MaxHeight="250" Width="800">
     <window:DialogWindowExt.Resources>
         <converter:CategoryNameByIdConvert x:Key="CategoryName"/>
@@ -103,7 +104,7 @@
                         <TextBlock Text="{Binding Path=ShowSelectStyles}" TextWrapping="WrapWithOverflow" ToolTip="{Binding Path=ShowSelectStyles}"/>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Стили">
-                        <xctk:CheckComboBox TabIndex="6" ToolTip="{Binding Path=ShowSelectStyles}" ItemsSource="{Binding Path=Styles}" SelectedValue="{Binding Path=ComboBoxTextStyle}" IsEditable="False" IsSelectAllActive="True"  SelectedMemberPath="IsChecked">
+                        <xctk:CheckComboBox x:Name="StyleComboBox" TabIndex="6" ToolTip="{Binding Path=ShowSelectStyles}" ItemsSource="{Binding Path=Styles}" SelectedValue="{Binding Path=ComboBoxTextStyle}" IsEditable="False" IsSelectAllActive="True"  SelectedMemberPath="IsChecked">
                             <xctk:CheckComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
