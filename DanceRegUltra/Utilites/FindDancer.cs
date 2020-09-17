@@ -14,7 +14,7 @@ namespace DanceRegUltra.Utilites
 {
     public class FindDancer
     {
-
+        private int Event_id;
         private TimerCallback Find_Callback;
         private Timer Find_Timer;
         private int Timeout;
@@ -53,8 +53,9 @@ namespace DanceRegUltra.Utilites
             }
         }
 
-        public FindDancer(int timeout)
+        public FindDancer(int event_id, int timeout)
         {
+            this.Event_id = event_id;
             this.Timeout = timeout;
             this.FindList = new ListExt<MemberDancer>();
             this.Find_Callback = new TimerCallback(this.TimerMethod);
@@ -90,7 +91,7 @@ namespace DanceRegUltra.Utilites
 
                 foreach(DbRow row in res)
                 {
-                    MemberDancer dancer = new MemberDancer(-1, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                    MemberDancer dancer = new MemberDancer(this.Event_id, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
                     dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
                     this.FindList.Add(dancer);
                 }

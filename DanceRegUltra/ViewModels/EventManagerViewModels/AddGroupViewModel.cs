@@ -213,7 +213,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             this.Groups.AddRange(this.EventInWork.Groups);
             this.Select_group = tmp_group;
 
-            this.FindList = new FindDancer(1000);
+            this.FindList = new FindDancer(-1, 1000);
             this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
             this.FindList.Event_FinishSearch += this.UpdateFindList;
 
@@ -298,7 +298,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 int update_insert = this.Groups.IndexOf(this.Select_group);
                 this.Groups[update_insert] = tmp_group;
                 this.Select_group = tmp_group;
-                this.EventInWork.AddMember(tmp_group);
+                await this.EventInWork.AddMember(tmp_group);
             }
             else
             {

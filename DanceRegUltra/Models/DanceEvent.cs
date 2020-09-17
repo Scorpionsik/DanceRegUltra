@@ -430,6 +430,7 @@ namespace DanceRegUltra.Models
                 */
                 dancer.Command_AddDancerUseMember = this.Command_AddDancerUseMember;
                 while (index_sort < this.HideDancers.Value.Count && this.HideDancers.Value[index_sort].CompareTo(dancer) <= 0) index_sort++;
+                //if (index_sort > this.HideDancers.Value.Count) index_sort--;
                 this.HideDancers.Value.Insert(index_sort, dancer);
                 this.OnPropertyChanged("Dancers");
             }
@@ -445,13 +446,14 @@ namespace DanceRegUltra.Models
                 else tmp_add = group;
                 */
                 while (index_sort < this.HideGroups.Value.Count && this.HideGroups.Value[index_sort].CompareTo(group) <= 0) index_sort++;
+                //if (index_sort > this.HideGroups.Value.Count) index_sort--;
                 this.HideGroups.Value.Insert(index_sort, group);
                 this.OnPropertyChanged("Groups");
             }
 
             if (newMember.MemberNum == 0)
             {
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Num_increment from events where Id_event=" + newMember.EventId);
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Num_increment from events where Id_event=" + this.IdEvent);
                 newMember.MemberNum = res["Num_increment", 0].ToInt32();
                 this.event_updateDanceEvent?.Invoke(this.IdEvent, "Num_increment", newMember.MemberNum + 1);
                 //await DanceRegDatabase.ExecuteNonQueryAsync("update events set Num_increment=" + (newMember.MemberNum + 1) + " Id_event=" + newMember.EventId);

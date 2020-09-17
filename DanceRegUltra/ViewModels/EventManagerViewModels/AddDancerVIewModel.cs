@@ -176,9 +176,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             this.EnableAddButton = true;
             this.ComboBoxTextStyle = "";
             this.EventInWork = DanceRegCollections.GetEventById(event_id);
-            this.SetDancerFromSearch(dancer == null ? new MemberDancer(event_id, -1, "", "") : dancer);
+            this.SetDancerFromSearch(dancer == null ? new MemberDancer(this.EventInWork.IdEvent, -1, "", "") : dancer);
             
-            this.FindList = new FindDancer(1000);
+            this.FindList = new FindDancer(this.EventInWork.IdEvent, 1000);
             this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
             this.FindList.Event_FinishSearch += this.UpdateFindList;
             this.Styles = new ListExt<IdCheck>();
