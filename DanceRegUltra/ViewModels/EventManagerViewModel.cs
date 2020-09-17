@@ -350,7 +350,7 @@ namespace DanceRegUltra.ViewModels
         {
             this.EventInWork = DanceRegCollections.GetEventById(idEventLoad);
             this.EventInWork.Event_UpdateDanceEvent += UpdateEvent;
-            this.EventInWork.Event_addNodes += UpdateCountsForSearchList;
+            this.EventInWork.Event_AddDeleteNodes += UpdateCountsForSearchList;
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -495,7 +495,7 @@ namespace DanceRegUltra.ViewModels
         {
             this.EventInWork.All_members_count = this.EventInWork.Dancers.Count + this.EventInWork.Groups.Count;
             this.EventInWork.Event_UpdateDanceEvent -= UpdateEvent;
-            this.EventInWork.Event_addNodes -= UpdateCountsForSearchList;
+            this.EventInWork.Event_AddDeleteNodes -= UpdateCountsForSearchList;
             this.EventInWork.Command_deleteNode = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();

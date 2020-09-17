@@ -44,6 +44,18 @@ namespace DanceRegUltra.Models
                 this.event_updateDanceEvent?.Invoke(this.IdEvent, "All_member_count", value);
             }
         }
+
+        private bool enableRandNums;
+        public bool EnableRandNums
+        {
+            get => this.enableRandNums;
+            private set
+            {
+                this.enableRandNums = value;
+                this.OnPropertyChanged("EnableRandNums");
+                this.event_updateDanceEvent?.Invoke(this.IdEvent, "Enable_rand_nums", value);
+            }
+        }
         /*
         private int member_finish_count;
         public int Member_finish_count
@@ -87,17 +99,27 @@ namespace DanceRegUltra.Models
             remove => this.event_updateDanceEvent -= value;
         }
 
-        private event Action event_addNodes;
-        public event Action Event_addNodes
+        private event Action event_AddDeleteNodes;
+        public event Action Event_AddDeleteNodes
         {
             add
             {
-                this.event_addNodes -= value;
-                this.event_addNodes += value;
+                this.event_AddDeleteNodes -= value;
+                this.event_AddDeleteNodes += value;
             }
-            remove => this.event_addNodes -= value;
+            remove => this.event_AddDeleteNodes -= value;
         }
 
+        private event Action<DanceEvent> event_UpdateTimeDate;
+        public event Action<DanceEvent> Event_UpdateTimeDate
+        {
+            add
+            {
+                this.event_UpdateTimeDate -= value;
+                this.event_UpdateTimeDate += value;
+            }
+            remove => this.event_UpdateTimeDate -= value;
+        }
 
         private Lazy<ListExt<MemberDancer>> HideDancers;
         public ListExt<MemberDancer> Dancers { get => this.HideDancers?.Value; }
@@ -131,6 +153,7 @@ namespace DanceRegUltra.Models
             private set
             {
                 this.startEventTimestamp = value;
+                this.event_UpdateTimeDate?.Invoke(this);
                 this.OnPropertyChanged("StartEventTimestamp");
             }
         }
@@ -185,6 +208,11 @@ namespace DanceRegUltra.Models
             this.Styles = new List<int>();
         }
 
+        public void SetEnableRandNums(bool value)
+        {
+            this.EnableRandNums = value;
+        }
+
         private async void AddNominationMember(DanceNode node)
         {
             DanceNomination tmp_nomination = null;
@@ -210,7 +238,7 @@ namespace DanceRegUltra.Models
                 tmp_nomination = nomination;
             }
             tmp_nomination.AddNominant(node);
-            this.event_addNodes?.Invoke();
+            this.event_AddDeleteNodes?.Invoke();
         }
 
         public void AddNomination(DanceNomination nomination)
@@ -368,7 +396,7 @@ namespace DanceRegUltra.Models
                 }
 
                 this.RemoveSchool(node.Member.School);
-                this.event_addNodes?.Invoke();
+                this.event_AddDeleteNodes?.Invoke();
             }
         }
 
@@ -421,7 +449,10 @@ namespace DanceRegUltra.Models
 
             if (newMember.MemberNum == 0)
             {
-                newMember.MemberNum = this.HideDancers.Value.Count + this.HideGroups.Value.Count;
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Num_increment from events where Id_event=" + newMember.EventId);
+                newMember.MemberNum = res["Num_increment", 0].ToInt32();
+                this.event_updateDanceEvent?.Invoke(this.IdEvent, "Num_increment", newMember.MemberNum + 1);
+                //await DanceRegDatabase.ExecuteNonQueryAsync("update events set Num_increment=" + (newMember.MemberNum + 1) + " Id_event=" + newMember.EventId);
                 await this.UpdateMemberNum(newMember.MemberId, isGroup, newMember.MemberNum);
             }
             //this.All_members_count++;

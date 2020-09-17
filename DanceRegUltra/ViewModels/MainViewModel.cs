@@ -78,7 +78,9 @@ namespace DanceRegUltra.ViewModels
             foreach(DbRow row in db_events)
             {
                 DanceEvent tmp_add = new DanceEvent(row["Id_event"].ToInt32(), row["Title"].ToString(), row["Start_timestamp"].ToDouble(), row["End_timestamp"].ToDouble(), row["Json_scheme"].ToString(), row["Id_node_increment"].ToInt32());
+                tmp_add.SetEnableRandNums(row["Id_event"].ToBoolean());
                 tmp_add.All_members_count = row["All_member_count"].ToInt32();
+                tmp_add.Event_UpdateTimeDate += UpdateEventPosition;
                 DanceRegCollections.Events.Add(tmp_add);
             }
             DanceRegCollections.Events.CollectionChanged += this.UpdateEvents;
@@ -96,6 +98,7 @@ namespace DanceRegUltra.ViewModels
 
         private static async void DeleteEvent(DanceEvent deleteEvent)
         {
+            deleteEvent.Event_UpdateTimeDate -= UpdateEventPosition;
             DanceRegCollections.Events.Remove(deleteEvent);
             await DanceRegDatabase.ExecuteNonQueryAsync("delete from events where Id_event=" + deleteEvent.IdEvent);
             await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + deleteEvent.IdEvent);
@@ -111,6 +114,8 @@ namespace DanceRegUltra.ViewModels
             DbResult new_event = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from events order by Id_event");
             DbRow current_row = new_event[new_event.RowsCount - 1];
             DanceEvent newEvent = new DanceEvent(current_row["Id_event"].ToInt32(), current_row["Title"].ToString(), current_row["Start_timestamp"].ToDouble(), current_row["End_timestamp"].ToDouble(), current_row["Json_scheme"].ToString());
+            newEvent.SetEnableRandNums(current_row["Enable_rand_nums"].ToBoolean());
+            newEvent.Event_UpdateTimeDate += UpdateEventPosition;
             int sort_id = 0;
             while (sort_id < DanceRegCollections.Events.Count && DanceRegCollections.Events[sort_id].CompareTo(newEvent) <= 0) sort_id++;
             DanceRegCollections.Events.Insert(sort_id, newEvent);
@@ -128,6 +133,15 @@ namespace DanceRegUltra.ViewModels
                 closeEvent.Close();
             }
             return base.CloseMethod();
+        }
+
+        private static void UpdateEventPosition(DanceEvent update_event)
+        {
+            int old_index = DanceRegCollections.Events.IndexOf(update_event);
+            int new_index = 0;
+            while (new_index < DanceRegCollections.Events.Count && DanceRegCollections.Events[new_index].CompareTo(update_event) <= 0) new_index++;
+            if (new_index == DanceRegCollections.Events.Count) new_index--;
+            if(old_index != new_index) DanceRegCollections.Events.Move(old_index, new_index);
         }
 
         public RelayCommand Command_AddEvent
