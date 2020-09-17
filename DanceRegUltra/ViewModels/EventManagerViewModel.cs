@@ -456,7 +456,7 @@ namespace DanceRegUltra.ViewModels
                     }
                     tmp_member.MemberNum = res_member["Number", 0].Value == DBNull.Value ? 0 : res_member["Number", 0].ToInt32();
                     tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member["Id_school", 0].ToInt32()));
-                    this.EventInWork.AddMember(tmp_member);
+                    await this.EventInWork.AddMember(tmp_member);
                 }
 
                 //add node
@@ -469,8 +469,19 @@ namespace DanceRegUltra.ViewModels
 
         private void UpdateCountsForSearchList()
         {
-            this.OnPropertyChanged("Result_search_nodes_count");
-            this.OnPropertyChanged("Result_search_nomination_count");
+            if (this.IsShowNodes)
+            {
+                this.OnPropertyChanged("Result_search_nodes_count");
+                this.OnPropertyChanged("Result_search_nodes");
+            }
+            else
+            {
+                if (this.Select_search_block != null || this.Select_search_nomination != null)
+                {
+                    this.OnPropertyChanged("Result_search_nomination");
+                }
+                this.OnPropertyChanged("Result_search_nomination_count");
+            }
         }
 
         private void UpdateEventTitleMethod(object obj)
