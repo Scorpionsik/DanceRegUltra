@@ -110,6 +110,7 @@
     <Compile Include="Enums\SchemeType.cs" />
     <Compile Include="Enums\UpdateStatus.cs" />
     <Compile Include="Interfaces\ICategoriesMenu.cs" />
+    <Compile Include="Models\Categories\CategoryString.cs" />
     <Compile Include="Models\Categories\IdCheck.cs" />
     <Compile Include="Models\Categories\IdTitle.cs" />
     <Compile Include="Models\Categories\JsonScheme.cs" />
@@ -214,7 +215,6 @@
     <Compile Include="Models\DanceEvent.cs" />
     <Compile Include="Models\DanceNode.cs" />
     <Compile Include="Models\Categories\DanceScheme.cs" />
-    <Compile Include="Models\Categories\CategoryString.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\MemberDancer.cs" />
     <Compile Include="Models\MemberGroup.cs" />
