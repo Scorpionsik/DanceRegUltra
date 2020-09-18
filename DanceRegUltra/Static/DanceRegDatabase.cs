@@ -45,13 +45,13 @@ namespace DanceRegUltra.Static
             remove => DanceRegDatabase.event_EndTask -= value;
         }
 
-        private static Mutex DatabaseMutex;
+        private static SemaphoreSlim DatabaseMutex;
 
         private static SqLiteDatabase.SqLiteDatabase Database;
 
         static DanceRegDatabase()
         {
-            DanceRegDatabase.DatabaseMutex = new Mutex();
+            DanceRegDatabase.DatabaseMutex = new SemaphoreSlim(1,1);
             if (!Directory.Exists("database")) Directory.CreateDirectory("database");
 
             DanceRegDatabase.Database = new SqLiteDatabase.SqLiteDatabase("database/" + DatabaseName);
@@ -60,9 +60,9 @@ namespace DanceRegUltra.Static
         internal static async Task<int> ExecuteNonQueryAsync(string query)
         {
             DanceRegDatabase.event_StartTask?.Invoke();
-            DanceRegDatabase.DatabaseMutex.WaitOne();
+            await DanceRegDatabase.DatabaseMutex.WaitAsync();
             int result = await Database.ExecuteNonQueryAsync(query);
-            DanceRegDatabase.DatabaseMutex.ReleaseMutex();
+            DanceRegDatabase.DatabaseMutex.Release();
             DanceRegDatabase.event_EndTask?.Invoke();
             return result;
         }
@@ -70,9 +70,9 @@ namespace DanceRegUltra.Static
         internal static async Task<DbResult> ExecuteAndGetQueryAsync(string query)
         {
             DanceRegDatabase.event_StartTask?.Invoke();
-            DanceRegDatabase.DatabaseMutex.WaitOne();
+            await DanceRegDatabase.DatabaseMutex.WaitAsync();
             DbResult result = await Database.ExecuteAndGetQueryAsync(query);
-            DanceRegDatabase.DatabaseMutex.ReleaseMutex();
+            DanceRegDatabase.DatabaseMutex.Release();
             DanceRegDatabase.event_EndTask?.Invoke();
             return result;
         }
