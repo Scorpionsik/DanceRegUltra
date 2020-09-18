@@ -377,11 +377,11 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             get => new RelayCommand(obj =>
             {
                 this.FindList.Clear();
-                
+                /*
                 foreach (IdCheck style in this.Styles)
                 {
                     style.IsChecked = false;
-                }
+                }*/
 
                 this.SetDancerFromSearch(new MemberDancer(this.EventInWork.IdEvent, -1, "", ""));
             });
