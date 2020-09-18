@@ -83,6 +83,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <GroupBox Grid.Column="0" Header="Поиск по блокам">
                         <ComboBox ItemsSource="{Binding Path=EventInWork.SchemeEvent.Blocks}" SelectedItem="{Binding Path=Select_search_block}">
@@ -119,6 +120,21 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Path=Title}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Header="Поиск по группе" Grid.Column="3">
+                        <ComboBox ItemsSource="{Binding Path=EventInWork.Groups}" SelectedItem="{Binding Path=Select_search_group}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=GroupType}"/>
+                                        <TextBlock Text=" ("/>
+                                        <TextBlock Text="{Binding Path=GroupMembersString}"/>
+                                        <TextBlock Text="), школа: "/>
+                                        <TextBlock Text="{Binding Path=School.Title}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>

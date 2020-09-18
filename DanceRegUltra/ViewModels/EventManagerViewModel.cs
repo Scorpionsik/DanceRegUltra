@@ -186,6 +186,19 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
+        private MemberGroup select_search_group;
+        public MemberGroup Select_search_group
+        {
+            get => this.select_search_group;
+            set
+            {
+                if (this.Find_Timer != null) this.Find_Timer.Dispose();
+                this.select_search_group = value;
+                if (value != null) this.Find_Timer = new Timer(this.Find_Callback, 7, 0, 5000);
+                this.OnPropertyChanged("Select_search_group");
+            }
+        }
+
         private int result_search_nodes_count;
         public int Result_search_nodes_count
         {
@@ -259,6 +272,16 @@ namespace DanceRegUltra.ViewModels
                         }*/
                     }
                 }
+                else if(this.Select_search_group != null)
+                {
+                    foreach (DanceNode node in this.EventInWork.Nodes)
+                    {
+                        if (node.Member == this.Select_search_group)
+                        {
+                            result.Add(node);
+                        }
+                    }
+                }
                 this.Result_search_nodes_count = result.Count;
                 return result;
             }
@@ -320,6 +343,7 @@ namespace DanceRegUltra.ViewModels
                         this.Select_search_block = null;
                         this.Select_search_nomination = null;
                         this.Select_search_school = null;
+                        this.Select_search_group = null;
                         this.IsShowNodes = true;
                         break;
                     case 2: //num member
@@ -330,6 +354,7 @@ namespace DanceRegUltra.ViewModels
                         this.Select_search_block = null;
                         this.Select_search_nomination = null;
                         this.Select_search_school = null;
+                        this.Select_search_group = null;
                         this.IsShowNodes = true;
                         break;
                     case 3: //block
@@ -341,6 +366,7 @@ namespace DanceRegUltra.ViewModels
                         this.OnPropertyChanged("SearchByNodeId");
                         this.Select_search_nomination = null;
                         this.Select_search_school = null;
+                        this.Select_search_group = null;
                         this.IsShowNodes = false;
                         break;
                     case 4: //nomination
@@ -352,6 +378,7 @@ namespace DanceRegUltra.ViewModels
                         this.OnPropertyChanged("SearchByNodeId");
                         this.Select_search_block = null;
                         this.Select_search_school = null;
+                        this.Select_search_group = null;
                         this.IsShowNodes = false;
                         break;
                     case 5: //school
@@ -363,9 +390,10 @@ namespace DanceRegUltra.ViewModels
                         this.OnPropertyChanged("SearchByNodeId");
                         this.Select_search_block = null;
                         this.Select_search_nomination = null;
+                        this.Select_search_group = null;
                         this.IsShowNodes = true;
                         break;
-                    case 6:
+                    case 6: //surname
                         this.searchByNodeId = "";
                         this.searchByMemberNum = "";
                         this.OnPropertyChanged("SearchByMemberNum");
@@ -373,9 +401,21 @@ namespace DanceRegUltra.ViewModels
                         this.Select_search_block = null;
                         this.Select_search_nomination = null;
                         this.Select_search_school = null;
+                        this.Select_search_group = null;
                         this.IsShowNodes = true;
                         break;
-
+                    case 7: //group
+                        this.searchByNodeId = "";
+                        this.searchByMemberNum = "";
+                        this.searchBySurname = "";
+                        this.OnPropertyChanged("SearchBySurname");
+                        this.OnPropertyChanged("SearchByMemberNum");
+                        this.OnPropertyChanged("SearchByNodeId");
+                        this.Select_search_block = null;
+                        this.Select_search_nomination = null;
+                        this.Select_search_school = null;
+                        this.IsShowNodes = true;
+                        break;
                 }
             }
         }
@@ -395,6 +435,7 @@ namespace DanceRegUltra.ViewModels
             this.Select_search_block = null;
             this.Select_search_nomination = null;
             this.Select_search_school = null;
+            this.Select_search_group = null;
             this.IsShowNodes = false;
         }
 
