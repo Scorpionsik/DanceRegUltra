@@ -281,7 +281,7 @@ namespace DanceRegUltra.Models
         private async void UpdateNominantPosition(DanceNode node)
         {
             int index = this.HideNodes.Value.IndexOf(node);
-            await this.UpdateNodePosition(index, this.HideNodes.Value.Count - 1);
+            await this.UpdateNodePosition(index, this.HideNodes.Value.Count - 1, true);
         }
 
         private async void UpdateDanceNode(int event_id, int node_id, string column_name, object value)
@@ -322,7 +322,7 @@ namespace DanceRegUltra.Models
             }
         }
 
-        public async Task AddNodeAsync(Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
+        public async Task<int> AddNodeAsync(Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id)
         {
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + member.MemberId + " and Is_group=" + isGroup + " and Id_platform=" + platform.Id + " and Id_league=" + league_id + " and Id_block=" + block.Id + " and Id_age=" + age_id + " and Id_style=" + style_id);
             if (res.RowsCount == 0)
@@ -336,6 +336,7 @@ namespace DanceRegUltra.Models
                     if (this.SchemeEvent.Compare(this.HideNodes.Value[position], newNode) == 1)
                     {
                         this.HideNodes.Value.Insert(position, newNode);
+                        
                         getPosition = true;
                         break;
                     }
@@ -347,9 +348,11 @@ namespace DanceRegUltra.Models
                 this.AddNominationMember(newNode);
                 this.AddSchool(newNode.Member.School);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
-                if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
+                //if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
+                return position;
                 //this.HideNodes.Value.Add(newNode);
             }
+            else return -1;
         }
 
         public async Task DeleteNodeAsync(DanceNode node)
@@ -362,7 +365,7 @@ namespace DanceRegUltra.Models
                 node.Command_deleteNode = null;
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
-                if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1);
+                if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1, true);
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + node.Member.MemberId);
                 if (res.RowsCount == 0)
                 {
@@ -402,14 +405,15 @@ namespace DanceRegUltra.Models
             }
         }
 
-        public async Task UpdateNodePosition(int index1, int index2)
+        public async Task UpdateNodePosition(int index1, int index2, bool isUnknownPosition)
         {
             int[] minmax = new int[2] { Math.Min(index1, index2), Math.Max(index1, index2) };
 
             for (int i = minmax[0]; i <= minmax[1]; i++)
             {
                 //DanceRegCollections.Ages.Value[i].Position = i + 1;
-                await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Position=" + this.Nodes[i].Position + " where Id_event=" + this.IdEvent + " and Id_node=" + this.Nodes[i].NodeId);
+                if(isUnknownPosition) this.Nodes[i].Position = i;
+                await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Position=" + (isUnknownPosition ? i : this.Nodes[i].Position) + " where Id_event=" + this.IdEvent + " and Id_node=" + this.Nodes[i].NodeId);
             }
         }
 

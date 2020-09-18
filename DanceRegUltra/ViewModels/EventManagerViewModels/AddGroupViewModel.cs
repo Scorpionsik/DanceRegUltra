@@ -304,10 +304,16 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 tmp_group = this.Select_group;
             }
+            int update_position = -1, tmp_position = -1;
             foreach (IdCheck style in this.Styles)
             {
-                if (style.IsChecked) await this.EventInWork.AddNodeAsync(tmp_group, true, this.Select_platform, this.Select_league.Key, this.Select_block, this.Select_age.Key, style.Id);
+                if (style.IsChecked)
+                {
+                    tmp_position = await this.EventInWork.AddNodeAsync(tmp_group, true, this.Select_platform, this.Select_league.Key, this.Select_block, this.Select_age.Key, style.Id);
+                    if (tmp_position > -1 && (update_position == -1 || update_position > tmp_position)) update_position = tmp_position;
+                }
             }
+            if (update_position > -1) await this.EventInWork.UpdateNodePosition(update_position, this.EventInWork.Nodes.Count - 1, true);
             this.EnableAddButton = true;
         }
 

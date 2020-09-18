@@ -612,7 +612,7 @@ namespace DanceRegUltra.ViewModels
                 nomination.SortByNums(step);
                 step += nomination.Nominants.Count;
             }
-            await this.EventInWork.UpdateNodePosition(0, this.EventInWork.Nodes.Count - 1);
+            await this.EventInWork.UpdateNodePosition(0, this.EventInWork.Nodes.Count - 1, false);
         }
 
         public RelayCommand Command_AddDancer
