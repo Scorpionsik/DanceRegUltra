@@ -27,6 +27,7 @@ namespace DanceRegUltra.Views.EventManagerViews
         private AddDancerView()
         {
             InitializeComponent();
+            this.Surname.Focus();
         }
 
         public AddDancerView(int event_id) : this()

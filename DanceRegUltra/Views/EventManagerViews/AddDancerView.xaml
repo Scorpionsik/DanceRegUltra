@@ -35,7 +35,7 @@
                     <TextBox TabIndex="2" Text="{Binding Path=DancerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
                 <GroupBox Grid.Column="0" Header="Фамилия">
-                    <TextBox TabIndex="1" Text="{Binding Path=DancerSurname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="Surname" TabIndex="1" Text="{Binding Path=DancerSurname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
             </Grid>
             <!--конец Имя-фамилия-->

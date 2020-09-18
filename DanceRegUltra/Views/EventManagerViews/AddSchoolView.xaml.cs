@@ -25,6 +25,7 @@ namespace DanceRegUltra.Views.EventManagerViews
         {
             InitializeComponent();
             this.DataContext = new AddSchoolViewModel();
+            this.Name.Focus();
         }
     }
 }
