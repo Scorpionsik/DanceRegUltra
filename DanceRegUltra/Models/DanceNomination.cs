@@ -150,5 +150,16 @@ namespace DanceRegUltra.Models
                 this.OnPropertyChanged("Command_AddDancerUseNomination");
             }
         }
+
+        private RelayCommand<DanceNomination> command_AddGroupUseNomination;
+        public RelayCommand<DanceNomination> Command_AddGroupUseNomination
+        {
+            get => this.command_AddGroupUseNomination;
+            set
+            {
+                this.command_AddGroupUseNomination = value;
+                this.OnPropertyChanged("Command_AddGroupUseNomination");
+            }
+        }
     }
 }

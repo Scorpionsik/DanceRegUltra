@@ -245,6 +245,7 @@ namespace DanceRegUltra.Models
         {
             nomination.Event_UpdateNominant += this.UpdateNominantPosition;
             nomination.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
+            nomination.Command_AddGroupUseNomination = this.Command_AddGroupUseNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
             this.HideNominations.Value.Insert(index, nomination);
@@ -271,6 +272,7 @@ namespace DanceRegUltra.Models
                 {
                     this.HideNominations.Value[index].Event_UpdateNominant -= this.UpdateNominantPosition;
                     this.HideNominations.Value[index].Command_AddDancerUseNomination = null;
+                    this.HideNominations.Value[index].Command_AddGroupUseNomination = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
@@ -449,6 +451,7 @@ namespace DanceRegUltra.Models
                 }
                 else tmp_add = group;
                 */
+                group.Command_AddGroupUseMember = this.Command_AddGroupUseMember;
                 while (index_sort < this.HideGroups.Value.Count && this.HideGroups.Value[index_sort].CompareTo(group) <= 0) index_sort++;
                 //if (index_sort > this.HideGroups.Value.Count) index_sort--;
                 this.HideGroups.Value.Insert(index_sort, group);
@@ -569,6 +572,28 @@ namespace DanceRegUltra.Models
             {
                 this.command_AddDancerUseNomination = value;
                 this.OnPropertyChanged("Command_AddDancerUseNomination");
+            }
+        }
+
+        private RelayCommand<MemberGroup> command_AddGroupUseMember;
+        public RelayCommand<MemberGroup> Command_AddGroupUseMember
+        {
+            get => this.command_AddGroupUseMember;
+            set
+            {
+                this.command_AddGroupUseMember = value;
+                this.OnPropertyChanged("Command_AddGroupUseMember");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_AddGroupUseNomination;
+        public RelayCommand<DanceNomination> Command_AddGroupUseNomination
+        {
+            get => this.command_AddGroupUseNomination;
+            set
+            {
+                this.command_AddGroupUseNomination = value;
+                this.OnPropertyChanged("Command_AddGroupUseNomination");
             }
         }
 

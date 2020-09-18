@@ -200,7 +200,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 this.OnPropertyChanged("ComboBoxTextStyle");
             }
         }
-        public AddGroupViewModel(int event_id) : base()
+        public AddGroupViewModel(int event_id, MemberGroup group = null) : base()
         {
             this.EnableAddButton = true;
             this.DancerInWork = new MemberDancer(-1, -1, "", "");
@@ -211,7 +211,8 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             MemberGroup tmp_group = new MemberGroup(this.EventInWork.IdEvent, -1, new List<MemberDancer>());
             this.Groups.Add(tmp_group);
             this.Groups.AddRange(this.EventInWork.Groups);
-            this.Select_group = tmp_group;
+            if (group == null) this.Select_group = tmp_group;
+            else this.Select_group = group;
 
             this.FindList = new FindDancer(-1, 1000);
             this.FindList.Event_changeSelectDancer += this.SetDancerFromSearch;
@@ -223,6 +224,44 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 this.Styles.Add(new IdCheck(style));
             }
             this.Title = "[" + this.EventInWork.Title + "] Добавить новую группу - " + App.AppTitle;
+        }
+
+        public AddGroupViewModel(DanceNomination nomination) : this(nomination.Event_id, null)
+        {
+            this.Select_block = nomination.Block_info;
+
+            foreach (KeyValuePair<int, List<IdTitle>> league in this.EventInWork.Leagues)
+            {
+                if (league.Key == nomination.League_id)
+                {
+                    this.Select_league = league;
+                    break;
+                }
+            }
+
+            foreach (KeyValuePair<int, List<IdTitle>> age in this.EventInWork.Ages)
+            {
+                if (age.Key == nomination.Age_id)
+                {
+                    this.select_age = age;
+                    break;
+                }
+            }
+        }
+
+        public void CheckStyle(int style_id)
+        {
+            if (style_id > 0)
+            {
+                foreach (IdCheck style in this.Styles)
+                {
+                    if (style.Id == style_id)
+                    {
+                        style.IsChecked = true;
+                        break;
+                    }
+                }
+            }
         }
 
         private void UpdateFindList()

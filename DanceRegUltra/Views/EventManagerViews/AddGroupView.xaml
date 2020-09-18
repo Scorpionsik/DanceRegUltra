@@ -6,6 +6,7 @@
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:converter="clr-namespace:DanceRegUltra.Utilites.Converters"
+                        Loaded="DialogWindowExt_Loaded"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
     <window:DialogWindowExt.Resources>

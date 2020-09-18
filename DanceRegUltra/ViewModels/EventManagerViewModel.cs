@@ -414,6 +414,9 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Event_AddDeleteNodes += UpdateCountsForSearchList;
             this.EventInWork.Command_AddDancerUseMember = this.Command_AddDancerUseMember;
             this.EventInWork.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
+            this.EventInWork.Command_AddGroupUseMember = this.Command_AddGroupUseMember;
+            this.EventInWork.Command_AddGroupUseNomination = this.Command_AddGroupUseNomination;
+
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -686,6 +689,24 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand<DanceNomination>(nomination =>
             {
                 AddDancerView window = new AddDancerView(nomination);
+                window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<MemberGroup> Command_AddGroupUseMember
+        {
+            get => new RelayCommand<MemberGroup>(group =>
+            {
+                AddGroupView window = new AddGroupView(this.EventInWork.IdEvent, group);
+                window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<DanceNomination> Command_AddGroupUseNomination
+        {
+            get => new RelayCommand<DanceNomination>(nomination =>
+            {
+                AddGroupView window = new AddGroupView(nomination);
                 window.ShowDialog();
             });
         }
