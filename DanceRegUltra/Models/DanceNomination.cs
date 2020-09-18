@@ -161,5 +161,16 @@ namespace DanceRegUltra.Models
                 this.OnPropertyChanged("Command_AddGroupUseNomination");
             }
         }
+
+        private RelayCommand<DanceNomination> command_DeleteNodesByNomination;
+        public RelayCommand<DanceNomination> Command_DeleteNodesByNomination
+        {
+            get => this.command_DeleteNodesByNomination;
+            set
+            {
+                this.command_DeleteNodesByNomination = value;
+                this.OnPropertyChanged("Command_DeleteNodesByNomination");
+            }
+        }
     }
 }

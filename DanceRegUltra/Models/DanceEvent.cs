@@ -246,6 +246,7 @@ namespace DanceRegUltra.Models
             nomination.Event_UpdateNominant += this.UpdateNominantPosition;
             nomination.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
             nomination.Command_AddGroupUseNomination = this.Command_AddGroupUseNomination;
+            nomination.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
             this.HideNominations.Value.Insert(index, nomination);
@@ -273,6 +274,7 @@ namespace DanceRegUltra.Models
                     this.HideNominations.Value[index].Event_UpdateNominant -= this.UpdateNominantPosition;
                     this.HideNominations.Value[index].Command_AddDancerUseNomination = null;
                     this.HideNominations.Value[index].Command_AddGroupUseNomination = null;
+                    this.HideNominations.Value[index].Command_DeleteNodesByNomination = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
@@ -357,7 +359,7 @@ namespace DanceRegUltra.Models
             else return -1;
         }
 
-        public async Task DeleteNodeAsync(DanceNode node)
+        public async Task<int> DeleteNodeAsync(DanceNode node)
         {
             int position = this.HideNodes.Value.IndexOf(node);
             if (position > -1)
@@ -367,8 +369,8 @@ namespace DanceRegUltra.Models
                 node.Command_deleteNode = null;
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
-                if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1, true);
-                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + node.Member.MemberId);
+                //if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1, true);
+                DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + node.Member.MemberId + " and Is_group=" + node.IsGroup);
                 if (res.RowsCount == 0)
                 {
                     if (node.IsGroup)
@@ -405,6 +407,7 @@ namespace DanceRegUltra.Models
                 this.RemoveSchool(node.Member.School);
                 this.event_AddDeleteNodes?.Invoke();
             }
+            return position;
         }
 
         public async Task UpdateNodePosition(int index1, int index2, bool isUnknownPosition)
@@ -457,7 +460,7 @@ namespace DanceRegUltra.Models
                 this.HideGroups.Value.Insert(index_sort, group);
                 this.OnPropertyChanged("Groups");
             }
-
+            newMember.Command_DeleteNodesByMember = this.Command_DeleteNodesByMember;
             if (newMember.MemberNum == 0)
             {
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Num_increment from events where Id_event=" + this.IdEvent);
@@ -594,6 +597,28 @@ namespace DanceRegUltra.Models
             {
                 this.command_AddGroupUseNomination = value;
                 this.OnPropertyChanged("Command_AddGroupUseNomination");
+            }
+        }
+
+        private RelayCommand<Member> command_DeleteNodesByMember;
+        public RelayCommand<Member> Command_DeleteNodesByMember
+        {
+            get => this.command_DeleteNodesByMember;
+            set
+            {
+                this.command_DeleteNodesByMember = value;
+                this.OnPropertyChanged("Command_DeleteNodesByMember");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_DeleteNodesByNomination;
+        public RelayCommand<DanceNomination> Command_DeleteNodesByNomination
+        {
+            get => this.command_DeleteNodesByNomination;
+            set
+            {
+                this.command_DeleteNodesByNomination = value;
+                this.OnPropertyChanged("Command_DeleteNodesByNomination");
             }
         }
 

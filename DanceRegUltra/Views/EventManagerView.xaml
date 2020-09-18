@@ -170,6 +170,8 @@
                                         <ContextMenu>
                                             <MenuItem Header="Добавить танцора в эту номинацию" Command="{Binding Path=Command_AddDancerUseNomination}" CommandParameter="{Binding}"/>
                                             <MenuItem Header="Добавить группу в эту номинацию" Command="{Binding Path=Command_AddGroupUseNomination}" CommandParameter="{Binding}"/>
+                                            <Separator/>
+                                            <MenuItem Header="Удалить эту номинацию" Command="{Binding Path=Command_DeleteNodesByNomination}" CommandParameter="{Binding}"/>
                                         </ContextMenu>
                                     </Grid.ContextMenu>
                                     <StackPanel Orientation="Horizontal" Grid.Column="0">
@@ -202,7 +204,8 @@
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Добавить номинацию с этим танцором" Command="{Binding Path=Member.Command_AddDancerUseMember}" CommandParameter="{Binding Path=Member}"/>
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Добавить номинацию с этой группой" Command="{Binding Path=Member.Command_AddGroupUseMember}" CommandParameter="{Binding Path=Member}"/>
                                                         <Separator/>
-                                                        <MenuItem Header="Удалить номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="Удалить участника и все номинации, связанные с ним" Command="{Binding Path=Member.Command_DeleteNodesByMember}" CommandParameter="{Binding Path=Member}"/>
+                                                        <MenuItem Header="Удалить этого номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
                                                     </ContextMenu>
                                                 </Setter.Value>
                                             </Setter>
@@ -291,7 +294,8 @@
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Добавить номинацию с этим танцором" Command="{Binding Path=Member.Command_AddDancerUseMember}" CommandParameter="{Binding Path=Member}"/>
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Добавить номинацию с этой группой" Command="{Binding Path=Member.Command_AddGroupUseMember}" CommandParameter="{Binding Path=Member}"/>
                                             <Separator/>
-                                            <MenuItem Header="Удалить номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
+                                            <MenuItem Header="Удалить участника и все номинации, связанные с ним" Command="{Binding Path=Member.Command_DeleteNodesByMember}" CommandParameter="{Binding Path=Member}"/>
+                                            <MenuItem Header="Удалить этого номинанта" Command="{Binding Path=Command_deleteNode}" CommandParameter="{Binding}"/>
                                         </ContextMenu>
                                     </Setter.Value>
                                 </Setter>
@@ -387,8 +391,10 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
-                                            <MenuItem Header="Добавить номинацию с этим танцором" Command="{Binding Path=Command_AddDancerUseMember}" CommandParameter="{Binding}"/>
-                                        </ContextMenu>
+                                                <MenuItem Header="Добавить номинацию с этим танцором" Command="{Binding Path=Command_AddDancerUseMember}" CommandParameter="{Binding}"/>
+                                                <Separator/>
+                                                <MenuItem Header="Удалить участника и все номинации, связанные с ним" Command="{Binding Path=Command_DeleteNodesByMember}" CommandParameter="{Binding}"/>
+                                            </ContextMenu>
                                     </Setter.Value>
                                     </Setter>
                                 </Style>
@@ -427,7 +433,9 @@
                                     <Setter Property="ContextMenu">
                                         <Setter.Value>
                                             <ContextMenu>
-                                                <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Добавить номинацию с этой группой" Command="{Binding Path=Command_AddGroupUseMember}" CommandParameter="{Binding}"/>
+                                                <MenuItem Header="Добавить номинацию с этой группой" Command="{Binding Path=Command_AddGroupUseMember}" CommandParameter="{Binding}"/>
+                                                <Separator/>
+                                                <MenuItem Header="Удалить участника и все номинации, связанные с ним" Command="{Binding Path=Command_DeleteNodesByMember}" CommandParameter="{Binding}"/>
                                             </ContextMenu>
                                         </Setter.Value>
                                     </Setter>

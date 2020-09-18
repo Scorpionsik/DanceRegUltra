@@ -1,4 +1,5 @@
 ﻿using CoreWPF.MVVM;
+using CoreWPF.Utilites;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Interfaces;
 using DanceRegUltra.Models.Categories;
@@ -55,6 +56,17 @@ namespace DanceRegUltra.Models
         protected void InvokeUpdate(string dataColumn, object currentData = null, UpdateStatus status = UpdateStatus.Default, object replaceData = null)
         {
             this.event_UpdateMember?.Invoke(this.EventId, this.MemberId, dataColumn, currentData, status);
+        }
+
+        private RelayCommand<Member> command_DeleteNodesByMember;
+        public RelayCommand<Member> Command_DeleteNodesByMember
+        {
+            get => this.command_DeleteNodesByMember;
+            set
+            {
+                this.command_DeleteNodesByMember = value;
+                this.OnPropertyChanged("Command_DeleteNodesByMember");
+            }
         }
     }
 }

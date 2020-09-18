@@ -416,8 +416,10 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
             this.EventInWork.Command_AddGroupUseMember = this.Command_AddGroupUseMember;
             this.EventInWork.Command_AddGroupUseNomination = this.Command_AddGroupUseNomination;
-
+            this.EventInWork.Command_DeleteNodesByMember = this.Command_DeleteNodesByMember;
+            this.EventInWork.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
+
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
             this.startDateEvent = UnixTime.ToDateTimeOffset(this.EventInWork.StartEventTimestamp, App.Locality).DateTime;
@@ -603,7 +605,20 @@ namespace DanceRegUltra.ViewModels
         */
         private async void DeleteNodeMethod(DanceNode deleteNode)
         {
-            await this.EventInWork.DeleteNodeAsync(deleteNode);
+            int position = await this.EventInWork.DeleteNodeAsync(deleteNode);
+            if (position > -1) await this.EventInWork.UpdateNodePosition(position, this.EventInWork.Nodes.Count - 1, true);
+        }
+
+        private async void DeleteRangeNodeMethod(IEnumerable<DanceNode> nodes)
+        {
+            int update_position = -1, tmp_position = -1;
+            foreach(DanceNode deleteNode in nodes)
+            {
+                tmp_position = await this.EventInWork.DeleteNodeAsync(deleteNode);
+                if (tmp_position > -1 && (update_position == -1 || update_position > tmp_position)) update_position = tmp_position;
+            }
+
+            if (update_position > -1 && update_position < this.EventInWork.Nodes.Count) await this.EventInWork.UpdateNodePosition(update_position, this.EventInWork.Nodes.Count - 1, true);
         }
 
         private async void SetRandomNumsMethod()
@@ -708,6 +723,27 @@ namespace DanceRegUltra.ViewModels
             {
                 AddGroupView window = new AddGroupView(nomination);
                 window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<Member> Command_DeleteNodesByMember
+        {
+            get => new RelayCommand<Member>(member =>
+            {
+                ListExt<DanceNode> delete = new ListExt<DanceNode>();
+                foreach(DanceNode node in this.EventInWork.Nodes)
+                {
+                    if (node.Member == member) delete.Add(node);
+                }
+                this.DeleteRangeNodeMethod(delete);
+            });
+        }
+
+        public RelayCommand<DanceNomination> Command_DeleteNodesByNomination
+        {
+            get => new RelayCommand<DanceNomination>(nomination =>
+            {
+                this.DeleteRangeNodeMethod(new ListExt<DanceNode>(nomination.Nominants));
             });
         }
     }
