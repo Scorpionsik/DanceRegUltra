@@ -220,7 +220,10 @@
                                                 <GroupBox Header="Платформа" Grid.Column="1">
                                                     <TextBlock TextAlignment="Center" Text="{Binding Path=Platform.Title}"/>
                                                 </GroupBox>
-                                                <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Танцор" Grid.Column="2">
+                                                <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Grid.Column="2">
+                                                    <GroupBox.Header>
+                                                        <TextBlock Text="Танцор" FontWeight="Bold"/>
+                                                    </GroupBox.Header>
                                                     <Grid>
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition/>
@@ -236,7 +239,10 @@
                                                         <TextBlock Grid.Row="1" Text="{Binding StringFormat=Школа: {0}, Path=Member.School.Title}"/>
                                                     </Grid>
                                                 </GroupBox>
-                                                <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="{Binding Path=Member.GroupType}" Grid.Column="2">
+                                                <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Grid.Column="2">
+                                                    <GroupBox.Header>
+                                                        <TextBlock Text="{Binding Path=Member.GroupType}" FontWeight="Bold"/>
+                                                    </GroupBox.Header>
                                                     <Grid>
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition/>
@@ -270,7 +276,7 @@
                 </GroupBox.Header>
                 <DockPanel LastChildFill="True">
                     <Button Content="Удалить номинанта" DockPanel.Dock="Bottom" Command="{Binding Path=Command_DeleteNode}" CommandParameter="{Binding Path=Select_node}"/>
-                    <ListBox ItemsSource="{Binding Path=Result_search_nodes}" SelectedItem="{Binding Path=Select_node}">
+                    <ListBox ItemsSource="{Binding Path=Result_search_nodes}" SelectedItem="{Binding Path=Select_node}" VirtualizingPanel.ScrollUnit="Pixel">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="BorderThickness" Value="1"/>
@@ -292,37 +298,37 @@
                             <DataTemplate>
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="15"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="200"/>
                                         <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
-                                
-                                
-                                    <GroupBox Header="ID" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                                        <TextBlock Text="Блок: "/>
+                                        <TextBlock FontWeight="Bold" Text="{Binding Path=Block.Title}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
+                                        <TextBlock Text="Номинация: "/>
+                                        <TextBlock FontWeight="Bold" Text="{Binding Path=LeagueId, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock FontWeight="Bold" Text="{Binding Path=AgeId, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock FontWeight="Bold" Text="{Binding Path=StyleId, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                                    </StackPanel>
+
+                                    <GroupBox Header="ID" Grid.Row="1" Grid.Column="0">
                                         <TextBox TextAlignment="Center" Text="{Binding Path=NodeId, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" FontWeight="Bold"/>
                                     </GroupBox>
-
-                                    <GroupBox Header="Номинация" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock TextAlignment="Center" Text="{Binding Path=LeagueId, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
-                                            <TextBlock Text=" - "/>
-                                            <TextBlock TextAlignment="Center" Text="{Binding Path=AgeId, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
-                                            <TextBlock Text=" - "/>
-                                            <TextBlock TextAlignment="Center" Text="{Binding Path=StyleId, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Header="Платформа" Grid.Row="0" Grid.Column="1">
+                                    <GroupBox Header="Платформа" Grid.Row="1" Grid.Column="1">
                                         <TextBlock TextAlignment="Center" Text="{Binding Path=Platform.Title}"/>
                                     </GroupBox>
-                                    <GroupBox Header="Блок" Grid.Row="0" Grid.Column="2">
-                                        <TextBlock TextAlignment="Center" Text="{Binding Path=Block.Title}"/>
-                                    </GroupBox>
-                                    <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Танцор" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3">
+                                    <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Grid.Row="1" Grid.Column="2">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="Танцор" FontWeight="Bold"/>
+                                        </GroupBox.Header>
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
@@ -338,7 +344,10 @@
                                             <TextBlock Grid.Row="1" Text="{Binding StringFormat=Школа: {0}, Path=Member.School.Title}"/>
                                         </Grid>
                                     </GroupBox>
-                                    <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="{Binding Path=Member.GroupType}" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3">
+                                    <GroupBox Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Grid.Row="1" Grid.Column="2">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="{Binding Path=Member.GroupType}" FontWeight="Bold"/>
+                                        </GroupBox.Header>
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>

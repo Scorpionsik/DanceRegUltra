@@ -246,6 +246,7 @@ namespace DanceRegUltra.ViewModels
                                 result.Add(node);
                             }
                         }
+                        /*
                         else if(node.Member is MemberGroup group)
                         {
                             foreach(MemberDancer group_dancer in group.GroupMembers)
@@ -255,7 +256,7 @@ namespace DanceRegUltra.ViewModels
                                     result.Add(node);
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
                 this.Result_search_nodes_count = result.Count;

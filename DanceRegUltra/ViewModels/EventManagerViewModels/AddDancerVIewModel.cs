@@ -368,7 +368,8 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             get => new RelayCommand(obj =>
             {
                 this.AddNodeMethod();
-            });
+            },
+                (obj) => this.DancerName.Length > 0 && this.DancerSurname.Length > 0 && this.Select_league.Key > 0 && this.Select_age.Key > 0 && this.ShowSelectStyles.Length > 0 && this.Select_block != null && this.Select_school != null);
         }
 
         public RelayCommand Command_ClearDancer

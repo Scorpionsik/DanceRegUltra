@@ -378,7 +378,8 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             get => new RelayCommand(obj =>
             {
                 this.AddNodeMethod();
-            });
+            },
+                (obj) => this.Select_group.GroupMembers.Count >= 2 && this.Select_league.Key > 0 && this.Select_age.Key > 0 && this.ShowSelectStyles.Length > 0 && this.Select_block != null && this.Select_school != null);
         }
 
         public RelayCommand Command_AddMemberInGroup
