@@ -130,6 +130,7 @@
     <Compile Include="ViewModels\EventManagerViewModels\AddGroupViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\AddSchoolViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\JudgeManagerViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\NominationJudgesViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\PlatformsManagerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\SelectSchemeTypeViewModel.cs" />
     <Compile Include="ViewModels\RegisterWindowViewModel.cs" />
@@ -154,6 +155,9 @@
     </Compile>
     <Compile Include="Views\EventManagerViews\JudgeManagerView.xaml.cs">
       <DependentUpon>JudgeManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventManagerViews\NominationJudgesView.xaml.cs">
+      <DependentUpon>NominationJudgesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventManagerViews\PlatformsManagerView.xaml.cs">
       <DependentUpon>PlatformsManagerView.xaml</DependentUpon>
@@ -192,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EventManagerViews\JudgeManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventManagerViews\NominationJudgesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,111 @@
+﻿<window:DialogWindowExt x:Class="DanceRegUltra.Views.EventManagerViews.NominationJudgesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:convert="clr-namespace:DanceRegUltra.Utilites.Converters"
+        mc:Ignorable="d"
+        Title="{Binding Path=Title}" Height="600" Width="800">
+    <window:WindowExt.Resources>
+        <convert:CategoryNameByIdConvert x:Key="CategoryName"/>
+    </window:WindowExt.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" Text="Установить для всех номинаций"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="Игнорировать решения судий">
+                    <ListBox  ItemsSource="{Binding Path=AllJudgeIgnore}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Path=IsChecked}">
+                                    <CheckBox.Content>
+                                        <TextBlock Text="{Binding StringFormat=Судья {0}, Path=Id}"/>
+                                    </CheckBox.Content>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="Настройка подсчёта оценок">
+                    <CheckBox Content="Считать отдельно танцоров и отдельно группы в пределах одной номинации" IsChecked="{Binding Path=AllSeparate}"/>
+                </GroupBox>
+                <Button Grid.Row="2" Content="Установить для всех номинаций" Command="{Binding Path=Command_SetAll}"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" Text="Установить для выбранной номинации"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="45"/>
+                </Grid.RowDefinitions>
+                <ComboBox Grid.Row="0" ItemsSource="{Binding Path=Nominations}" SelectedItem="{Binding Path=Select_nomination}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <TextBlock FontWeight="Bold" Text="{Binding Path=Block_info.Title}"/>
+                                <TextBlock Text=": "/>
+                                <TextBlock Text="{Binding Path=League_id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                                <TextBlock Text=" - "/>
+                                <TextBlock Text="{Binding Path=Age_id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                                <TextBlock Text=" - "/>
+                                <TextBlock Text="{Binding Path=Style_id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <GroupBox Grid.Row="1" Header="Игнорировать решения судий">
+                    <ListBox  ItemsSource="{Binding Path=ShowJudgeIgnore}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Path=IsChecked}">
+                                    <CheckBox.Content>
+                                        <TextBlock Text="{Binding StringFormat=Судья {0}, Path=Id}"/>
+                                    </CheckBox.Content>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="Настройка подсчёта оценок">
+                    <CheckBox Content="Считать отдельно танцоров и отдельно группы в пределах одной номинации" IsChecked="{Binding Path=ShowSeparate}"/>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Сохранить изменения" Grid.Column="0" Command="{Binding Path=Command_save}"/>
+            <Button Content="Отмена" Grid.Column="1" Command="{Binding Path=Command_close}"/>
+        </Grid>
+    </Grid>
+</window:DialogWindowExt>

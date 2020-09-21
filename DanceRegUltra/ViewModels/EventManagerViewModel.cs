@@ -780,6 +780,15 @@ namespace DanceRegUltra.ViewModels
             });
         }
 
+        public RelayCommand Command_EditNominations
+        {
+            get => new RelayCommand(obj =>
+            {
+                NominationJudgesView window = new NominationJudgesView(this.EventInWork.IdEvent);
+                window.ShowDialog();
+            });
+        }
+
         public RelayCommand<DanceNomination> Command_DeleteNodesByNomination
         {
             get => new RelayCommand<DanceNomination>(nomination =>

@@ -33,7 +33,17 @@ namespace DanceRegUltra.Models
         public IdTitle Block_info { get; private set; }
         public int Style_id { get; private set; }
         public ListExt<DanceNode> Nominants { get; private set; }
-        public bool Separate_dancer_group { get; private set; }
+
+        private bool separate_dancer_group;
+        public bool Separate_dancer_group
+        {
+            get => this.separate_dancer_group;
+            private set
+            {
+                this.separate_dancer_group = value;
+                this.OnPropertyChanged("Separate_dancer_group");
+            }
+        }
 
         public ListExt<IdCheck> JudgeIgnore { get; private set; }
 
@@ -95,6 +105,11 @@ namespace DanceRegUltra.Models
                     if (this.JudgeIgnore.Count < 4) this.JudgeIgnore.Add(new IdCheck(4, false));
                     break;
             }
+        }
+
+        public void SetSeparate(bool separate)
+        {
+            this.Separate_dancer_group = separate;
         }
 
         public string GetJsonJudgeIgnore()
