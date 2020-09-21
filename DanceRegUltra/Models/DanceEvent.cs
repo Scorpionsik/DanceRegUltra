@@ -247,6 +247,7 @@ namespace DanceRegUltra.Models
             nomination.Command_AddDancerUseNomination = this.Command_AddDancerUseNomination;
             nomination.Command_AddGroupUseNomination = this.Command_AddGroupUseNomination;
             nomination.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
+            nomination.Command_editSelectNomination = this.Command_editSelectNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
             this.HideNominations.Value.Insert(index, nomination);
@@ -275,6 +276,7 @@ namespace DanceRegUltra.Models
                     this.HideNominations.Value[index].Command_AddDancerUseNomination = null;
                     this.HideNominations.Value[index].Command_AddGroupUseNomination = null;
                     this.HideNominations.Value[index].Command_DeleteNodesByNomination = null;
+                    this.HideNominations.Value[index].Command_editSelectNomination = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
@@ -619,6 +621,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_DeleteNodesByNomination = value;
                 this.OnPropertyChanged("Command_DeleteNodesByNomination");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_editSelectNomination;
+        public RelayCommand<DanceNomination> Command_editSelectNomination
+        {
+            get => this.command_editSelectNomination;
+            set
+            {
+                this.command_editSelectNomination = value;
+                this.OnPropertyChanged("Command_editSelectNomination");
             }
         }
 

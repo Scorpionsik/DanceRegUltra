@@ -60,11 +60,12 @@ namespace DanceRegUltra.Models
             this.JudgeIgnore = new ListExt<IdCheck>();
             List<bool> tmp_judge = jsonJudge == "" ? new List<bool>() { false, false, false, false } : JsonConvert.DeserializeObject<List<bool>>(jsonJudge);
             int index = 0, max = (int)type + 3;
-            while(index < max)
+            while(index < max && index < tmp_judge.Count)
             {
                 this.JudgeIgnore.Add(new IdCheck(index + 1, tmp_judge[index]));
                 index++;
             }
+            if (type == JudgeType.FourD && tmp_judge.Count == 3) this.JudgeIgnore.Add(new IdCheck(4, false));
 
             /*
             for(int i = 0; i < 4; i++)
@@ -195,6 +196,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_DeleteNodesByNomination = value;
                 this.OnPropertyChanged("Command_DeleteNodesByNomination");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_editSelectNomination;
+        public RelayCommand<DanceNomination> Command_editSelectNomination
+        {
+            get => this.command_editSelectNomination;
+            set
+            {
+                this.command_editSelectNomination = value;
+                this.OnPropertyChanged("Command_editSelectNomination");
             }
         }
     }

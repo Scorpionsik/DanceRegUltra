@@ -460,6 +460,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_DeleteNodesByMember = this.Command_DeleteNodesByMember;
             this.EventInWork.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
+            this.EventInWork.Command_editSelectNomination = this.Command_editSelectNomination;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -606,6 +607,13 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Event_UpdateDanceEvent -= UpdateEvent;
             this.EventInWork.Event_AddDeleteNodes -= UpdateCountsForSearchList;
             this.EventInWork.Command_deleteNode = null;
+            this.EventInWork.Command_AddDancerUseMember = null;
+            this.EventInWork.Command_AddDancerUseNomination = null;
+            this.EventInWork.Command_AddGroupUseMember = null;
+            this.EventInWork.Command_AddGroupUseNomination = null;
+            this.EventInWork.Command_DeleteNodesByMember = null;
+            this.EventInWork.Command_DeleteNodesByNomination = null;
+            this.EventInWork.Command_editSelectNomination = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -794,6 +802,15 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand<DanceNomination>(nomination =>
             {
                 this.DeleteRangeNodeMethod(new ListExt<DanceNode>(nomination.Nominants));
+            });
+        }
+
+        public RelayCommand<DanceNomination> Command_editSelectNomination
+        {
+            get => new RelayCommand<DanceNomination>(nomination =>
+            {
+                NominationJudgesView window = new NominationJudgesView(this.EventInWork.IdEvent, nomination);
+                window.ShowDialog();
             });
         }
     }
