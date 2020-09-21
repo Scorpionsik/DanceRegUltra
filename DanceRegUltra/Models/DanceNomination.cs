@@ -27,12 +27,24 @@ namespace DanceRegUltra.Models
             remove => this.event_UpdateNominant -= value;
         }
         public bool IsShowInList { get; private set; }
+        
         public int Event_id { get; private set; }
         public int League_id { get; private set; }
         public int Age_id { get; private set; }
         public IdTitle Block_info { get; private set; }
         public int Style_id { get; private set; }
         public ListExt<DanceNode> Nominants { get; private set; }
+
+        private JudgeType type;
+        public JudgeType Type
+        {
+            get => this.type;
+            private set
+            {
+                this.type = value;
+                this.OnPropertyChanged("Type");
+            }
+        }
 
         private bool separate_dancer_group;
         public bool Separate_dancer_group
@@ -58,15 +70,15 @@ namespace DanceRegUltra.Models
             this.Separate_dancer_group = separate;
             this.Nominants = new ListExt<DanceNode>();
             this.JudgeIgnore = new ListExt<IdCheck>();
-            List<bool> tmp_judge = jsonJudge == "" ? new List<bool>() { false, false, false, false } : JsonConvert.DeserializeObject<List<bool>>(jsonJudge);
-            int index = 0, max = (int)type + 3;
-            while(index < max && index < tmp_judge.Count)
+            List<bool> tmp_judge = jsonJudge == "" ? new List<bool>() : JsonConvert.DeserializeObject<List<bool>>(jsonJudge);
+            int index = 0;
+            while(index < tmp_judge.Count)
             {
                 this.JudgeIgnore.Add(new IdCheck(index + 1, tmp_judge[index]));
                 index++;
             }
-            if (type == JudgeType.FourD && tmp_judge.Count == 3) this.JudgeIgnore.Add(new IdCheck(4, false));
 
+            this.SetNewType(type);
             /*
             for(int i = 0; i < 4; i++)
             {
@@ -97,6 +109,7 @@ namespace DanceRegUltra.Models
 
         public void SetNewType(JudgeType type)
         {
+            /*
             switch (type)
             {
                 case JudgeType.ThreeD:
@@ -105,6 +118,20 @@ namespace DanceRegUltra.Models
                 case JudgeType.FourD:
                     if (this.JudgeIgnore.Count < 4) this.JudgeIgnore.Add(new IdCheck(4, false));
                     break;
+            }*/
+            this.Type = type;
+        }
+
+        public void SetJudgeCount(int count)
+        {
+            
+            while(count != this.JudgeIgnore.Count)
+            {
+                if (count < this.JudgeIgnore.Count)
+                {
+                    this.JudgeIgnore.RemoveAt(this.JudgeIgnore.Count - 1);
+                }
+                else this.JudgeIgnore.Add(new IdCheck(this.JudgeIgnore.Count + 1, false));
             }
         }
 

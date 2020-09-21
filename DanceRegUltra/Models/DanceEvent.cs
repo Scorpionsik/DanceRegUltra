@@ -232,8 +232,10 @@ namespace DanceRegUltra.Models
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.IdEvent + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
 
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into nominations values (" + this.IdEvent + ", " + node.Block.Id + ", " + node.LeagueId + ", " + node.AgeId + ", " + node.StyleId +", "+ !res.HasRows +",'"+ JsonConvert.SerializeObject(new List<bool>() { false, false, false, false }) +"', 1)");
-                
-                DanceNomination nomination = new DanceNomination(this.IdEvent, node.Block, this.SchemeEvent.GetSchemeArrayById(node.Block.Id, Enums.SchemeType.Block).ScoreType, node.LeagueId, node.AgeId, node.StyleId, !res.HasRows);
+
+                JsonSchemeArray tmp_block = this.SchemeEvent.GetSchemeArrayById(node.Block.Id, Enums.SchemeType.Block);
+                DanceNomination nomination = new DanceNomination(this.IdEvent, node.Block, tmp_block.ScoreType, node.LeagueId, node.AgeId, node.StyleId, !res.HasRows);
+                nomination.SetJudgeCount(tmp_block.JudgeCount);
                 this.AddNomination(nomination);
                 tmp_nomination = nomination;
             }
@@ -250,6 +252,9 @@ namespace DanceRegUltra.Models
             nomination.Command_editSelectNomination = this.Command_editSelectNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
+
+            //nomination.SetNewType(tmp_block.ScoreType);
+
             this.HideNominations.Value.Insert(index, nomination);
             this.OnPropertyChanged("Nominations");
         }

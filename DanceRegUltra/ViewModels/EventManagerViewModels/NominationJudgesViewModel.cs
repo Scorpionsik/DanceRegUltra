@@ -80,13 +80,18 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             this.Title = "[" + this.EventInWork.Title + "] Настройка номинаций - " + App.AppTitle;
 
             this.AllSeparate = true;
-            this.AllJudgeIgnore = new ListExt<IdCheck>()
+            int max_judge = 0;
+            foreach(JsonSchemeArray block in this.EventInWork.SchemeEvent.Blocks)
             {
-                new IdCheck(1, false),
-                new IdCheck(2, false),
-                new IdCheck(3, false),
-                new IdCheck(4, false)
-            };
+                if (block.JudgeCount > max_judge) max_judge = block.JudgeCount;
+            }
+
+            this.AllJudgeIgnore = new ListExt<IdCheck>();
+
+            for(int i = 0; i < max_judge; i++)
+            {
+                this.AllJudgeIgnore.Add(new IdCheck(i + 1, false));
+            }
 
             this.Update_nominations = new List<DanceNomination>();
             this.SelectJudgeIgnore = new Dictionary<DanceNomination, ListExt<IdCheck>>();
