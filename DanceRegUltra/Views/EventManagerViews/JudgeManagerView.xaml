@@ -14,10 +14,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
+            <RowDefinition Height="20"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Установить для всех блоков">
+        <GroupBox Grid.Row="0">
+            <GroupBox.Header>
+                <TextBlock  FontWeight="Bold" Text="Установить для всех блоков"/>
+            </GroupBox.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -39,7 +43,10 @@
                 <Button Content="Применить" Grid.Column="2" Command="{Binding Path=Command_SetCommon}"/>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Установить для конкретных блоков">
+        <GroupBox Grid.Row="2">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" Text="Установить для конкретных блоков"/>
+            </GroupBox.Header>
             <ListBox ItemsSource="{Binding Path=Blocks}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -73,7 +80,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

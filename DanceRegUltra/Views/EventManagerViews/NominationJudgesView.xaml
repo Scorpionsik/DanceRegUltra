@@ -9,6 +9,7 @@
         Title="{Binding Path=Title}" Height="600" Width="800">
     <window:WindowExt.Resources>
         <convert:CategoryNameByIdConvert x:Key="CategoryName"/>
+        <convert:JudgeTypeConvert x:Key="JudgeType"/>
     </window:WindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -57,7 +58,8 @@
             </GroupBox.Header>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="45"/>
                     <RowDefinition/>
                     <RowDefinition Height="45"/>
                 </Grid.RowDefinitions>
@@ -76,7 +78,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <GroupBox Grid.Row="1" Header="Игнорировать решения судий">
+                <GroupBox Grid.Row="1" Header="Тип оценивания">
+                    <TextBlock Text="{Binding Path=Select_nomination.Type, Converter={StaticResource JudgeType}}"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="Игнорировать решения судий">
                     <ListBox  ItemsSource="{Binding Path=ShowJudgeIgnore}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -94,7 +99,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </GroupBox>
-                <GroupBox Grid.Row="2" Header="Настройка подсчёта оценок">
+                <GroupBox Grid.Row="3" Header="Настройка подсчёта оценок">
                     <CheckBox Content="Считать отдельно танцоров и отдельно группы в пределах одной номинации" IsChecked="{Binding Path=ShowSeparate}"/>
                 </GroupBox>
             </Grid>
