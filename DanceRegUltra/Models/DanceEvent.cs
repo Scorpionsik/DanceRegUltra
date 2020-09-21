@@ -445,6 +445,7 @@ namespace DanceRegUltra.Models
                 else tmp_add = dancer;
                 */
                 dancer.Command_AddDancerUseMember = this.Command_AddDancerUseMember;
+                dancer.Command_EditDancer = this.Command_EditDancer;
                 while (index_sort < this.HideDancers.Value.Count && this.HideDancers.Value[index_sort].CompareTo(dancer) <= 0) index_sort++;
                 //if (index_sort > this.HideDancers.Value.Count) index_sort--;
                 this.HideDancers.Value.Insert(index_sort, dancer);
@@ -637,6 +638,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_editSelectNomination = value;
                 this.OnPropertyChanged("Command_editSelectNomination");
+            }
+        }
+
+        private RelayCommand<MemberDancer> command_EditDancer;
+        public RelayCommand<MemberDancer> Command_EditDancer
+        {
+            get => this.command_EditDancer;
+            set
+            {
+                this.command_EditDancer = value;
+                this.OnPropertyChanged("Command_EditDancer");
             }
         }
 

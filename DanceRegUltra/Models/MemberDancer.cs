@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Utilites;
+using DanceRegUltra.Views.EventManagerViews;
 using System;
 
 namespace DanceRegUltra.Models
@@ -58,6 +59,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_AddDancerUseMember = value;
                 this.OnPropertyChanged("Command_AddDancerUseMember");
+            }
+        }
+
+        private RelayCommand<MemberDancer> command_EditDancer;
+        public RelayCommand<MemberDancer> Command_EditDancer
+        {
+            get => this.command_EditDancer;
+            set
+            {
+                this.command_EditDancer = value;
+                this.OnPropertyChanged("Command_EditDancer");
             }
         }
     }

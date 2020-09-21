@@ -121,6 +121,7 @@
     <Compile Include="Utilites\Converters\JudgeTypeConvert.cs" />
     <Compile Include="Utilites\Converters\VisibilityBoolConvert.cs" />
     <Compile Include="Utilites\FindDancer.cs" />
+    <Compile Include="Utilites\LazyString.cs" />
     <Compile Include="ViewModels\CategoryManagerViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\AgeMenuElementViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\LeagueMenuElementViewModel.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="ViewModels\EventManagerViewModels\AddDancerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\AddGroupViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\AddSchoolViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\EditDancerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\JudgeManagerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\NominationJudgesViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\PlatformsManagerViewModel.cs" />
@@ -152,6 +154,9 @@
     </Compile>
     <Compile Include="Views\EventManagerViews\AddSchoolView.xaml.cs">
       <DependentUpon>AddSchoolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventManagerViews\EditDancerView.xaml.cs">
+      <DependentUpon>EditDancerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventManagerViews\JudgeManagerView.xaml.cs">
       <DependentUpon>JudgeManagerView.xaml</DependentUpon>
@@ -192,6 +197,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EventManagerViews\AddSchoolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventManagerViews\EditDancerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -64,6 +64,11 @@ namespace DanceRegUltra.Models
             this.HideGroupMembers.Value.CollectionChanged -= this.UpdateMembersMethod;
         }
 
+        public void UpdateGroupMembersString()
+        {
+            this.OnPropertyChanged("GroupMembersString");
+        }
+
         public MemberGroup(int eventId, int memberId, IEnumerable<MemberDancer> group) : this(eventId, memberId)
         {
             this.HideGroupMembers.Value.AddRange(group);

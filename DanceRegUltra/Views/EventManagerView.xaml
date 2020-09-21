@@ -220,6 +220,7 @@
                                             <Setter Property="ContextMenu">
                                                 <Setter.Value>
                                                     <ContextMenu>
+                                                        <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Редактировать данные танцора..." Command="{Binding Path=Member.Command_EditDancer}" CommandParameter="{Binding Path=Member}"/>
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Добавить номинацию с этим танцором..." Command="{Binding Path=Member.Command_AddDancerUseMember}" CommandParameter="{Binding Path=Member}"/>
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Добавить номинацию с этой группой..." Command="{Binding Path=Member.Command_AddGroupUseMember}" CommandParameter="{Binding Path=Member}"/>
                                                         <Separator/>
@@ -314,6 +315,7 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
+                                            <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Редактировать данные танцора..." Command="{Binding Path=Member.Command_EditDancer}" CommandParameter="{Binding Path=Member}"/>
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Добавить номинацию с этим танцором..." Command="{Binding Path=Member.Command_AddDancerUseMember}" CommandParameter="{Binding Path=Member}"/>
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Добавить номинацию с этой группой..." Command="{Binding Path=Member.Command_AddGroupUseMember}" CommandParameter="{Binding Path=Member}"/>
                                             <Separator/>
@@ -412,12 +414,18 @@
                                 <TextBlock FontWeight="Bold" Text="{Binding Path=EventInWork.Dancers.Count}"/>
                             </StackPanel>
                         </TabItem.Header>
-                        <ListBox ItemsSource="{Binding Path=EventInWork.Dancers}">
+                        <ListBox ItemsSource="{Binding Path=EventInWork.Dancers}" SelectedItem="{Binding Path=Select_dancer}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding Path=Command_EditDancer}" CommandParameter="{Binding Path=Select_dancer}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
+                                                <MenuItem Header="Редактировать данные танцора..." Command="{Binding Path=Command_EditDancer}" CommandParameter="{Binding}"/>
                                                 <MenuItem Header="Добавить номинацию с этим танцором..." Command="{Binding Path=Command_AddDancerUseMember}" CommandParameter="{Binding}"/>
                                                 <Separator/>
                                                 <MenuItem Header="Удалить участника и все номинации, связанные с ним" Command="{Binding Path=Command_DeleteNodesByMember}" CommandParameter="{Binding}"/>

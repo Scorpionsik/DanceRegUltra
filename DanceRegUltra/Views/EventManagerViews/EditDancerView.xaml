@@ -1,0 +1,47 @@
+﻿<window:DialogWindowExt x:Class="DanceRegUltra.Views.EventManagerViews.EditDancerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        mc:Ignorable="d"
+        Title="{Binding Path=Title}" Height="250" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Surname" Grid.Column="0">
+                <TextBox Text="{Binding Path=Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
+            <GroupBox Header="Firstname" Grid.Column="1">
+                <TextBox Text="{Binding Path=Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
+        </Grid>
+        <DockPanel Grid.Row="1" LastChildFill="True">
+            <GroupBox DockPanel.Dock="Left" Header="Num">
+                <TextBox Text="{Binding Path=MemberNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
+            <GroupBox Header="School">
+                <DockPanel LastChildFill="True" IsEnabled="{Binding Path=IsEnableDancerEdit}">
+                    <Button IsTabStop="False" DockPanel.Dock="Right" Content="Добавить школу..." Command="{Binding Path=Command_AddSchool}"/>
+                    <ComboBox TabIndex="3" ItemsSource="{Binding Path=Schools}" DisplayMemberPath="Title" SelectedItem="{Binding Path=Select_school}"/>
+                </DockPanel>
+            </GroupBox>
+        </DockPanel>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Save" Grid.Column="0" Command="{Binding Path=Command_save}"/>
+            <Button Content="Cancel" Grid.Column="1" Command="{Binding Path=Command_close}"/>
+        </Grid>
+    </Grid>
+</window:DialogWindowExt>

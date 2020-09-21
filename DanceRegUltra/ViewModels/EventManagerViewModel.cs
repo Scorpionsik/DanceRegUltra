@@ -44,6 +44,17 @@ namespace DanceRegUltra.ViewModels
             get => "[" + this.EventEditTitle + "] " + base.Title;
         }
 
+        private MemberDancer select_dancer;
+        public MemberDancer Select_dancer
+        {
+            get => this.select_dancer;
+            set
+            {
+                this.select_dancer = value;
+                this.OnPropertyChanged("Select_dancer");
+            }
+        }
+
         private string eventEditTitle;
         public string EventEditTitle
         {
@@ -461,6 +472,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
             this.EventInWork.Command_editSelectNomination = this.Command_editSelectNomination;
+            this.EventInWork.Command_EditDancer = this.Command_EditDancer;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -614,6 +626,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_DeleteNodesByMember = null;
             this.EventInWork.Command_DeleteNodesByNomination = null;
             this.EventInWork.Command_editSelectNomination = null;
+            this.EventInWork.Command_EditDancer = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -810,6 +823,15 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand<DanceNomination>(nomination =>
             {
                 NominationJudgesView window = new NominationJudgesView(this.EventInWork.IdEvent, nomination);
+                window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<MemberDancer> Command_EditDancer
+        {
+            get => new RelayCommand<MemberDancer>(dancer =>
+            {
+                EditDancerView window = new EditDancerView(dancer);
                 window.ShowDialog();
             });
         }
