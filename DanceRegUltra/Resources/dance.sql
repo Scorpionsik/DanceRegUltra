@@ -38,7 +38,8 @@ create table "nominations"
 "Id_age" INTEGER NOT NULL,
 "Id_style" INTEGER NOT NULL,
 "Is_show_in_search" BOOLEAN DEFAULT 1,
-"Json_judge_ignore" TEXT DEFAULT ''
+"Json_judge_ignore" TEXT DEFAULT '',
+"Separate_dancer_group" BOOLEAN NOT NULL DEFAULT 1
 );
 
 /*Коллекция школ*/

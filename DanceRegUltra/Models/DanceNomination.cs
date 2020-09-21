@@ -33,10 +33,11 @@ namespace DanceRegUltra.Models
         public IdTitle Block_info { get; private set; }
         public int Style_id { get; private set; }
         public ListExt<DanceNode> Nominants { get; private set; }
+        public bool Separate_dancer_group { get; private set; }
 
         public ListExt<IdCheck> JudgeIgnore { get; private set; }
 
-        public DanceNomination(int event_id, IdTitle block, JudgeType type, int league, int age, int style, bool isShow, string jsonJudge = "")
+        public DanceNomination(int event_id, IdTitle block, JudgeType type, int league, int age, int style, bool isShow, string jsonJudge = "", bool separate = true)
         {
             this.Event_id = event_id;
             this.League_id = league;
@@ -44,6 +45,7 @@ namespace DanceRegUltra.Models
             this.Block_info = new IdTitle(block.Id, block.Title);
             this.Style_id = style;
             this.IsShowInList = isShow;
+            this.Separate_dancer_group = separate;
             this.Nominants = new ListExt<DanceNode>();
             this.JudgeIgnore = new ListExt<IdCheck>();
             List<bool> tmp_judge = jsonJudge == "" ? new List<bool>() { false, false, false, false } : JsonConvert.DeserializeObject<List<bool>>(jsonJudge);

@@ -231,7 +231,7 @@ namespace DanceRegUltra.Models
             {
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from nominations where Id_event=" + this.IdEvent + " and Id_league=" + node.LeagueId + " and Id_age=" + node.AgeId + " and Id_style=" + node.StyleId);
 
-                await DanceRegDatabase.ExecuteNonQueryAsync("insert into nominations values (" + this.IdEvent + ", " + node.Block.Id + ", " + node.LeagueId + ", " + node.AgeId + ", " + node.StyleId +", "+ !res.HasRows +",'"+ JsonConvert.SerializeObject(new List<bool>() { false, false, false, false }) +"')");
+                await DanceRegDatabase.ExecuteNonQueryAsync("insert into nominations values (" + this.IdEvent + ", " + node.Block.Id + ", " + node.LeagueId + ", " + node.AgeId + ", " + node.StyleId +", "+ !res.HasRows +",'"+ JsonConvert.SerializeObject(new List<bool>() { false, false, false, false }) +"', 1)");
                 
                 DanceNomination nomination = new DanceNomination(this.IdEvent, node.Block, this.SchemeEvent.GetSchemeArrayById(node.Block.Id, Enums.SchemeType.Block).ScoreType, node.LeagueId, node.AgeId, node.StyleId, !res.HasRows);
                 this.AddNomination(nomination);

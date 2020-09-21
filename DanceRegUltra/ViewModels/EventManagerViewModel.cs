@@ -533,7 +533,7 @@ namespace DanceRegUltra.ViewModels
                 title_block = tmp_blocks[id_block].Title;
                 type_block = tmp_blocks[id_block].ScoreType;
 
-                this.EventInWork.AddNomination(new DanceNomination(this.EventInWork.IdEvent, new IdTitle(id_block, title_block), type_block, row["Id_league"].ToInt32(), row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Is_show_in_search"].ToBoolean(), row["Json_judge_ignore"].ToString()));
+                this.EventInWork.AddNomination(new DanceNomination(this.EventInWork.IdEvent, new IdTitle(id_block, title_block), type_block, row["Id_league"].ToInt32(), row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Is_show_in_search"].ToBoolean(), row["Json_judge_ignore"].ToString(), row["Separate_dancer_group"].ToBoolean()));
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.EventInWork.IdEvent + " order by Position");
