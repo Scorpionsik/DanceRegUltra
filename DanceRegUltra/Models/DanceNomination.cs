@@ -47,11 +47,19 @@ namespace DanceRegUltra.Models
             this.Nominants = new ListExt<DanceNode>();
             this.JudgeIgnore = new ListExt<IdCheck>();
             List<bool> tmp_judge = jsonJudge == "" ? new List<bool>() { false, false, false, false } : JsonConvert.DeserializeObject<List<bool>>(jsonJudge);
+            int index = 0, max = (int)type + 3;
+            while(index < max)
+            {
+                this.JudgeIgnore.Add(new IdCheck(index + 1, tmp_judge[index]));
+                index++;
+            }
+
+            /*
             for(int i = 0; i < 4; i++)
             {
                 if (i == 3 && type == JudgeType.ThreeD) continue;
                 this.JudgeIgnore.Add(new IdCheck(i + 1, tmp_judge[i]));
-            }
+            }*/
         }
         public void AddNominant(DanceNode nominant)
         {
@@ -94,7 +102,7 @@ namespace DanceRegUltra.Models
             {
                 result.Add(value.IsChecked);
             }
-            if (result.Count < 4) result.Add(false);
+            //if (result.Count < 4) result.Add(false);
 
             return JsonConvert.SerializeObject(result);
         }
