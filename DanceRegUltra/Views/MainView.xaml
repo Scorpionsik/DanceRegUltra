@@ -37,8 +37,12 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>
-                                <MenuItem Header="Edit" Command="{Binding Path=Command_EditEvent}" CommandParameter="{Binding}"/>
-                                <MenuItem Header="Delete" Command="{Binding Path=Command_DeleteEvent}" CommandParameter="{Binding}"/>
+                                <MenuItem Command="{Binding Path=Command_EditEvent}" CommandParameter="{Binding}">
+                                    <MenuItem.Header>
+                                        <TextBlock Text="Изменить событие..." FontWeight="Bold"/>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                                <MenuItem Header="Удалить событие" Command="{Binding Path=Command_DeleteEvent}" CommandParameter="{Binding}"/>
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>

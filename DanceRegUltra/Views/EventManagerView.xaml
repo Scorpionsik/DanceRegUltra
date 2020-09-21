@@ -425,7 +425,11 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
-                                                <MenuItem Header="Редактировать данные танцора..." Command="{Binding Path=Command_EditDancer}" CommandParameter="{Binding}"/>
+                                                <MenuItem Command="{Binding Path=Command_EditDancer}" CommandParameter="{Binding}">
+                                                    <MenuItem.Header>
+                                                        <TextBlock Text="Редактировать данные танцора..." FontWeight="Bold"/>
+                                                    </MenuItem.Header>
+                                                </MenuItem>
                                                 <MenuItem Header="Добавить номинацию с этим танцором..." Command="{Binding Path=Command_AddDancerUseMember}" CommandParameter="{Binding}"/>
                                                 <Separator/>
                                                 <MenuItem Header="Удалить участника и все номинации, связанные с ним" Command="{Binding Path=Command_DeleteNodesByMember}" CommandParameter="{Binding}"/>
