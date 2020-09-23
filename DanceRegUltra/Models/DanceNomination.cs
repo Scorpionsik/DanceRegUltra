@@ -14,10 +14,12 @@ using System.Windows;
 
 namespace DanceRegUltra.Models
 {
+    public delegate void UpdateDragDrop(DanceNode node, int old_index, int new_index);
+
     public class DanceNomination : NotifyPropertyChanged, IDropTarget
     {
-        private event Action<DanceNode> event_UpdateNominant;
-        public event Action<DanceNode> Event_UpdateNominant
+        private event UpdateDragDrop event_UpdateNominant;
+        public event UpdateDragDrop Event_UpdateNominant
         {
             add
             {
@@ -163,13 +165,15 @@ namespace DanceRegUltra.Models
             if (dropInfo.Data is DanceNode node)
             {
                 int oldIndex = this.Nominants.IndexOf(node);
+                if (oldIndex > -1)
+                {
+                    int insert_index = dropInfo.InsertIndex;
+                    if (insert_index > oldIndex) insert_index -= 1;
 
-                int insert_index = dropInfo.InsertIndex;
-                if (insert_index > oldIndex) insert_index -= 1;
+                    this.Nominants.Move(oldIndex, insert_index);
 
-                this.Nominants.Move(oldIndex, insert_index);
-
-                this.event_UpdateNominant?.Invoke(node);
+                    this.event_UpdateNominant?.Invoke(node, oldIndex, insert_index);
+                }
             }
         }
 

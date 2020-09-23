@@ -8,6 +8,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         xmlns:corewpf="clr-namespace:CoreWPF.Utilites;assembly=CoreWPF"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
     <window:WindowExt.Resources>
@@ -207,7 +208,10 @@
                                     </StackPanel>
                                     <TextBlock Grid.Column="2" Text="{Binding StringFormat=Участников: {0}, Mode=OneWay, Path=Nominants.Count}"/>
                                 </Grid>
-                                <ListBox ItemsSource="{Binding Path=Nominants}">
+                                <ListBox ItemsSource="{Binding Path=Nominants}"
+                                         dd:DragDrop.IsDragSource="True"
+                                            dd:DragDrop.IsDropTarget="True"
+                                            dd:DragDrop.DropHandler="{Binding}">
                                     <i:Interaction.Behaviors>
                                         <corewpf:IgnoreMouseWheelBehavior />
                                     </i:Interaction.Behaviors>

@@ -289,10 +289,16 @@ namespace DanceRegUltra.Models
             
         }
 
-        private async void UpdateNominantPosition(DanceNode node)
+        private async void UpdateNominantPosition(DanceNode node, int old_index, int new_index)
         {
-            int index = this.HideNodes.Value.IndexOf(node);
-            await this.UpdateNodePosition(index, this.HideNodes.Value.Count - 1, true);
+            if (old_index != new_index)
+            {
+
+                int true_old_index = this.HideNodes.Value.IndexOf(node);
+                int true_new_index = true_old_index + (new_index - old_index);
+                this.HideNodes.Value.Move(true_old_index, true_new_index);
+                await this.UpdateNodePosition(true_old_index < true_new_index ? true_old_index : true_new_index, this.HideNodes.Value.Count - 1, true);
+            }
         }
 
         private async void UpdateDanceNode(int event_id, int node_id, string column_name, object value)
