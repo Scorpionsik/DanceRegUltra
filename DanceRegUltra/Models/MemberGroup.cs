@@ -20,16 +20,21 @@ namespace DanceRegUltra.Models
         {
             get
             {
-                int countGroup = this.HideGroupMembers.Value.Count;
-                this.groupType = "";
-
-                if (countGroup < 2) this.groupType = "Группа";
-                else if(countGroup >= 2 && countGroup <= 6) this.groupType = "Группа";
-                else if (countGroup >= 7 && countGroup <= 23) this.groupType = "Формейшен";
-                else if (countGroup >= 24) this.groupType = "Продакшн";
-
-                return this.groupType;
+                return MemberGroup.GetTypeByCount(this.GroupMembers.Count);
             }
+        }
+
+        public static string GetTypeByCount(int count)
+        {
+            int countGroup = count;
+            string groupType = "";
+
+            if (countGroup < 2) groupType = "Группа";
+            else if (countGroup >= 2 && countGroup <= 6) groupType = "Группа";
+            else if (countGroup >= 7 && countGroup <= 23) groupType = "Формейшен";
+            else if (countGroup >= 24) groupType = "Продакшн";
+
+            return groupType;
         }
 
         public string GroupMembersString
