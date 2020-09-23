@@ -20,7 +20,8 @@ namespace DanceRegUltra.Models
         {
             get
             {
-                return MemberGroup.GetTypeByCount(this.GroupMembers.Count);
+                this.groupType = MemberGroup.GetTypeByCount(this.GroupMembers.Count);
+                return this.groupType;
             }
         }
 
@@ -200,6 +201,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_AddGroupUseMember = value;
                 this.OnPropertyChanged("Command_AddGroupUseMember");
+            }
+        }
+
+        private RelayCommand<MemberGroup> command_EditGroup;
+        public RelayCommand<MemberGroup> Command_EditGroup
+        {
+            get => this.command_EditGroup;
+            set
+            {
+                this.command_EditGroup = value;
+                this.OnPropertyChanged("Command_EditGroup");
             }
         }
     }
