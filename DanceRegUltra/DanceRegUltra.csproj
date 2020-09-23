@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\EventManagerViewModels\AddGroupViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\AddSchoolViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\EditDancerViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\EditGroupViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\JudgeManagerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\NominationJudgesViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\PlatformsManagerViewModel.cs" />
@@ -157,6 +158,9 @@
     </Compile>
     <Compile Include="Views\EventManagerViews\EditDancerView.xaml.cs">
       <DependentUpon>EditDancerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventManagerViews\EditGroupView.xaml.cs">
+      <DependentUpon>EditGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventManagerViews\JudgeManagerView.xaml.cs">
       <DependentUpon>JudgeManagerView.xaml</DependentUpon>
@@ -201,6 +205,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EventManagerViews\EditDancerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventManagerViews\EditGroupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

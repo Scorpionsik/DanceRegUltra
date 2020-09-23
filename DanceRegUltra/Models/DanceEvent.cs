@@ -463,6 +463,7 @@ namespace DanceRegUltra.Models
                 else tmp_add = group;
                 */
                 group.Command_AddGroupUseMember = this.Command_AddGroupUseMember;
+                group.Command_EditGroup = this.Command_EditGroup;
                 while (index_sort < this.HideGroups.Value.Count && this.HideGroups.Value[index_sort].CompareTo(group) <= 0) index_sort++;
                 //if (index_sort > this.HideGroups.Value.Count) index_sort--;
                 this.HideGroups.Value.Insert(index_sort, group);
@@ -649,6 +650,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_EditDancer = value;
                 this.OnPropertyChanged("Command_EditDancer");
+            }
+        }
+
+        private RelayCommand<MemberGroup> command_EditGroup;
+        public RelayCommand<MemberGroup> Command_EditGroup
+        {
+            get => this.command_EditGroup;
+            set
+            {
+                this.command_EditGroup = value;
+                this.OnPropertyChanged("Command_EditGroup");
             }
         }
 

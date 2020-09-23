@@ -55,6 +55,17 @@ namespace DanceRegUltra.ViewModels
             }
         }
 
+        private MemberGroup select_group;
+        public MemberGroup Select_group
+        {
+            get => this.select_group;
+            set
+            {
+                this.select_group = value;
+                this.OnPropertyChanged("Select_group");
+            }
+        }
+
         private string eventEditTitle;
         public string EventEditTitle
         {
@@ -473,6 +484,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_deleteNode = this.Command_DeleteNode;
             this.EventInWork.Command_editSelectNomination = this.Command_editSelectNomination;
             this.EventInWork.Command_EditDancer = this.Command_EditDancer;
+            this.EventInWork.Command_EditGroup = this.Command_EditGroup;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -627,6 +639,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_DeleteNodesByNomination = null;
             this.EventInWork.Command_editSelectNomination = null;
             this.EventInWork.Command_EditDancer = null;
+            this.EventInWork.Command_EditGroup = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -832,6 +845,15 @@ namespace DanceRegUltra.ViewModels
             get => new RelayCommand<MemberDancer>(dancer =>
             {
                 EditDancerView window = new EditDancerView(dancer);
+                window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<MemberGroup> Command_EditGroup
+        {
+            get => new RelayCommand<MemberGroup>(group =>
+            {
+                EditGroupView window = new EditGroupView(group);
                 window.ShowDialog();
             });
         }
