@@ -7,7 +7,7 @@ create table "events"
 "End_timestamp" LONG DEFAULT -1,
 "Json_scheme" TEXT DEFAULT '',
 "Id_node_increment" INTERER NOT NULL DEFAULT 1,
-"Num_increment" INTERER NOT NULL DEFAULT 1,
+"Num_increment" INTERER NOT NULL DEFAULT 100,
 "Enable_rand_nums" BOOLEAN DEFAULT 1,
 "All_member_count" INTEGER DEFAULT 0
 );
