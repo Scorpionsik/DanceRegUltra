@@ -57,6 +57,16 @@ namespace DanceRegUltra.Static
             DanceRegDatabase.Database = new SqLiteDatabase.SqLiteDatabase("database/" + DatabaseName);
         }
 
+        internal static async Task ManualOpen(string manual_id)
+        {
+            await Database.ManualOpenAsync(manual_id);
+        }
+
+        internal static void ManualClose(string manual_id)
+        {
+            Database.ManualClose(manual_id);
+        }
+
         internal static async Task<int> ExecuteNonQueryAsync(string query)
         {
             DanceRegDatabase.event_StartTask?.Invoke();
