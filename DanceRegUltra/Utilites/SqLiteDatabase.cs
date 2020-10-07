@@ -50,7 +50,7 @@ namespace SqLiteDatabase
                 this.Connection.Close();
                 return res;
             }
-            else return null;
+            else return DbResult.Empty;
         }
 
         public async Task<DbResult> ExecuteAndGetQueryAsync(string query)
@@ -64,7 +64,7 @@ namespace SqLiteDatabase
                 this.Connection.Close();
                 return res;
             }
-            else return null;
+            else return DbResult.Empty;
         }
 
         public int ExecuteNonQuery(string query)

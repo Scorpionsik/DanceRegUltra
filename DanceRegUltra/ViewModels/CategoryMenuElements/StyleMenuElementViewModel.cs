@@ -68,8 +68,8 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into styles ('Name') values ('" + style_name + "')");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_style, Name from styles order by Id_style");
-                DbRow row = res[res.RowsCount - 1];
-                CategoryString add_style = new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString());
+                DbRow row = res.GetRow(res.RowsCount - 1);
+                CategoryString add_style = new CategoryString(row.GetInt32("Id_style"), CategoryType.Style, row["Name"].ToString());
                 DanceRegCollections.LoadStyle(add_style);
             }
             this.OnPropertyChanged("Categorys");

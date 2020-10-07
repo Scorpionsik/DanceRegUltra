@@ -98,10 +98,10 @@ namespace DanceRegUltra.Models
             MemberDancer tmp_dancer = null;
             foreach (DbRow row in res)
             {
-                tmp_dancer = DanceRegCollections.GetGroupDancerById(row["Id_member"].ToInt32());
+                tmp_dancer = DanceRegCollections.GetGroupDancerById(row.GetInt32("Id_member"));
                 if (tmp_dancer == null)
                 {
-                    tmp_dancer = new MemberDancer(-1, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
+                    tmp_dancer = new MemberDancer(-1, row.GetInt32("Id_member"), row["Firstname"].ToString(), row["Surname"].ToString());
                     DanceRegCollections.AddGroupDancer(tmp_dancer);
                 }
                 this.HideGroupMembers.Value.Add(tmp_dancer);

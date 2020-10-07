@@ -68,8 +68,8 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into ages ('Name') values ('" + age_name + "')");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_age, Name from ages order by Id_age");
-                DbRow row = res[res.RowsCount - 1];
-                CategoryString add_age = new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString());
+                DbRow row = res.GetRow(res.RowsCount - 1);
+                CategoryString add_age = new CategoryString(row.GetInt32("Id_age"), CategoryType.Age, row["Name"].ToString());
                 DanceRegCollections.LoadAge(add_age);
             }
             this.OnPropertyChanged("Categorys");

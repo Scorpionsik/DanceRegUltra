@@ -208,8 +208,8 @@ namespace DanceRegUltra.ViewModels
             int insert_index = -1;
             foreach(DbRow row in res)
             {
-                insert_index = DanceRegCollections.LoadLeague(new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                tmp_array[insert_index] = new IdCheck(row["Id_league"].ToInt32());
+                insert_index = DanceRegCollections.LoadLeague(new CategoryString(row.GetInt32("Id_league"), CategoryType.League, row["Name"].ToString(), row.GetInt32("Position"), row.GetBoolean("IsHide")));
+                tmp_array[insert_index] = new IdCheck(row.GetInt32("Id_league"));
             }
             
             for(int i = 0; i < DanceRegCollections.Leagues.Value.Count; i++)
@@ -221,8 +221,8 @@ namespace DanceRegUltra.ViewModels
             tmp_array = new IdCheck[res.RowsCount];
             foreach (DbRow row in res)
             {
-                insert_index = DanceRegCollections.LoadAge(new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                tmp_array[insert_index] = new IdCheck(row["Id_age"].ToInt32());
+                insert_index = DanceRegCollections.LoadAge(new CategoryString(row.GetInt32("Id_age"), CategoryType.Age, row["Name"].ToString(), row.GetInt32("Position"), row.GetBoolean("IsHide")));
+                tmp_array[insert_index] = new IdCheck(row.GetInt32("Id_age"));
             }
 
             for (int i = 0; i < DanceRegCollections.Ages.Value.Count; i++)
@@ -234,8 +234,8 @@ namespace DanceRegUltra.ViewModels
             tmp_array = new IdCheck[res.RowsCount];
             foreach (DbRow row in res)
             {
-                insert_index = DanceRegCollections.LoadStyle(new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean()));
-                tmp_array[insert_index] = new IdCheck(row["Id_style"].ToInt32());
+                insert_index = DanceRegCollections.LoadStyle(new CategoryString(row.GetInt32("Id_style"), CategoryType.Style, row["Name"].ToString(), row.GetInt32("Position"), row.GetBoolean("IsHide")));
+                tmp_array[insert_index] = new IdCheck(row.GetInt32("Id_style"));
 
             }
 
@@ -247,8 +247,8 @@ namespace DanceRegUltra.ViewModels
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from template_schemes");
             foreach(DbRow row in res)
             {
-                this.Schemes.Add(new DanceScheme(row["Id_scheme"].ToInt32(), row["Title"].ToString(), JsonScheme.Deserialize(row["Json_scheme"].ToString())));
-                if (select_index > 0 && select_index == row["Id_scheme"].ToInt32()) this.Select_scheme = this.Schemes.Last;
+                this.Schemes.Add(new DanceScheme(row.GetInt32("Id_scheme"), row["Title"].ToString(), JsonScheme.Deserialize(row["Json_scheme"].ToString())));
+                if (select_index > 0 && select_index == row.GetInt32("Id_scheme")) this.Select_scheme = this.Schemes.Last;
             }
 
             if (this.Schemes.Count == 0) this.Schemes.Add(new DanceScheme());

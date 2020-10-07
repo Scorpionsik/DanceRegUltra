@@ -479,7 +479,7 @@ namespace DanceRegUltra.Models
             if (newMember.MemberNum == 0)
             {
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Num_increment from events where Id_event=" + this.IdEvent);
-                newMember.MemberNum = res["Num_increment", 0].ToInt32();
+                newMember.MemberNum = res.GetInt32("Num_increment", 0);
                 this.event_updateDanceEvent?.Invoke(this.IdEvent, "Num_increment", newMember.MemberNum + 1);
                 //await DanceRegDatabase.ExecuteNonQueryAsync("update events set Num_increment=" + (newMember.MemberNum + 1) + " Id_event=" + newMember.EventId);
                 await this.UpdateMemberNum(newMember.MemberId, isGroup, newMember.MemberNum);

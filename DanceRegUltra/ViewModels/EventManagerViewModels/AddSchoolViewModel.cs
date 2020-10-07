@@ -33,7 +33,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         {
             await DanceRegDatabase.ExecuteNonQueryAsync("insert into schools ('Name') values ('" + this.SchoolName + "')");
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from schools order by Id_school");
-            IdTitle tmp_school = new IdTitle(res["Id_school", res.RowsCount - 1].ToInt32(), this.SchoolName);
+            IdTitle tmp_school = new IdTitle(res.GetInt32("Id_school", res.RowsCount - 1), this.SchoolName);
 
             DanceRegCollections.Schools.Value.Add(tmp_school);
 

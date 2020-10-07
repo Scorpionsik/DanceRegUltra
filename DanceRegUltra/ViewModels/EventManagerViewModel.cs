@@ -497,7 +497,7 @@ namespace DanceRegUltra.ViewModels
 
         private async void Initialize()
         {
-            DbResult res = null;
+            DbResult res = DbResult.Empty;
             foreach(JsonSchemeArray platform in this.EventInWork.SchemeEvent.Platforms)
             {
                 foreach(IdCheck league in platform.Values)
@@ -508,7 +508,7 @@ namespace DanceRegUltra.ViewModels
                         {
                             this.EventInWork.Leagues.Add(league.Id, new List<IdTitle>());
                             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues where Id_league=" + league.Id);
-                            DanceRegCollections.LoadLeague(new CategoryString(res["Id_league", 0].ToInt32(), CategoryType.League, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
+                            DanceRegCollections.LoadLeague(new CategoryString(res.GetInt32("Id_league", 0), CategoryType.League, res["Name", 0].ToString(), res.GetInt32("Position", 0), res.GetBoolean("IsHide", 0)));
                         }
                         this.EventInWork.Leagues[league.Id].Add(new IdTitle(platform.IdArray, platform.Title));
                     }
@@ -525,7 +525,7 @@ namespace DanceRegUltra.ViewModels
                         {
                             this.EventInWork.Ages.Add(age.Id, new List<IdTitle>());
                             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages where Id_age=" + age.Id);
-                            DanceRegCollections.LoadAge(new CategoryString(res["Id_age", 0].ToInt32(), CategoryType.Age, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
+                            DanceRegCollections.LoadAge(new CategoryString(res.GetInt32("Id_age", 0), CategoryType.Age, res["Name", 0].ToString(), res.GetInt32("Position", 0), res.GetBoolean("IsHide", 0)));
                         }
                         this.EventInWork.Ages[age.Id].Add(new IdTitle(block.IdArray, block.Title));
                     }
@@ -538,7 +538,7 @@ namespace DanceRegUltra.ViewModels
                 {
                     this.EventInWork.Styles.Add(style.Id);
                     res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles where Id_style=" + style.Id);
-                    DanceRegCollections.LoadStyle(new CategoryString(res["Id_style", 0].ToInt32(), CategoryType.Style, res["Name", 0].ToString(), res["Position", 0].ToInt32(), res["IsHide", 0].ToBoolean()));
+                    DanceRegCollections.LoadStyle(new CategoryString(res.GetInt32("Id_style", 0), CategoryType.Style, res["Name", 0].ToString(), res.GetInt32("Position", 0), res.GetBoolean("IsHide", 0)));
                 }
             }
 
@@ -548,7 +548,7 @@ namespace DanceRegUltra.ViewModels
             Dictionary<int, JsonSchemeArray> tmp_blocks = new Dictionary<int, JsonSchemeArray>();
             foreach(DbRow row in res)
             {
-                int id_block = row["Id_block"].ToInt32();
+                int id_block = row.GetInt32("Id_block");
                 string title_block = "";
                 JudgeType type_block = JudgeType.ThreeD;
                 if (!tmp_blocks.ContainsKey(id_block))
@@ -558,7 +558,7 @@ namespace DanceRegUltra.ViewModels
                 title_block = tmp_blocks[id_block].Title;
                 type_block = tmp_blocks[id_block].ScoreType;
 
-                this.EventInWork.AddNomination(new DanceNomination(this.EventInWork.IdEvent, new IdTitle(id_block, title_block), type_block, row["Id_league"].ToInt32(), row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Is_show_in_search"].ToBoolean(), row["Json_judge_ignore"].ToString(), row["Separate_dancer_group"].ToBoolean()));
+                this.EventInWork.AddNomination(new DanceNomination(this.EventInWork.IdEvent, new IdTitle(id_block, title_block), type_block, row.GetInt32("Id_league"), row.GetInt32("Id_age"), row.GetInt32("Id_style"), row.GetBoolean("Is_show_in_search"), row["Json_judge_ignore"].ToString(), row.GetBoolean("Separate_dancer_group")));
             }
 
             res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.EventInWork.IdEvent + " order by Position");
@@ -566,39 +566,39 @@ namespace DanceRegUltra.ViewModels
             {
                 //add member
                 Member tmp_member = null;
-                bool isGroup = row["Is_group"].ToBoolean();
+                bool isGroup = row.GetBoolean("Is_group");
                 if (!isGroup)
                 {
-                    tmp_member = this.EventInWork.GetDancerById(row["Id_member"].ToInt32());
+                    tmp_member = this.EventInWork.GetDancerById(row.GetInt32("Id_member"));
                 }
-                else tmp_member = this.EventInWork.GetGroupById(row["Id_member"].ToInt32());
+                else tmp_member = this.EventInWork.GetGroupById(row.GetInt32("Id_member"));
 
                 if(tmp_member == null)
                 {
-                    //DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from " + (isGroup ? "groups" : "dancers") + " where Id_member=" + row["Id_member"].ToInt32());
+                    //DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from " + (isGroup ? "groups" : "dancers") + " where Id_member=" + row.GetInt32("Id_member"));
                     string table_name = (isGroup ? "groups" : "dancers");
-                    int id_member = row["Id_member"].ToInt32();
+                    int id_member = row.GetInt32("Id_member");
                     DbResult res_member = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from "+ table_name + " left join nums_for_members on (nums_for_members.Id_event="+ this.EventInWork.IdEvent +" and nums_for_members.Id_member="+ id_member + " and nums_for_members.Is_group="+ isGroup +") where "+ table_name + ".Id_member="+ id_member + ";");
 
                     if (!isGroup)
                     {
-                        tmp_member = new MemberDancer(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Firstname", 0].ToString(), res_member["Surname", 0].ToString());
+                        tmp_member = new MemberDancer(this.EventInWork.IdEvent, res_member.GetInt32("Id_member", 0), res_member["Firstname", 0].ToString(), res_member["Surname", 0].ToString());
                     }
                     else
                     {
-                        tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member["Id_member", 0].ToInt32(), res_member["Json_members", 0].ToString());
+                        tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member.GetInt32("Id_member", 0), res_member["Json_members", 0].ToString());
                         
                     }
-                    tmp_member.MemberNum = res_member["Number", 0].Value == DBNull.Value ? 0 : res_member["Number", 0].ToInt32();
-                    tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member["Id_school", 0].ToInt32()));
+                    tmp_member.MemberNum = res_member["Number", 0] == DBNull.Value ? 0 : res_member.GetInt32("Number", 0);
+                    tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member.GetInt32("Id_school", 0)));
                     await this.EventInWork.AddMember(tmp_member);
                 }
 
                 //add node
-                IdTitle tmp_platform = new IdTitle(row["Id_platform"].ToInt32(), this.EventInWork.SchemeEvent.GetTypeTitleById(row["Id_platform"].ToInt32(), SchemeType.Platform));
-                IdTitle tmp_block = new IdTitle(row["Id_block"].ToInt32(), this.EventInWork.SchemeEvent.GetTypeTitleById(row["Id_block"].ToInt32(), SchemeType.Block));
+                IdTitle tmp_platform = new IdTitle(row.GetInt32("Id_platform"), this.EventInWork.SchemeEvent.GetTypeTitleById(row.GetInt32("Id_platform"), SchemeType.Platform));
+                IdTitle tmp_block = new IdTitle(row.GetInt32("Id_block"), this.EventInWork.SchemeEvent.GetTypeTitleById(row.GetInt32("Id_block"), SchemeType.Block));
 
-                this.EventInWork.AddNode(row["Id_node"].ToInt32(), tmp_member, isGroup, tmp_platform, row["Id_league"].ToInt32(), tmp_block, row["Id_age"].ToInt32(), row["Id_style"].ToInt32(), row["Json_scores"].ToString(), row["Position"].ToInt32());
+                this.EventInWork.AddNode(row.GetInt32("Id_node"), tmp_member, isGroup, tmp_platform, row.GetInt32("Id_league"), tmp_block, row.GetInt32("Id_age"), row.GetInt32("Id_style"), row["Json_scores"].ToString(), row.GetInt32("Position"));
             }
         }
 

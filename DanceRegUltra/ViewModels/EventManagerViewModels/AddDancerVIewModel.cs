@@ -301,9 +301,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into dancers (Firstname, Surname, Id_school) values ('" + this.DancerName + "', '" + this.DancerSurname + "', " + this.Select_school.Id + ")");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) order by dancers.Id_member");
-                DbRow row = res[res.RowsCount - 1];
-                tmp_dancer = new MemberDancer(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
-                tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
+                DbRow row = res.GetRow(res.RowsCount - 1);
+                tmp_dancer = new MemberDancer(this.EventInWork.IdEvent, row.GetInt32("Id_member"), row["Firstname"].ToString(), row["Surname"].ToString());
+                tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row.GetInt32("Id_school")));
                 
                 this.SetDancerFromSearch(tmp_dancer);
                 await this.EventInWork.AddMember(tmp_dancer);
