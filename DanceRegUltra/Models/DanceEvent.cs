@@ -427,12 +427,14 @@ namespace DanceRegUltra.Models
         {
             int[] minmax = new int[2] { Math.Min(index1, index2), Math.Max(index1, index2) };
 
+            await DanceRegDatabase.ManualOpen("UpdateNodePosition");
             for (int i = minmax[0]; i <= minmax[1]; i++)
             {
                 //DanceRegCollections.Ages.Value[i].Position = i + 1;
                 if(isUnknownPosition) this.Nodes[i].Position = i;
                 await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set Position=" + (isUnknownPosition ? i : this.Nodes[i].Position) + " where Id_event=" + this.IdEvent + " and Id_node=" + this.Nodes[i].NodeId);
             }
+            DanceRegDatabase.ManualClose("UpdateNodePosition");
         }
 
         public async Task AddMember(Member newMember)

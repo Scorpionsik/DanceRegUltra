@@ -319,6 +319,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 }
             }
             int update_position = -1, tmp_position = -1;
+            await DanceRegDatabase.ManualOpen("AddDancerNodes");
             foreach (IdCheck style in this.Styles)
             {
                 if (style.IsChecked)
@@ -327,8 +328,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     if (tmp_position > -1 && (update_position == -1 || update_position > tmp_position)) update_position = tmp_position;
                 }
             }
+            DanceRegDatabase.ManualClose("AddDancerNodes");
             //if (update_position > 0) update_position--;
-            if(update_position > -1) await this.EventInWork.UpdateNodePosition(update_position, this.EventInWork.Nodes.Count - 1, true);
+            if (update_position > -1) await this.EventInWork.UpdateNodePosition(update_position, this.EventInWork.Nodes.Count - 1, true);
             this.EnableAddButton = true;
         }
 
