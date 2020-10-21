@@ -486,11 +486,12 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_EditDancer = this.Command_EditDancer;
             this.EventInWork.Command_EditGroup = this.Command_EditGroup;
             this.EventInWork.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
+            this.EventInWork.Command_ChangeBlockForNomination = this.Command_ChangeBlockForNomination;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
             this.startDateEvent = UnixTime.ToDateTimeOffset(this.EventInWork.StartEventTimestamp, App.Locality).DateTime;
-            this.Title = "Менеджер событий - " + App.AppTitle;
+            this.Title = "Менеджер событий - " + App.AppTitle + " Сердечко от Ани ♡";
             this.TitleUpdate_Callback = new TimerCallback(this.UpdateEventTitleMethod);
             this.Initialize();
             this.ClearSearch();
@@ -642,6 +643,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_EditDancer = null;
             this.EventInWork.Command_EditGroup = null;
             this.EventInWork.Command_ChangeBlockForNode = null;
+            this.EventInWork.Command_ChangeBlockForNomination = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -702,6 +704,7 @@ namespace DanceRegUltra.ViewModels
         {
             await this.EventInWork.SetRandomNums();
 
+
             int step = 0;
             foreach(DanceNomination nomination in this.EventInWork.Nominations)
             {
@@ -711,11 +714,25 @@ namespace DanceRegUltra.ViewModels
             await this.EventInWork.UpdateNodePosition(0, this.EventInWork.Nodes.Count - 1, false);
         }
 
-        public async void ChangeBlockForNodeMethod(DanceNode node, IdTitle newBlock)
+        private async void ChangeBlockForNodeMethod(DanceNode node, IdTitle newBlock)
         {
             int delete_position = await this.EventInWork.DeleteNodeAsync(node, true);
             int add_position = await this.EventInWork.AddNodeAsync(node.Member, node.IsGroup, node.Platform, node.LeagueId, newBlock, node.AgeId, node.StyleId);
             int min_position = Math.Min(delete_position > -1 ? delete_position : 0, add_position);
+            await this.EventInWork.UpdateNodePosition(min_position, this.EventInWork.Nodes.Count - 1, true);
+        }
+
+        private async void ChangeBlockForNominationMethod(DanceNomination nomination, IdTitle newBlock)
+        {
+            List<DanceNode> move_nominants = new List<DanceNode>(nomination.Nominants);
+            int min_position = this.EventInWork.Nodes.Count - 1;
+            foreach(DanceNode node in move_nominants)
+            {
+                int delete_position = await this.EventInWork.DeleteNodeAsync(node, true);
+                int add_position = await this.EventInWork.AddNodeAsync(node.Member, node.IsGroup, node.Platform, node.LeagueId, newBlock, node.AgeId, node.StyleId);
+                int tmp_min_position = Math.Min(delete_position > -1 ? delete_position : 0, add_position);
+                if (tmp_min_position < min_position) min_position = tmp_min_position;
+            }
             await this.EventInWork.UpdateNodePosition(min_position, this.EventInWork.Nodes.Count - 1, true);
         }
 
@@ -886,6 +903,29 @@ namespace DanceRegUltra.ViewModels
                 {
                     this.ChangeBlockForNodeMethod(node, window.Select_value);
                 }
+            });
+        }
+
+        public RelayCommand<DanceNomination> Command_ChangeBlockForNomination
+        {
+            get => new RelayCommand<DanceNomination>(nomination =>
+            {
+                IdTitle tmp_block = new IdTitle(0, "");
+                foreach (IdTitle block in this.EventInWork.Ages[nomination.Age_id])
+                {
+                    if (block.Id == nomination.Block_info.Id)
+                    {
+                        tmp_block = block;
+                        break;
+                    }
+                }
+                SelectSchemeTypeView window = new SelectSchemeTypeView(nomination.Age_id, SchemeType.Block, this.EventInWork.Ages[nomination.Age_id], tmp_block);
+                if ((bool)window.ShowDialog() && window.Select_value != tmp_block)
+                {
+                    //this.ChangeBlockForNodeMethod(node, window.Select_value);
+                    this.ChangeBlockForNominationMethod(nomination, window.Select_value);
+                }
+                
             });
         }
     }

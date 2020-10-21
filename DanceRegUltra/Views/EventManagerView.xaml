@@ -188,6 +188,8 @@
                                     <Grid.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Header="Редактировать номинацию..." Command="{Binding Path=Command_editSelectNomination}" CommandParameter="{Binding}"/>
+                                            <MenuItem Header="Изменить блок для всей номинации..." Command="{Binding Path=Command_ChangeBlockForNomination}" CommandParameter="{Binding}"/>
+                                            <Separator/>
                                             <MenuItem Header="Добавить танцора в эту номинацию..." Command="{Binding Path=Command_AddDancerUseNomination}" CommandParameter="{Binding}"/>
                                             <MenuItem Header="Добавить группу в эту номинацию..." Command="{Binding Path=Command_AddGroupUseNomination}" CommandParameter="{Binding}"/>
                                             <Separator/>

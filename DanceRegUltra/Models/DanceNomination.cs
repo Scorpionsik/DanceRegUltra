@@ -240,5 +240,16 @@ namespace DanceRegUltra.Models
                 this.OnPropertyChanged("Command_editSelectNomination");
             }
         }
+
+        private RelayCommand<DanceNomination> command_ChangeBlockForNomination;
+        public RelayCommand<DanceNomination> Command_ChangeBlockForNomination
+        {
+            get => this.command_ChangeBlockForNomination;
+            set
+            {
+                this.command_ChangeBlockForNomination = value;
+                this.OnPropertyChanged("Command_ChangeBlockForNomination");
+            }
+        }
     }
 }

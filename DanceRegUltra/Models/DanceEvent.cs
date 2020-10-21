@@ -250,6 +250,7 @@ namespace DanceRegUltra.Models
             nomination.Command_AddGroupUseNomination = this.Command_AddGroupUseNomination;
             nomination.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
             nomination.Command_editSelectNomination = this.Command_editSelectNomination;
+            nomination.Command_ChangeBlockForNomination = this.Command_ChangeBlockForNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
 
@@ -282,6 +283,7 @@ namespace DanceRegUltra.Models
                     this.HideNominations.Value[index].Command_AddGroupUseNomination = null;
                     this.HideNominations.Value[index].Command_DeleteNodesByNomination = null;
                     this.HideNominations.Value[index].Command_editSelectNomination = null;
+                    this.HideNominations.Value[index].Command_ChangeBlockForNomination = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
@@ -580,8 +582,8 @@ namespace DanceRegUltra.Models
             result.AddRange(this.HideGroups.Value);
             result = result.Shuffle();
 
-            int num = 1;
-            foreach(Member member in result)
+            int num = 100;
+            foreach (Member member in result)
             {
                 member.MemberNum = num++;
                 bool isGroup = member is MemberDancer ? false : true;
@@ -709,6 +711,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_ChangeBlockForNode = value;
                 this.OnPropertyChanged("Command_ChangeBlockForNode");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_ChangeBlockForNomination;
+        public RelayCommand<DanceNomination> Command_ChangeBlockForNomination
+        {
+            get => this.command_ChangeBlockForNomination;
+            set
+            {
+                this.command_ChangeBlockForNomination = value;
+                this.OnPropertyChanged("Command_ChangeBlockForNomination");
             }
         }
 
