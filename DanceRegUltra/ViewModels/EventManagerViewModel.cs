@@ -485,6 +485,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_editSelectNomination = this.Command_editSelectNomination;
             this.EventInWork.Command_EditDancer = this.Command_EditDancer;
             this.EventInWork.Command_EditGroup = this.Command_EditGroup;
+            this.EventInWork.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -640,6 +641,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_editSelectNomination = null;
             this.EventInWork.Command_EditDancer = null;
             this.EventInWork.Command_EditGroup = null;
+            this.EventInWork.Command_ChangeBlockForNode = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -707,6 +709,14 @@ namespace DanceRegUltra.ViewModels
                 step += nomination.Nominants.Count;
             }
             await this.EventInWork.UpdateNodePosition(0, this.EventInWork.Nodes.Count - 1, false);
+        }
+
+        public async void ChangeBlockForNodeMethod(DanceNode node, IdTitle newBlock)
+        {
+            int delete_position = await this.EventInWork.DeleteNodeAsync(node, true);
+            int add_position = await this.EventInWork.AddNodeAsync(node.Member, node.IsGroup, node.Platform, node.LeagueId, newBlock, node.AgeId, node.StyleId);
+            int min_position = Math.Min(delete_position > -1 ? delete_position : 0, add_position);
+            await this.EventInWork.UpdateNodePosition(min_position, this.EventInWork.Nodes.Count - 1, true);
         }
 
         public RelayCommand Command_AddDancer
@@ -855,6 +865,27 @@ namespace DanceRegUltra.ViewModels
             {
                 EditGroupView window = new EditGroupView(group);
                 window.ShowDialog();
+            });
+        }
+
+        public RelayCommand<DanceNode> Command_ChangeBlockForNode
+        {
+            get => new RelayCommand<DanceNode>(node =>
+            {
+                IdTitle tmp_block = new IdTitle(0, "");
+                foreach(IdTitle block in this.EventInWork.Ages[node.AgeId])
+                {
+                    if(block.Id == node.Block.Id)
+                    {
+                        tmp_block = block;
+                        break;
+                    }
+                }
+                SelectSchemeTypeView window = new SelectSchemeTypeView(node.AgeId, SchemeType.Block, this.EventInWork.Ages[node.AgeId], tmp_block);
+                if((bool)window.ShowDialog() && window.Select_value != tmp_block)
+                {
+                    this.ChangeBlockForNodeMethod(node, window.Select_value);
+                }
             });
         }
     }

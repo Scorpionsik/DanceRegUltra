@@ -310,6 +310,7 @@ namespace DanceRegUltra.Models
         {
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
             newNode.Command_deleteNode = this.Command_deleteNode;
+            newNode.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
             newNode.Position = position;
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
@@ -362,6 +363,7 @@ namespace DanceRegUltra.Models
                 if (!getPosition) this.HideNodes.Value.Add(newNode);
                 newNode.Position = position;
                 newNode.Command_deleteNode = this.Command_deleteNode;
+                newNode.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
                 this.AddNominationMember(newNode);
                 this.AddSchool(newNode.Member.School);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
@@ -372,19 +374,20 @@ namespace DanceRegUltra.Models
             else return -1;
         }
 
-        public async Task<int> DeleteNodeAsync(DanceNode node)
+        public async Task<int> DeleteNodeAsync(DanceNode node, bool move_node = false)
         {
             int position = this.HideNodes.Value.IndexOf(node);
             if (position > -1)
             {
                 //if (node.IsPrintPrice) this.Member_finish_count--;
                 node.Event_UpdateDanceNode -= this.UpdateDanceNode;
+                node.Command_ChangeBlockForNode = null;
                 node.Command_deleteNode = null;
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
                 //if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1, true);
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from event_nodes where Id_event=" + this.IdEvent + " and Id_member=" + node.Member.MemberId + " and Is_group=" + node.IsGroup);
-                if (res.RowsCount == 0)
+                if (res.RowsCount == 0 && !move_node)
                 {
                     if (node.IsGroup)
                     {
@@ -503,6 +506,32 @@ namespace DanceRegUltra.Models
             foreach(MemberGroup group in this.HideGroups.Value)
             {
                 if (group.MemberId == id_group) return group;
+            }
+            return null;
+        }
+
+        public DanceNomination GetNominationByNode(DanceNode node)
+        {
+            foreach(DanceNomination nomination in this.Nominations)
+            {
+                if (nomination.Nominants.Contains(node)) return nomination;
+            }
+            return null;
+        }
+
+        public DanceNomination GetNominationBySchemeInfo(int league_id, int block_id, int age_id, int style_id)
+        {
+            foreach (DanceNomination nomination in this.Nominations)
+            {
+                if(
+                    nomination.League_id == league_id &&
+                    nomination.Block_info.Id == block_id &&
+                    nomination.Age_id == age_id &&
+                    nomination.Style_id == style_id
+                    )
+                {
+                    return nomination;
+                }
             }
             return null;
         }
@@ -669,6 +698,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_EditGroup = value;
                 this.OnPropertyChanged("Command_EditGroup");
+            }
+        }
+
+        private RelayCommand<DanceNode> command_ChangeBlockForNode;
+        public RelayCommand<DanceNode> Command_ChangeBlockForNode
+        {
+            get => this.command_ChangeBlockForNode;
+            set
+            {
+                this.command_ChangeBlockForNode = value;
+                this.OnPropertyChanged("Command_ChangeBlockForNode");
             }
         }
 

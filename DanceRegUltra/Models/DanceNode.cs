@@ -164,5 +164,16 @@ namespace DanceRegUltra.Models
                 this.OnPropertyChanged("Command_deleteNode");
             }
         }
+
+        private RelayCommand<DanceNode> command_ChangeBlockForNode;
+        public RelayCommand<DanceNode> Command_ChangeBlockForNode
+        {
+            get => this.command_ChangeBlockForNode;
+            set
+            {
+                this.command_ChangeBlockForNode = value;
+                this.OnPropertyChanged("Command_ChangeBlockForNode");
+            }
+        }
     }
 }
