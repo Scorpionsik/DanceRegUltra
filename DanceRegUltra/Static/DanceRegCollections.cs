@@ -133,7 +133,7 @@ namespace DanceRegUltra.Static
 
                 foreach(DbRow row in res)
                 {
-                    Schools.Value.Add(new IdTitle(row["Id_school"].ToInt32(), row["Name"].ToString()));
+                    Schools.Value.Add(new IdTitle(row.GetInt32("Id_school"), row["Name"].ToString()));
                 }
             }
         }
@@ -178,7 +178,7 @@ namespace DanceRegUltra.Static
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from dancers");
             foreach(DbRow row in res)
             {
-                Dancers.Value.Add(new MemberDancer(-1, row["Id_dancer"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString()));
+                Dancers.Value.Add(new MemberDancer(-1, row.GetInt32("Id_dancer"), row["Firstname"].ToString(), row["Surname"].ToString()));
             }
         }
 
@@ -186,7 +186,7 @@ namespace DanceRegUltra.Static
         {
             await DanceRegDatabase.ExecuteNonQueryAsync("insert into dancers (Firstname, Surname) values ('" + name + "', '" + surname + "')");
             DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_dancer from dancers order by Id_dancer");
-            return res["Id_dancer", res.RowsCount - 1].ToInt32();
+            return res.GetInt32("Id_dancer", res.RowsCount - 1);
         }
 
         internal async static Task RemoveDancerAsync(MemberDancer dancer)

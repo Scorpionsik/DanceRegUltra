@@ -54,7 +54,17 @@ namespace DanceRegUltra.Static
             DanceRegDatabase.DatabaseMutex = new SemaphoreSlim(1,1);
             if (!Directory.Exists("database")) Directory.CreateDirectory("database");
 
-            DanceRegDatabase.Database = new SqLiteDatabase.SqLiteDatabase("database/" + DatabaseName);
+            DanceRegDatabase.Database = new SqLiteDatabase.SqLiteDatabase("database/" + DatabaseName + "; Version=3; Pooling=True; Max Pool Size=100");
+        }
+
+        internal static async Task ManualOpen(string manual_id)
+        {
+            await Database.ManualOpenAsync(manual_id);
+        }
+
+        internal static void ManualClose(string manual_id)
+        {
+            Database.ManualClose(manual_id);
         }
 
         internal static async Task<int> ExecuteNonQueryAsync(string query)

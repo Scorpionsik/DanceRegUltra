@@ -91,8 +91,8 @@ namespace DanceRegUltra.Utilites
 
                 foreach(DbRow row in res)
                 {
-                    MemberDancer dancer = new MemberDancer(this.Event_id, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
-                    dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
+                    MemberDancer dancer = new MemberDancer(this.Event_id, row.GetInt32("Id_member"), row["Firstname"].ToString(), row["Surname"].ToString());
+                    dancer.SetSchool(DanceRegCollections.GetSchoolById(row.GetInt32("Id_school")));
                     this.FindList.Add(dancer);
                 }
                 this.event_FinishSearch?.Invoke();

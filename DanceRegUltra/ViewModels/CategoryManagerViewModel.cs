@@ -58,21 +58,21 @@ namespace DanceRegUltra.ViewModels
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from leagues");
                 foreach(DbRow row in res)
                 {
-                    CategoryString add_league = new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean());
+                    CategoryString add_league = new CategoryString(row.GetInt32("Id_league"), CategoryType.League, row["Name"].ToString(), row.GetInt32("Position"), row.GetBoolean("IsHide"));
                     DanceRegCollections.LoadLeague(add_league);
                 }
 
                 res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from ages");
                 foreach (DbRow row in res)
                 {
-                    CategoryString add_age = new CategoryString(row["Id_age"].ToInt32(), CategoryType.Age, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean());
+                    CategoryString add_age = new CategoryString(row.GetInt32("Id_age"), CategoryType.Age, row["Name"].ToString(), row.GetInt32("Position"), row.GetBoolean("IsHide"));
                     DanceRegCollections.LoadAge(add_age);
                 }
 
                 res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select * from styles");
                 foreach (DbRow row in res)
                 {
-                    CategoryString add_style = new CategoryString(row["Id_style"].ToInt32(), CategoryType.Style, row["Name"].ToString(), row["Position"].ToInt32(), row["IsHide"].ToBoolean());
+                    CategoryString add_style = new CategoryString(row.GetInt32("Id_style"), CategoryType.Style, row["Name"].ToString(), row.GetInt32("Position"), row.GetBoolean("IsHide"));
                     DanceRegCollections.LoadStyle(add_style);
                 }
             }

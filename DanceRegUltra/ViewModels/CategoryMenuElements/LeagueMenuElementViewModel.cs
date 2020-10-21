@@ -68,8 +68,8 @@ namespace DanceRegUltra.ViewModels.CategoryMenuElements
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into leagues ('Name') values ('"+ league_name +"')");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select Id_league, Name from leagues order by Id_league");
-                DbRow row = res[res.RowsCount - 1];
-                CategoryString add_league = new CategoryString(row["Id_league"].ToInt32(), CategoryType.League, row["Name"].ToString());
+                DbRow row = res.GetRow(res.RowsCount - 1);
+                CategoryString add_league = new CategoryString(row.GetInt32("Id_league"), CategoryType.League, row["Name"].ToString());
                 DanceRegCollections.LoadLeague(add_league);
             }
             this.OnPropertyChanged("Categorys");

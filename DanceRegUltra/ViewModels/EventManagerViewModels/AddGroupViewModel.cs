@@ -329,9 +329,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             {
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into groups (Json_members, Id_school) values ('" + this.Select_group.GetMembers() + "', " + this.Select_school.Id + ")");
                 DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select groups.Id_member, groups.Json_members, groups.Id_school, schools.Name from groups join schools using (Id_school) order by groups.Id_member");
-                DbRow row = res[res.RowsCount - 1];
-                tmp_group = new MemberGroup(this.EventInWork.IdEvent, row["Id_member"].ToInt32(), row["Json_members"].ToString());
-                tmp_group.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
+                DbRow row = res.GetRow(res.RowsCount - 1);
+                tmp_group = new MemberGroup(this.EventInWork.IdEvent, row.GetInt32("Id_member"), row["Json_members"].ToString());
+                tmp_group.SetSchool(DanceRegCollections.GetSchoolById(row.GetInt32("Id_school")));
 
                 this.Groups.Insert(0, new MemberGroup(this.EventInWork.IdEvent, -1, new List<MemberDancer>()));
                 int update_insert = this.Groups.IndexOf(this.Select_group);
@@ -366,9 +366,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 {
                     await DanceRegDatabase.ExecuteNonQueryAsync("insert into dancers (Firstname, Surname, Id_school) values ('" + this.DancerName + "', '" + this.DancerSurname + "', " + this.Select_school.Id + ")");
                     DbResult res = await DanceRegDatabase.ExecuteAndGetQueryAsync("select dancers.Id_member, dancers.Firstname, dancers.Surname, dancers.Id_school, schools.Name from dancers join schools using (Id_school) order by dancers.Id_member");
-                    DbRow row = res[res.RowsCount - 1];
-                    tmp_dancer = new MemberDancer(-1, row["Id_member"].ToInt32(), row["Firstname"].ToString(), row["Surname"].ToString());
-                    tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row["Id_school"].ToInt32()));
+                    DbRow row = res.GetRow(res.RowsCount - 1);
+                    tmp_dancer = new MemberDancer(-1, row.GetInt32("Id_member"), row["Firstname"].ToString(), row["Surname"].ToString());
+                    tmp_dancer.SetSchool(DanceRegCollections.GetSchoolById(row.GetInt32("Id_school")));
                 }
                 else tmp_dancer = this.DancerInWork;
                 DanceRegCollections.AddGroupDancer(tmp_dancer);
