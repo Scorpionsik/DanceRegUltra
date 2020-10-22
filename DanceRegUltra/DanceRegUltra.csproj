@@ -135,7 +135,9 @@
     <Compile Include="ViewModels\EventManagerViewModels\JudgeManagerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\NominationJudgesViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\PlatformsManagerViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\ScoresManagerViewModel.cs" />
     <Compile Include="ViewModels\EventManagerViewModels\SelectSchemeTypeViewModel.cs" />
+    <Compile Include="ViewModels\EventManagerViewModels\SetScoresForNodeViewModel.cs" />
     <Compile Include="ViewModels\RegisterWindowViewModel.cs" />
     <Compile Include="ViewModels\SchemeManagerViewModel.cs" />
     <Compile Include="Views\CategoryManagerView.xaml.cs">
@@ -171,8 +173,14 @@
     <Compile Include="Views\EventManagerViews\PlatformsManagerView.xaml.cs">
       <DependentUpon>PlatformsManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EventManagerViews\ScoresManagerView.xaml.cs">
+      <DependentUpon>ScoresManagerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EventManagerViews\SelectSchemeTypeView.xaml.cs">
       <DependentUpon>SelectSchemeTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventManagerViews\SetScoresForNodeView.xaml.cs">
+      <DependentUpon>SetScoresForNodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RegisterWindowView.xaml.cs">
       <DependentUpon>RegisterWindowView.xaml</DependentUpon>
@@ -224,7 +232,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EventManagerViews\ScoresManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EventManagerViews\SelectSchemeTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventManagerViews\SetScoresForNodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
