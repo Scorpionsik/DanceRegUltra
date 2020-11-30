@@ -47,8 +47,8 @@ namespace DanceRegUltra.Models
         public int AgeId { get; private set; }
         public int StyleId { get; private set; }
 
-        private Lazy<List<List<int>>> HideScores;
-        public List<List<int>> Scores { get => this.HideScores.Value; }
+        private Lazy<List<List<double>>> HideScores;
+        public List<List<double>> Scores { get => this.HideScores.Value; }
 
         private int prizePlace;
         public int PrizePlace
@@ -115,7 +115,7 @@ namespace DanceRegUltra.Models
             this.AgeId = ageId;
             this.StyleId = styleId;
 
-            this.HideScores = new Lazy<List<List<int>>>();
+            this.HideScores = new Lazy<List<List<double>>>();
 
             this.position = position;
         }
@@ -129,12 +129,12 @@ namespace DanceRegUltra.Models
                 this.OnPropertyChanged("Status");
             }
         }
-
-        public long GetAverage()
+        
+        public double GetAverage()
         {
             long result = 0;
             
-            foreach(List<int> judge in this.Scores)
+            foreach(List<double> judge in this.Scores)
             {
                 int sum = 0;
                 foreach(int score in judge)
@@ -156,16 +156,16 @@ namespace DanceRegUltra.Models
 
         public void SetScores(string jsonScores)
         {
-            this.HideScores = new Lazy<List<List<int>>>();
-            if (jsonScores != null && jsonScores.Length > 0) this.HideScores.Value.AddRange(JsonConvert.DeserializeObject <List<List<int>>> (jsonScores));
+            this.HideScores = new Lazy<List<List<double>>>();
+            if (jsonScores != null && jsonScores.Length > 0) this.HideScores.Value.AddRange(JsonConvert.DeserializeObject <List<List<double>>> (jsonScores));
             this.OnPropertyChanged("Scores");
             this.OnPropertyChanged("JudgeCount");
         }
 
-        public void SetScores(IEnumerable<IEnumerable<int>> scores)
+        public void SetScores(IEnumerable<IEnumerable<double>> scores)
         {
-            this.HideScores = new Lazy<List<List<int>>>();
-            foreach(List<int> new_score in scores)
+            this.HideScores = new Lazy<List<List<double>>>();
+            foreach(List<double> new_score in scores)
             {
                 this.HideScores.Value.Add(new_score);
             }

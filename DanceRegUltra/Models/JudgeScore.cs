@@ -21,23 +21,23 @@ namespace DanceRegUltra.Models
             this.Scores = new ListExt<Title>();
         }
 
-        public JudgeScore(int number, IEnumerable<int> scores)
+        public JudgeScore(int number, IEnumerable<double> scores)
         {
             this.Judge_number = number;
             this.Scores = new ListExt<Title>();
-            foreach(int score in scores)
+            foreach(double score in scores)
             {
                 this.Scores.Add(new Title(score.ToString()));
             }
         }
 
-        public List<int> GetScores()
+        public List<double> GetScores()
         {
-            List<int> res = new List<int>();
+            List<double> res = new List<double>();
 
             foreach(Title score in this.Scores)
             {
-                res.Add(Convert.ToInt32(score.Value));
+                res.Add(Convert.ToDouble(score.Value.Replace('.',',')));
             }
 
             return res;

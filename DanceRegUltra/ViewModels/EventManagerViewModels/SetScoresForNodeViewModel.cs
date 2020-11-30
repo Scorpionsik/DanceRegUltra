@@ -32,8 +32,8 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
             int score_count = this.NominationInWork.Type == Enums.JudgeType.ThreeD ? 3 : 4;
             for(int j = 0; j < judge_count; j++)
             {
-                List<int> judge_scores = node.Scores.Count > j ? node.Scores[j] : new List<int>() { 0, 0, 0, 0 };
-                ListExt<int> tmp_scores = new ListExt<int>();
+                List<double> judge_scores = node.Scores.Count > j ? node.Scores[j] : new List<double>() { 0, 0, 0, 0 };
+                ListExt<double> tmp_scores = new ListExt<double>();
                 for (int i = 0; i < score_count; i++)
                 {
                     tmp_scores.Add(judge_scores.Count >= score_count ? judge_scores[i] : 0);
@@ -44,7 +44,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
 
         private async void SaveMethod()
         {
-            List<List<int>> add_scores = new List<List<int>>();
+            List<List<double>> add_scores = new List<List<double>>();
             foreach(JudgeScore edit_score in this.Scores)
             {
                 add_scores.Add(edit_score.GetScores());

@@ -137,15 +137,15 @@ namespace DanceRegUltra.Models
         /// </summary>
         public async Task<bool> CheckNodeScores()
         {
-            List<long> averages = new List<long>();
+            List<double> averages = new List<double>();
 
             foreach(DanceNode node in this.Nominants)
             {
-                long average = node.GetAverage();
-                if (average < 0) return false;
+                double average = node.GetAverage();
+                if (average <= 0) return false;
                 averages.Add(average);
             }
-            List<long> tmp_averages = new List<long>(averages);
+            List<double> tmp_averages = new List<double>(averages);
             averages.Sort();
 
             return true;
