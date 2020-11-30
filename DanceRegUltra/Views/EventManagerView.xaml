@@ -211,9 +211,15 @@
                                     <TextBlock Grid.Column="2" Text="{Binding StringFormat=Участников: {0}, Mode=OneWay, Path=Nominants.Count}"/>
                                 </Grid>
                                 <ListBox ItemsSource="{Binding Path=Nominants}"
+                                         SelectedItem="{Binding Path=Select_nominant}"
                                          dd:DragDrop.IsDragSource="True"
                                             dd:DragDrop.IsDropTarget="True"
                                             dd:DragDrop.DropHandler="{Binding}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding Path=Command_NodeSetScore}" CommandParameter="{Binding Path=Select_nominant}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
                                     <i:Interaction.Behaviors>
                                         <corewpf:IgnoreMouseWheelBehavior />
                                     </i:Interaction.Behaviors>
@@ -320,6 +326,11 @@
                 <DockPanel LastChildFill="True">
                     <Button Content="Удалить номинанта" DockPanel.Dock="Bottom" Command="{Binding Path=Command_DeleteNode}" CommandParameter="{Binding Path=Select_node}"/>
                     <ListBox ItemsSource="{Binding Path=Result_search_nodes}" SelectedItem="{Binding Path=Select_node}" VirtualizingPanel.ScrollUnit="Pixel">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding Path=Command_SetScore}" CommandParameter="{Binding Path=Select_node}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="BorderThickness" Value="1"/>

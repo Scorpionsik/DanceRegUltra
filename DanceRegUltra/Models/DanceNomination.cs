@@ -37,6 +37,17 @@ namespace DanceRegUltra.Models
         public int Style_id { get; private set; }
         public ListExt<DanceNode> Nominants { get; private set; }
 
+        private DanceNode select_nominant;
+        public DanceNode Select_nominant
+        {
+            get => this.select_nominant;
+            set
+            {
+                this.select_nominant = value;
+                this.OnPropertyChanged("Select_nominant");
+            }
+        }
+
         private JudgeType type;
         public JudgeType Type
         {
@@ -280,6 +291,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_ChangeBlockForNomination = value;
                 this.OnPropertyChanged("Command_ChangeBlockForNomination");
+            }
+        }
+
+        private RelayCommand<DanceNode> command_NodeSetScore;
+        public RelayCommand<DanceNode> Command_NodeSetScore
+        {
+            get => this.command_NodeSetScore;
+            set
+            {
+                this.command_NodeSetScore = value;
+                this.OnPropertyChanged("Command_NodeSetScore");
             }
         }
     }

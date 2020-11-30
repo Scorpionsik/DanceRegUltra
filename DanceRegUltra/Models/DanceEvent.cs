@@ -251,6 +251,7 @@ namespace DanceRegUltra.Models
             nomination.Command_DeleteNodesByNomination = this.Command_DeleteNodesByNomination;
             nomination.Command_editSelectNomination = this.Command_editSelectNomination;
             nomination.Command_ChangeBlockForNomination = this.Command_ChangeBlockForNomination;
+            nomination.Command_NodeSetScore = this.Command_SetScore;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
 
@@ -284,6 +285,7 @@ namespace DanceRegUltra.Models
                     this.HideNominations.Value[index].Command_DeleteNodesByNomination = null;
                     this.HideNominations.Value[index].Command_editSelectNomination = null;
                     this.HideNominations.Value[index].Command_ChangeBlockForNomination = null;
+                    this.HideNominations.Value[index].Command_NodeSetScore = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
