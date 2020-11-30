@@ -313,6 +313,7 @@ namespace DanceRegUltra.Models
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
             newNode.Command_deleteNode = this.Command_deleteNode;
             newNode.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
+            newNode.Command_SetScore = this.Command_SetScore;
             newNode.Position = position;
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
@@ -722,6 +723,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_ChangeBlockForNomination = value;
                 this.OnPropertyChanged("Command_ChangeBlockForNomination");
+            }
+        }
+
+        private RelayCommand<DanceNode> command_SetScore;
+        public RelayCommand<DanceNode> Command_SetScore
+        {
+            get => this.command_SetScore;
+            set
+            {
+                this.command_SetScore = value;
+                this.OnPropertyChanged("Command_SetScore");
             }
         }
 

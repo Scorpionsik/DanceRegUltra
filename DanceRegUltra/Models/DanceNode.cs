@@ -47,8 +47,8 @@ namespace DanceRegUltra.Models
         public int AgeId { get; private set; }
         public int StyleId { get; private set; }
 
-        private Lazy<List<int>> HideScores;
-        public int[] Scores { get => this.HideScores.Value.ToArray(); }
+        private Lazy<List<List<int>>> HideScores;
+        public List<List<int>> Scores { get => this.HideScores.Value; }
 
         private int prizePlace;
         public int PrizePlace
@@ -115,7 +115,7 @@ namespace DanceRegUltra.Models
             this.AgeId = ageId;
             this.StyleId = styleId;
 
-            this.HideScores = new Lazy<List<int>>();
+            this.HideScores = new Lazy<List<List<int>>>();
 
             this.position = position;
         }
@@ -130,6 +130,24 @@ namespace DanceRegUltra.Models
             }
         }
 
+        public long GetAverage()
+        {
+            long result = 0;
+            
+            foreach(List<int> judge in this.Scores)
+            {
+                int sum = 0;
+                foreach(int score in judge)
+                {
+                    if (score > 0) sum += score;
+                    else return -1;
+                }
+                result += (Convert.ToInt64(sum / judge.Count));
+            }
+
+            return Convert.ToInt64(result / this.Scores.Count);
+        }
+
         public void Print()
         {
             this.IsPrintPrize = true;
@@ -138,8 +156,19 @@ namespace DanceRegUltra.Models
 
         public void SetScores(string jsonScores)
         {
-            this.HideScores = new Lazy<List<int>>();
-            if(jsonScores != null && jsonScores.Length > 0) this.HideScores.Value.AddRange(JsonConvert.DeserializeObject<List<int>>(jsonScores));
+            this.HideScores = new Lazy<List<List<int>>>();
+            if (jsonScores != null && jsonScores.Length > 0) this.HideScores.Value.AddRange(JsonConvert.DeserializeObject <List<List<int>>> (jsonScores));
+            this.OnPropertyChanged("Scores");
+            this.OnPropertyChanged("JudgeCount");
+        }
+
+        public void SetScores(IEnumerable<IEnumerable<int>> scores)
+        {
+            this.HideScores = new Lazy<List<List<int>>>();
+            foreach(List<int> new_score in scores)
+            {
+                this.HideScores.Value.Add(new_score);
+            }
             this.OnPropertyChanged("Scores");
             this.OnPropertyChanged("JudgeCount");
         }
@@ -173,6 +202,17 @@ namespace DanceRegUltra.Models
             {
                 this.command_ChangeBlockForNode = value;
                 this.OnPropertyChanged("Command_ChangeBlockForNode");
+            }
+        }
+
+        private RelayCommand<DanceNode> command_SetScore;
+        public RelayCommand<DanceNode> Command_SetScore
+        {
+            get => this.command_SetScore;
+            set
+            {
+                this.command_SetScore = value;
+                this.OnPropertyChanged("Command_SetScore");
             }
         }
     }

@@ -116,12 +116,14 @@
     <Compile Include="Models\Categories\JsonScheme.cs" />
     <Compile Include="Models\Categories\JsonSchemeArray.cs" />
     <Compile Include="Models\DanceNomination.cs" />
+    <Compile Include="Models\JudgeScore.cs" />
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
     <Compile Include="Utilites\Converters\DancerTimeConvert.cs" />
     <Compile Include="Utilites\Converters\JudgeTypeConvert.cs" />
     <Compile Include="Utilites\Converters\VisibilityBoolConvert.cs" />
     <Compile Include="Utilites\FindDancer.cs" />
     <Compile Include="Utilites\LazyString.cs" />
+    <Compile Include="Utilites\Title.cs" />
     <Compile Include="ViewModels\CategoryManagerViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\AgeMenuElementViewModel.cs" />
     <Compile Include="ViewModels\CategoryMenuElements\LeagueMenuElementViewModel.cs" />

@@ -487,6 +487,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_EditGroup = this.Command_EditGroup;
             this.EventInWork.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
             this.EventInWork.Command_ChangeBlockForNomination = this.Command_ChangeBlockForNomination;
+            this.EventInWork.Command_SetScore = this.Command_SetScore;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -644,6 +645,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_EditGroup = null;
             this.EventInWork.Command_ChangeBlockForNode = null;
             this.EventInWork.Command_ChangeBlockForNomination = null;
+            this.EventInWork.Command_SetScore = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -926,6 +928,15 @@ namespace DanceRegUltra.ViewModels
                     this.ChangeBlockForNominationMethod(nomination, window.Select_value);
                 }
                 
+            });
+        }
+
+        public RelayCommand<DanceNode> Command_SetScore
+        {
+            get => new RelayCommand<DanceNode>(node =>
+            {
+                SetScoresForNodeView window = new SetScoresForNodeView(this.EventInWork.IdEvent, node);
+                window.ShowDialog();
             });
         }
     }

@@ -226,6 +226,11 @@
                                             <Setter Property="ContextMenu">
                                                 <Setter.Value>
                                                     <ContextMenu>
+                                                        <MenuItem Command="{Binding Path=Command_SetScore}" CommandParameter="{Binding}">
+                                                            <MenuItem.Header>
+                                                                <TextBlock Text="Оценить номинанта..." FontWeight="Bold"/>
+                                                            </MenuItem.Header>
+                                                        </MenuItem>
                                                         <MenuItem Command="{Binding Path=Command_ChangeBlockForNode}" Header="Изменить блок для этого номинанта..." CommandParameter="{Binding}"/>
                                                         <Separator/>
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Редактировать данные танцора..." Command="{Binding Path=Member.Command_EditDancer}" CommandParameter="{Binding Path=Member}"/>
@@ -324,6 +329,11 @@
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>
+                                            <MenuItem Command="{Binding Path=Command_SetScore}" CommandParameter="{Binding}">
+                                                <MenuItem.Header>
+                                                    <TextBlock Text="Оценить номинанта..." FontWeight="Bold"/>
+                                                </MenuItem.Header>
+                                            </MenuItem>
                                             <MenuItem Command="{Binding Path=Command_ChangeBlockForNode}" Header="Изменить блок для этого номинанта..." CommandParameter="{Binding}"/>
                                             <Separator/>
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Редактировать данные танцора..." Command="{Binding Path=Member.Command_EditDancer}" CommandParameter="{Binding Path=Member}"/>

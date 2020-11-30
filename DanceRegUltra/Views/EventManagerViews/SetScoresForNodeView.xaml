@@ -4,9 +4,100 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:window="clr-namespace:CoreWPF.Windows;assembly=CoreWPF"
+        xmlns:convert="clr-namespace:DanceRegUltra.Utilites.Converters"                
         mc:Ignorable="d"
         Title="{Binding Path=Title}" Height="450" Width="800">
+    <window:DialogWindowExt.Resources>
+        <convert:VisibilityBoolConvert x:Key="BoolVisibility"/>
+        <convert:CategoryNameByIdConvert x:Key="CategoryName"/>
+        <convert:JudgeTypeConvert x:Key="JudgeType"/>
+    </window:DialogWindowExt.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="Номинация">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=NominationInWork.Block_info.Title}"/>
+                    <Label Margin="7 0 0 0"/>
+                    <TextBlock Text="{Binding Path=NominationInWork.League_id, Converter={StaticResource CategoryName}, ConverterParameter=league}"/>
+                    <Label Margin="4 0 0 0"/>
+                    <TextBlock Text="{Binding Path=NominationInWork.Age_id, Converter={StaticResource CategoryName}, ConverterParameter=age}"/>
+                    <Label Margin="4 0 0 0"/>
+                    <TextBlock Text="{Binding Path=NominationInWork.Style_id, Converter={StaticResource CategoryName}, ConverterParameter=style}"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="Судий">
+                <TextBlock Text="{Binding Path=NominationInWork.JudgeCount}"/>
+            </GroupBox>
+            <GroupBox Grid.Column="2" Header="Тип оценивания">
+                <TextBlock Text="{Binding Path=NominationInWork.Type, Converter={StaticResource JudgeType}}"/>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="ID номинанта">
+                <TextBlock Text="{Binding Path=NodeInWork.NodeId}"/>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="Номинант">
+                
+            </GroupBox>
+        </Grid>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Path=Scores}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding StringFormat=Судья {0}, Path=Judge_number}"/>
+                        <ListBox Grid.Column="1" ItemsSource="{Binding Path=Scores}">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="{Binding Path=Scores.Count}" Rows="1" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBox TextAlignment="Center" Text="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Save" Command="{Binding Path=Command_save}"/>
+            <Button Grid.Column="1" Content="Close" Command="{Binding Path=Command_close}"/>
+        </Grid>
     </Grid>
 </window:DialogWindowExt>

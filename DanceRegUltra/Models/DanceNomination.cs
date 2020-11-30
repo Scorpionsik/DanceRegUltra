@@ -48,6 +48,11 @@ namespace DanceRegUltra.Models
             }
         }
 
+        public int JudgeCount
+        {
+            get => this.JudgeIgnore != null ? this.JudgeIgnore.Count : 0;
+        }
+
         private bool separate_dancer_group;
         public bool Separate_dancer_group
         {
@@ -72,6 +77,7 @@ namespace DanceRegUltra.Models
             this.Separate_dancer_group = separate;
             this.Nominants = new ListExt<DanceNode>();
             this.JudgeIgnore = new ListExt<IdCheck>();
+            this.JudgeIgnore.CollectionChanged += this.UpdateJudgeCount;
             List<bool> tmp_judge = jsonJudge == "" ? new List<bool>() : JsonConvert.DeserializeObject<List<bool>>(jsonJudge);
             int index = 0;
             while(index < tmp_judge.Count)
@@ -88,6 +94,12 @@ namespace DanceRegUltra.Models
                 this.JudgeIgnore.Add(new IdCheck(i + 1, tmp_judge[i]));
             }*/
         }
+
+        private void UpdateJudgeCount(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.OnPropertyChanged("JudgeCount");
+        }
+
         public void AddNominant(DanceNode nominant)
         {
             if (nominant.LeagueId == this.League_id &&
@@ -107,6 +119,25 @@ namespace DanceRegUltra.Models
             {
                 this.AddNominant(node);
             }
+        }
+
+        /// <summary>
+        /// Проверка, все ли узлы оценены, и выставление призовых мест
+        /// </summary>
+        public async Task<bool> CheckNodeScores()
+        {
+            List<long> averages = new List<long>();
+
+            foreach(DanceNode node in this.Nominants)
+            {
+                long average = node.GetAverage();
+                if (average < 0) return false;
+                averages.Add(average);
+            }
+            List<long> tmp_averages = new List<long>(averages);
+            averages.Sort();
+
+            return true;
         }
 
         public void SetNewType(JudgeType type)
