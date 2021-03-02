@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace DanceRegUltra.Models
@@ -130,10 +131,26 @@ namespace DanceRegUltra.Models
             }
         }
         
-        public double GetAverage()
+        public double GetAverage(IEnumerable<bool> ignore)
         {
-            long result = 0;
-            
+            double result = 0;
+            int step = 0, current = 0;
+            foreach(bool judge_ignore in ignore)
+            {
+                if (judge_ignore)
+                {
+                    current++;
+                    double sum = 0;
+                    foreach(double score in this.Scores[step])
+                    {
+                        if (score > 0) sum += score;
+                        else return 0;
+                    }
+                    result += Convert.ToDouble(sum / this.Scores[step].Count);
+                }
+                step++;
+            }
+            /*
             foreach(List<double> judge in this.Scores)
             {
                 int sum = 0;
@@ -143,9 +160,19 @@ namespace DanceRegUltra.Models
                     else return -1;
                 }
                 result += (Convert.ToInt64(sum / judge.Count));
-            }
+            }*/
 
-            return Convert.ToInt64(result / this.Scores.Count);
+            return Convert.ToDouble(result / current);
+        }
+
+        public double GetAverage(IEnumerable<IdCheck> ignore)
+        {
+            List<bool> tmp_send = new List<bool>();
+            foreach(IdCheck check in ignore)
+            {
+                tmp_send.Add(check.IsChecked);
+            }
+            return this.GetAverage(tmp_send);
         }
 
         public void Print()

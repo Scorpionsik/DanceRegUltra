@@ -141,7 +141,7 @@ namespace DanceRegUltra.Models
 
             foreach(DanceNode node in this.Nominants)
             {
-                double average = node.GetAverage();
+                double average = node.GetAverage(this.JudgeIgnore);
                 if (average <= 0) return false;
                 averages.Add(average);
             }
