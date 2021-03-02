@@ -592,7 +592,7 @@ namespace DanceRegUltra.ViewModels
                         tmp_member = new MemberGroup(this.EventInWork.IdEvent, res_member.GetInt32("Id_member", 0), res_member["Json_members", 0].ToString());
                         
                     }
-                    tmp_member.MemberNum = res_member["Number", 0] == DBNull.Value ? 0 : res_member.GetInt32("Number", 0);
+                    tmp_member.MemberNum = res_member["Number", 0].Value == DBNull.Value ? 0 : res_member.GetInt32("Number", 0);
                     tmp_member.SetSchool(DanceRegCollections.GetSchoolById(res_member.GetInt32("Id_school", 0)));
                     await this.EventInWork.AddMember(tmp_member);
                 }
