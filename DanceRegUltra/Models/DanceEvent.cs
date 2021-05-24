@@ -310,7 +310,7 @@ namespace DanceRegUltra.Models
             await DanceRegDatabase.ExecuteNonQueryAsync("update event_nodes set " + column_name + "='" + value + "' where Id_event=" + event_id + " and Id_node=" + node_id);
         }
 
-        public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores, int position)
+        public void AddNode(int node_id, Member member, bool isGroup, IdTitle platform, int league_id, IdTitle block, int age_id, int style_id, string scores, int position, int prize)
         {
             DanceNode newNode = new DanceNode(this.IdEvent, node_id, member, isGroup, platform, league_id, block, age_id, style_id);
             newNode.Command_deleteNode = this.Command_deleteNode;
@@ -319,6 +319,7 @@ namespace DanceRegUltra.Models
             newNode.Position = position;
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
+            newNode.SetPrizePlace(prize);
             this.HideNodes.Value.Add(newNode);
             this.AddNominationMember(newNode);
             this.AddSchool(member.School);

@@ -601,7 +601,7 @@ namespace DanceRegUltra.ViewModels
                 IdTitle tmp_platform = new IdTitle(row.GetInt32("Id_platform"), this.EventInWork.SchemeEvent.GetTypeTitleById(row.GetInt32("Id_platform"), SchemeType.Platform));
                 IdTitle tmp_block = new IdTitle(row.GetInt32("Id_block"), this.EventInWork.SchemeEvent.GetTypeTitleById(row.GetInt32("Id_block"), SchemeType.Block));
 
-                this.EventInWork.AddNode(row.GetInt32("Id_node"), tmp_member, isGroup, tmp_platform, row.GetInt32("Id_league"), tmp_block, row.GetInt32("Id_age"), row.GetInt32("Id_style"), row["Json_scores"].ToString(), row.GetInt32("Position"));
+                this.EventInWork.AddNode(row.GetInt32("Id_node"), tmp_member, isGroup, tmp_platform, row.GetInt32("Id_league"), tmp_block, row.GetInt32("Id_age"), row.GetInt32("Id_style"), row["Json_scores"].ToString(), row.GetInt32("Position"), row.GetInt32("Prize_place"));
             }
         }
 

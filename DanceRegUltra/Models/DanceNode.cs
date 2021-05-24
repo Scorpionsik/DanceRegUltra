@@ -131,48 +131,57 @@ namespace DanceRegUltra.Models
             }
         }
         
-        public double GetAverage(IEnumerable<bool> ignore)
+        public double GetAverage(IEnumerable<bool> ignore, JudgeType type, bool separate)
         {
             double result = 0;
-            int step = 0, current = 0;
-            foreach(bool judge_ignore in ignore)
-            {
-                if (judge_ignore)
-                {
-                    current++;
-                    double sum = 0;
-                    foreach(double score in this.Scores[step])
-                    {
-                        if (score > 0) sum += score;
-                        else return 0;
-                    }
-                    result += Convert.ToDouble(sum / this.Scores[step].Count);
-                }
-                step++;
-            }
-            /*
-            foreach(List<double> judge in this.Scores)
-            {
-                int sum = 0;
-                foreach(int score in judge)
-                {
-                    if (score > 0) sum += score;
-                    else return -1;
-                }
-                result += (Convert.ToInt64(sum / judge.Count));
-            }*/
 
-            return Convert.ToDouble(result / current);
+            if (!separate) result = this.GetAverageAllMembers(ignore, type);
+            else result = this.GetAverageSeparateDancersGroup(ignore, type);
+
+            return result;
         }
 
-        public double GetAverage(IEnumerable<IdCheck> ignore)
+        public double GetAverage(IEnumerable<IdCheck> ignore, JudgeType type, bool separate)
         {
             List<bool> tmp_send = new List<bool>();
             foreach(IdCheck check in ignore)
             {
                 tmp_send.Add(check.IsChecked);
             }
-            return this.GetAverage(tmp_send);
+            return this.GetAverage(tmp_send, type, separate);
+        }
+
+        private double GetAverageAllMembers(IEnumerable<bool> ignore, JudgeType type)
+        {
+            double result = 0;
+            int step = 0, current = 0;
+
+            foreach (bool judge_ignore in ignore)
+            {
+                if (!judge_ignore)
+                {
+                    current++;
+                    double sum = 0;
+                    if (step < this.Scores.Count)
+                    {
+                        int score_count = type == JudgeType.ThreeD ? 3 : 4;
+                        for (int i = 0; i < score_count; i++)
+                        {
+                            sum += this.Scores[step][i];
+                        }
+
+                        result += Convert.ToDouble(sum / score_count);
+                    }
+                }
+                step++;
+            }
+
+            return current > 0 ? Convert.ToDouble(result / current) : 0;
+        }
+
+        private double GetAverageSeparateDancersGroup(IEnumerable<bool> ignore, JudgeType type)
+        {
+            return 0;
         }
 
         public void Print()
@@ -191,7 +200,27 @@ namespace DanceRegUltra.Models
 
         public void SetScores(IEnumerable<IEnumerable<double>> scores)
         {
-            this.HideScores = new Lazy<List<List<double>>>();
+            if(this.HideScores == null) this.HideScores = new Lazy<List<List<double>>>();
+            //для обновления
+            for(int i = 0; i < this.HideScores.Value.Count && i < scores.Count(); i++)
+            {
+                if (this.HideScores.Value[i].Count < scores.ElementAt(i).Count()) this.HideScores.Value[i].Add(0);
+                for(int j = 0; j < this.HideScores.Value[i].Count && j < scores.ElementAt(i).Count(); j++)
+                {
+                    this.HideScores.Value[i][j] = scores.ElementAt(i).ElementAt(j);
+                }
+            }
+            //для добавления
+            for (int i = 0; i < scores.Count() - this.HideScores.Value.Count; i++)
+            {
+                this.HideScores.Value.Add(new List<double>(scores.ElementAt(this.HideScores.Value.Count + i)));
+            }
+            //для удаления
+            for (int i = 0; i < this.HideScores.Value.Count - scores.Count(); i++)
+            {
+                this.HideScores.Value.RemoveAt(this.HideScores.Value.Count - 1 - i);
+            }
+                        
             foreach(List<double> new_score in scores)
             {
                 this.HideScores.Value.Add(new_score);

@@ -36,7 +36,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 ListExt<double> tmp_scores = new ListExt<double>();
                 for (int i = 0; i < score_count; i++)
                 {
-                    tmp_scores.Add(judge_scores.Count >= score_count ? judge_scores[i] : 0);
+                    tmp_scores.Add(i < judge_scores.Count ? judge_scores[i] : 0);
                 }
                 this.Scores.Add(new JudgeScore(j+1, tmp_scores));
             }

@@ -77,6 +77,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                     if (nomination.Block_info.Id != event_block.IdArray) continue;
                     nomination.SetNewType(block.ScoreType);
                     nomination.SetJudgeCount(block.JudgeCount);
+                    await nomination.CheckNodeScores();
                     await DanceRegDatabase.ExecuteNonQueryAsync("update nominations set Json_judge_ignore='" + nomination.GetJsonJudgeIgnore() + "' where Id_event=" + this.EventInWork.IdEvent + " and Id_block=" + nomination.Block_info.Id + " and Id_league=" + nomination.League_id + " and Id_age=" + nomination.Age_id + " and Id_style=" + nomination.Style_id);
                 }
             }

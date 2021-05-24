@@ -128,6 +128,7 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
                 }
                 nomination.SetSeparate(this.SelectSeparate[nomination]);
                 await DanceRegDatabase.ExecuteNonQueryAsync("update nominations set Json_judge_ignore='" + nomination.GetJsonJudgeIgnore() + "', Separate_dancer_group=" + nomination.Separate_dancer_group + " where Id_event=" + this.EventInWork.IdEvent + " and Id_block=" + nomination.Block_info.Id + " and Id_league=" + nomination.League_id + " and Id_age=" + nomination.Age_id + " and Id_style=" + nomination.Style_id);
+                await nomination.CheckNodeScores();
             }
             base.Command_save?.Execute();
         }

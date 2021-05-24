@@ -70,16 +70,15 @@ namespace DanceRegUltra.Properties {
         ///&quot;End_timestamp&quot; LONG DEFAULT -1,
         ///&quot;Json_scheme&quot; TEXT DEFAULT &apos;&apos;,
         ///&quot;Id_node_increment&quot; INTERER NOT NULL DEFAULT 1,
-        ///&quot;Judge_count&quot; INTEGER DEFAULT 4
+        ///&quot;Num_increment&quot; INTERER NOT NULL DEFAULT 100,
+        ///&quot;Enable_rand_nums&quot; BOOLEAN DEFAULT 1,
+        ///&quot;All_member_count&quot; INTEGER DEFAULT 0
         ///);
         ///
         ////*Таблица узлов, связанных с определенным событием*/
         ///create table &quot;event_nodes&quot;
         ///(
-        ///&quot;Id_event&quot; INTEGER NOT NULL,
-        ///&quot;Id_node&quot; INTEGER NOT NULL,
-        ///&quot;Id_member&quot; INTEGER NOT NULL,
-        ///&quot;Is_group&quot;  [остаток строки не уместился]&quot;;.
+        ///&quot;Id_event&quot; [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string dance {
             get {

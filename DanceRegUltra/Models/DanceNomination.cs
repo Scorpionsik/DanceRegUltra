@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+
 namespace DanceRegUltra.Models
 {
     public delegate void UpdateDragDrop(DanceNode node, int old_index, int new_index);
@@ -137,18 +138,38 @@ namespace DanceRegUltra.Models
         /// </summary>
         public async Task<bool> CheckNodeScores()
         {
-            List<double> averages = new List<double>();
-
-            foreach(DanceNode node in this.Nominants)
+            return await Task<bool>.Run(() =>
             {
-                double average = node.GetAverage(this.JudgeIgnore);
-                if (average <= 0) return false;
-                averages.Add(average);
-            }
-            List<double> tmp_averages = new List<double>(averages);
-            averages.Sort();
+                Dictionary<DanceNode, double> averages = new Dictionary<DanceNode, double>();
+                foreach (DanceNode node in this.Nominants)
+                {
+                    double average = node.GetAverage(this.JudgeIgnore, this.Type, this.Separate_dancer_group);
+                    if (average <= 0) node.SetPrizePlace(0);
+                    else averages.Add(node, average);
+                }
 
-            return true;
+                List<DanceNode> tmp_nominants = new List<DanceNode>(averages.Keys);
+
+                for (int i = 0; i < tmp_nominants.Count; i++)
+                {
+                    for (int j = i; j < tmp_nominants.Count - 1; j++)
+                    {
+                        if (averages[tmp_nominants[j + 1]] > averages[tmp_nominants[j]])
+                        {
+                            DanceNode tmp_node = tmp_nominants[j];
+                            tmp_nominants[j] = tmp_nominants[j + 1];
+                            tmp_nominants[j + 1] = tmp_node;
+                        }
+                    }
+                }
+
+                for (int i = 0, prize = 1; i < tmp_nominants.Count; i++, prize++)
+                {
+                    tmp_nominants[i].SetPrizePlace(prize);
+                    if (i != tmp_nominants.Count - 1 && averages[tmp_nominants[i]] == averages[tmp_nominants[i + 1]]) prize--;
+                }
+                return true;
+            });
         }
 
         public void SetNewType(JudgeType type)
