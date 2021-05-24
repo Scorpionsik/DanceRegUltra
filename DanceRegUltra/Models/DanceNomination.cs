@@ -140,36 +140,67 @@ namespace DanceRegUltra.Models
         {
             return await Task<bool>.Run(() =>
             {
-                Dictionary<DanceNode, double> averages = new Dictionary<DanceNode, double>();
-                foreach (DanceNode node in this.Nominants)
+                if (!this.Separate_dancer_group) this.SetPrizePlaceInCollection(this.Nominants);
+                else
                 {
-                    double average = node.GetAverage(this.JudgeIgnore, this.Type, this.Separate_dancer_group);
-                    if (average <= 0) node.SetPrizePlace(0);
-                    else averages.Add(node, average);
-                }
+                    ListExt<DanceNode> dancers = new ListExt<DanceNode>();
+                    ListExt<DanceNode> groups = new ListExt<DanceNode>();
 
-                List<DanceNode> tmp_nominants = new List<DanceNode>(averages.Keys);
-
-                for (int i = 0; i < tmp_nominants.Count; i++)
-                {
-                    for (int j = i; j < tmp_nominants.Count - 1; j++)
+                    try
                     {
-                        if (averages[tmp_nominants[j + 1]] > averages[tmp_nominants[j]])
+                        dancers = this.Nominants.FindRange(new Func<DanceNode, bool>(node =>
                         {
-                            DanceNode tmp_node = tmp_nominants[j];
-                            tmp_nominants[j] = tmp_nominants[j + 1];
-                            tmp_nominants[j + 1] = tmp_node;
-                        }
+                            return !node.IsGroup;
+                        }));
                     }
-                }
+                    catch { }
 
-                for (int i = 0, prize = 1; i < tmp_nominants.Count; i++, prize++)
-                {
-                    tmp_nominants[i].SetPrizePlace(prize);
-                    if (i != tmp_nominants.Count - 1 && averages[tmp_nominants[i]] == averages[tmp_nominants[i + 1]]) prize--;
+                    try
+                    {
+                        groups = this.Nominants.FindRange(new Func<DanceNode, bool>(node =>
+                        {
+                            return node.IsGroup;
+                        }));
+                    }
+                    catch { }
+
+                    if (dancers.Count > 0) this.SetPrizePlaceInCollection(dancers);
+                    if (groups.Count > 0) this.SetPrizePlaceInCollection(groups);
                 }
                 return true;
             });
+        }
+
+        private void SetPrizePlaceInCollection(IEnumerable<DanceNode> nominants)
+        {
+            Dictionary<DanceNode, double> averages = new Dictionary<DanceNode, double>();
+            foreach (DanceNode node in nominants)
+            {
+                double average = node.GetAverage(this.JudgeIgnore, this.Type);
+                if (average <= 0) node.SetPrizePlace(0);
+                else averages.Add(node, average);
+            }
+
+            List<DanceNode> tmp_nominants = new List<DanceNode>(averages.Keys);
+
+            for (int i = 0; i < tmp_nominants.Count; i++)
+            {
+                for (int j = i; j < tmp_nominants.Count - 1; j++)
+                {
+                    if (averages[tmp_nominants[j + 1]] > averages[tmp_nominants[j]])
+                    {
+                        DanceNode tmp_node = tmp_nominants[j];
+                        tmp_nominants[j] = tmp_nominants[j + 1];
+                        tmp_nominants[j + 1] = tmp_node;
+                    }
+                }
+            }
+
+            for (int i = 0, prize = 1; i < tmp_nominants.Count; i++, prize++)
+            {
+                tmp_nominants[i].SetPrizePlace(prize);
+                if (i != tmp_nominants.Count - 1 && averages[tmp_nominants[i]] == averages[tmp_nominants[i + 1]]) prize--;
+            }
         }
 
         public void SetNewType(JudgeType type)

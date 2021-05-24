@@ -131,27 +131,7 @@ namespace DanceRegUltra.Models
             }
         }
         
-        public double GetAverage(IEnumerable<bool> ignore, JudgeType type, bool separate)
-        {
-            double result = 0;
-
-            if (!separate) result = this.GetAverageAllMembers(ignore, type);
-            else result = this.GetAverageSeparateDancersGroup(ignore, type);
-
-            return result;
-        }
-
-        public double GetAverage(IEnumerable<IdCheck> ignore, JudgeType type, bool separate)
-        {
-            List<bool> tmp_send = new List<bool>();
-            foreach(IdCheck check in ignore)
-            {
-                tmp_send.Add(check.IsChecked);
-            }
-            return this.GetAverage(tmp_send, type, separate);
-        }
-
-        private double GetAverageAllMembers(IEnumerable<bool> ignore, JudgeType type)
+        public double GetAverage(IEnumerable<bool> ignore, JudgeType type)
         {
             double result = 0;
             int step = 0, current = 0;
@@ -179,9 +159,14 @@ namespace DanceRegUltra.Models
             return current > 0 ? Convert.ToDouble(result / current) : 0;
         }
 
-        private double GetAverageSeparateDancersGroup(IEnumerable<bool> ignore, JudgeType type)
+        public double GetAverage(IEnumerable<IdCheck> ignore, JudgeType type)
         {
-            return 0;
+            List<bool> tmp_send = new List<bool>();
+            foreach(IdCheck check in ignore)
+            {
+                tmp_send.Add(check.IsChecked);
+            }
+            return this.GetAverage(tmp_send, type);
         }
 
         public void Print()
