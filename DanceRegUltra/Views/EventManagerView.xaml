@@ -24,11 +24,6 @@
         </Grid.RowDefinitions>
         <!--Menu-->
         <ToolBarTray Grid.Row="0">
-            <ToolBar Band="1">
-                <Button Content="Добавить танцора" Command="{Binding Path=Command_AddDancer}"/>
-                <Separator/>
-                <Button Content="Добавить группу" Command="{Binding Path=Command_AddGroup}"/>
-            </ToolBar>
             <ToolBar>
                 <Button Content="Редактор площадок" Command="{Binding Path=Command_EditPlatforms}"/>
                 <Separator/>
@@ -37,6 +32,14 @@
                 <Button Content="Настройки номинаций" Command="{Binding Path=Command_EditNominations}"/>
                 <Separator/>
                 <Button Content="Пронумеровать участников" Command="{Binding Path=Command_SetRandomNums}"/>
+            </ToolBar>
+            <ToolBar Band="1">
+                <Button Content="Добавить танцора" Command="{Binding Path=Command_AddDancer}"/>
+                <Separator/>
+                <Button Content="Добавить группу" Command="{Binding Path=Command_AddGroup}"/>
+            </ToolBar>
+            <ToolBar Band="1">
+                <Button Content="Печать номеров участников" Command="{Binding Command_PrintMemberNumbers}"/>
             </ToolBar>
         </ToolBarTray>
         <!--end Menu-->

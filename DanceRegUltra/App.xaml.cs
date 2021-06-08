@@ -1,5 +1,7 @@
 ﻿using CoreWPF.Utilites;
+using PrintTemplate.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -64,6 +66,18 @@ namespace DanceRegUltra
                 }
             }
             return sb.ToString();
+        }
+
+        public static bool PrintPages(string title, List<List<Element>> pages)
+        {
+            bool isPrint = false;
+            PrintTemplate.Views.MainView window = new PrintTemplate.Views.MainView(title, pages, true);
+            window.EventIsPrint += new Action<bool>(value =>
+            {
+                isPrint = value;
+            });
+            window.ShowDialog();
+            return isPrint;
         }
     }
 }

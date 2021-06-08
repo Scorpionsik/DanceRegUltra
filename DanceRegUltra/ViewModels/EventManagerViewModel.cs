@@ -4,6 +4,7 @@ using CoreWPF.Windows.Enums;
 using DanceRegUltra.Enums;
 using DanceRegUltra.Models;
 using DanceRegUltra.Models.Categories;
+using DanceRegUltra.Models.PrintTempletes;
 using DanceRegUltra.Static;
 using DanceRegUltra.Views.EventManagerViews;
 using GongSolutions.Wpf.DragDrop;
@@ -492,7 +493,7 @@ namespace DanceRegUltra.ViewModels
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
             this.startDateEvent = UnixTime.ToDateTimeOffset(this.EventInWork.StartEventTimestamp, App.Locality).DateTime;
-            this.Title = "Менеджер событий - " + App.AppTitle + " Сердечко от Ани ♡";
+            this.Title = "Менеджер событий - " + App.AppTitle + " (Сердечко от Ани ♡)";
             this.TitleUpdate_Callback = new TimerCallback(this.UpdateEventTitleMethod);
             this.Initialize();
             this.ClearSearch();
@@ -939,5 +940,20 @@ namespace DanceRegUltra.ViewModels
                 window.ShowDialog();
             });
         }
+
+        #region PrintCommands
+        public RelayCommand Command_PrintMemberNumbers
+        {
+            get => new RelayCommand(obj =>
+            {
+                List<Member> members = new List<Member>();
+                members.AddRange(this.EventInWork.Dancers);
+                members.AddRange(this.EventInWork.Groups);
+                MemberNumbersPrintTemplate temp = new MemberNumbersPrintTemplate(members);
+                App.PrintPages("Печать номеров участников", temp.GetPages());
+            },
+                (obj) => this.EventInWork.Dancers.Count > 0 || this.EventInWork.Groups.Count > 0);
+        }
+        #endregion
     }
 }
