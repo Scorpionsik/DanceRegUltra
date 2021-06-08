@@ -1,4 +1,5 @@
 ﻿using CoreWPF.Utilites;
+using DanceRegUltra.Models.PrintTempletes;
 using PrintTemplate.Models;
 using System;
 using System.Collections.Generic;
@@ -68,10 +69,10 @@ namespace DanceRegUltra
             return sb.ToString();
         }
 
-        public static bool PrintPages(string title, List<List<Element>> pages)
+        public static bool PrintPages(string title, IPrintTemplate temp)
         {
             bool isPrint = false;
-            PrintTemplate.Views.MainView window = new PrintTemplate.Views.MainView(title, pages, true);
+            PrintTemplate.Views.MainView window = new PrintTemplate.Views.MainView(title, temp.GetPages(), true);
             window.EventIsPrint += new Action<bool>(value =>
             {
                 isPrint = value;

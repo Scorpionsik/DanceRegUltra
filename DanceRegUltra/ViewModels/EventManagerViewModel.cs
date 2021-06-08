@@ -950,7 +950,7 @@ namespace DanceRegUltra.ViewModels
                 members.AddRange(this.EventInWork.Dancers);
                 members.AddRange(this.EventInWork.Groups);
                 MemberNumbersPrintTemplate temp = new MemberNumbersPrintTemplate(members);
-                App.PrintPages("Печать номеров участников", temp.GetPages());
+                App.PrintPages("Печать номеров участников", temp);
             },
                 (obj) => this.EventInWork.Dancers.Count > 0 || this.EventInWork.Groups.Count > 0);
         }
