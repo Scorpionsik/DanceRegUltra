@@ -22,6 +22,7 @@ namespace DanceRegUltra.Models.PrintTempletes
         };
 
         private Point TextCorrectionPoint = new Point(-40, 35);
+        private int FontSizeStep = 40;
         public MemberNumbersPrintTemplate(IEnumerable<Member> members)
         {
             this.Numbers = new List<int>();
@@ -40,14 +41,17 @@ namespace DanceRegUltra.Models.PrintTempletes
                 {
                     pages.Add(new List<Element>());
                 }
+                string textForElement = this.Numbers[numId].ToString();
+                int fontSize = 220;
+                if (textForElement.Length > 3) fontSize = fontSize - (this.FontSizeStep * (textForElement.Length - 3));
                 BorderElement border = new BorderElement() { Position = this.BorderPoints[elemId], Width = 370, Height = 400, BorderThickness = 3 };
                 TextElement text = new TextElement()
                 {
-                    Position = SumPoints(this.BorderPoints[elemId], this.TextCorrectionPoint),
+                    Position = SumPoints(this.BorderPoints[elemId], this.TextCorrectionPoint, textForElement.Length - 3),
                     Width = 450,
                     Height = 300,
-                    Text = this.Numbers[numId].ToString(),
-                    FontSize = 220,
+                    Text = textForElement,
+                    FontSize = fontSize,
                     FontFamily = "Times New Roman",
                     TextAlignment = "Center",
                     IsBold = true
@@ -65,11 +69,13 @@ namespace DanceRegUltra.Models.PrintTempletes
             return pages;
         }
 
-        private Point SumPoints(Point p1, Point p2)
+        private Point SumPoints(Point p1, Point p2, int fontStep = 0)
         {
+            int yStep = 0;
+            if(fontStep > 0) yStep = fontStep * (int)(this.FontSizeStep / 1.5);
             Point result = new Point(p1.X, p1.Y);
             result.X += p2.X;
-            result.Y += p2.Y;
+            result.Y += p2.Y + yStep;
             return result;
         }
     }
