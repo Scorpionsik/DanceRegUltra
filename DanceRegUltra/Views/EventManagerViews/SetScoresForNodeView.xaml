@@ -51,8 +51,36 @@
             <GroupBox Grid.Column="0" Header="ID номинанта">
                 <TextBlock Text="{Binding Path=NodeInWork.NodeId}"/>
             </GroupBox>
-            <GroupBox Grid.Column="1" Header="Номинант">
-                
+            <GroupBox Grid.Column="1" DataContext="{Binding Path=NodeInWork}">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Text="Танцор" FontWeight="Bold"/>
+                        <TextBlock Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Text="{Binding Path=Member.GroupType}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="{Binding StringFormat=#{0}, Path=Member.MemberNum}" FontWeight="Bold"/>
+                        <TextBlock Text=": "/>
+                        <!--Танцор-->
+                        <StackPanel Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Member.Surname}"/>
+                            <Label Margin="2 0 0 0"/>
+                            <TextBlock Text="{Binding Path=Member.Name}"/>
+                        </StackPanel>
+                        <!--конец Танцор-->
+                        <!--Группа-->
+                        <StackPanel Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Orientation="Horizontal">
+                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=Member.GroupMembersString}"/>
+                        </StackPanel>
+                        <!--конец Группа-->
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" Text="{Binding StringFormat=Школа: {0}, Path=Member.School.Title}"/>
+                </Grid>
             </GroupBox>
         </Grid>
         <ListBox Grid.Row="2" ItemsSource="{Binding Path=Scores}">

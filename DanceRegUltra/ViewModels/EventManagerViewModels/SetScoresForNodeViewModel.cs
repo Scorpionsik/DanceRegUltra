@@ -23,6 +23,9 @@ namespace DanceRegUltra.ViewModels.EventManagerViewModels
         public SetScoresForNodeViewModel(int event_id, DanceNode node)
         {
             this.EventInWork = DanceRegCollections.GetEventById(event_id);
+
+            this.Title = "[" + this.EventInWork.Title + "] Оценка номинанта - " + App.AppTitle;
+
             this.NodeInWork = node;
             this.NominationInWork = this.EventInWork.GetNominationByNode(node);
 
