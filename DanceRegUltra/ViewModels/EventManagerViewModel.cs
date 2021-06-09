@@ -954,6 +954,40 @@ namespace DanceRegUltra.ViewModels
             },
                 (obj) => this.EventInWork.Dancers.Count > 0 || this.EventInWork.Groups.Count > 0);
         }
+
+        public RelayCommand Command_PrintNominantList
+        {
+            get => new RelayCommand(obj =>
+            {
+                IPrintTemplate temp = null;
+                
+                if (this.IsShowNodes)
+                {
+                    temp = new DanceNodePrintTemplate(this.EventInWork.Title, this.StartDateEvent, this.Result_search_nodes);
+                }
+                else
+                {
+                    List<DanceNode> nodes = new List<DanceNode>();
+                    foreach(DanceNomination nomination in this.Result_search_nomination)
+                    {
+                        nodes.AddRange(nomination.Nominants);
+                    }
+                    temp = new DanceNodePrintTemplate(this.EventInWork.Title, this.StartDateEvent, nodes);
+                }
+                
+                App.PrintPages("Печать списка узлов/номинаций", temp);
+            },
+                (obj) => this.EventInWork.Nodes.Count > 0);
+        }
+
+        public RelayCommand Command_PrintJudgeList
+        {
+            get => new RelayCommand(obj =>
+            {
+
+            },
+                (obj) => !this.IsShowNodes);
+        }
         #endregion
     }
 }
