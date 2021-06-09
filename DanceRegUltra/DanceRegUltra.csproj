@@ -119,8 +119,11 @@
     <Compile Include="Models\DanceNomination.cs" />
     <Compile Include="Models\JudgeScore.cs" />
     <Compile Include="Models\PrintTempletes\DanceNodePrintTemplate.cs" />
+    <Compile Include="Models\PrintTempletes\DanceNominationPrintTemplate.cs" />
     <Compile Include="Models\PrintTempletes\IPrintTemplate.cs" />
+    <Compile Include="Models\PrintTempletes\JudgeListPrintTemplate.cs" />
     <Compile Include="Models\PrintTempletes\MemberNumbersPrintTemplate.cs" />
+    <Compile Include="Models\PrintTempletes\PrintTemplate.cs" />
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
     <Compile Include="Utilites\Converters\DancerTimeConvert.cs" />
     <Compile Include="Utilites\Converters\JudgeTypeConvert.cs" />

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DanceRegUltra.Models.PrintTempletes
 {
-    public class MemberNumbersPrintTemplate : IPrintTemplate
+    public class MemberNumbersPrintTemplate : PrintTemplate
     {
         private List<int> Numbers;
         private List<Point> BorderPoints = new List<Point>
@@ -31,7 +31,7 @@ namespace DanceRegUltra.Models.PrintTempletes
                 this.Numbers.Add(member.MemberNum);
             }
         }
-        public List<List<Element>> GetPages()
+        public override List<List<Element>> GetPages()
         {
             List<List<Element>> pages = new List<List<Element>>();
 
@@ -72,7 +72,7 @@ namespace DanceRegUltra.Models.PrintTempletes
         private Point SumPoints(Point p1, Point p2, int fontStep = 0)
         {
             int yStep = 0;
-            if(fontStep > 0) yStep = fontStep * (int)(this.FontSizeStep / 1.5);
+            if (fontStep > 0) yStep = fontStep * (int)(this.FontSizeStep / 1.5);
             Point result = new Point(p1.X, p1.Y);
             result.X += p2.X;
             result.Y += p2.Y + yStep;
