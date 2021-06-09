@@ -72,7 +72,7 @@ namespace DanceRegUltra
         public static bool PrintPages(string title, IPrintTemplate temp)
         {
             bool isPrint = false;
-            PrintTemplate.Views.MainView window = new PrintTemplate.Views.MainView(title, temp.GetPages(), true);
+            PrintTemplate.Views.MainView window = new PrintTemplate.Views.MainView(title, temp.GetPages(), true, true);
             window.EventIsPrint += new Action<bool>(value =>
             {
                 isPrint = value;
