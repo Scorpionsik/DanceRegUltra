@@ -1001,6 +1001,30 @@ namespace DanceRegUltra.ViewModels
             },
                 (obj) => this.EventInWork.Nodes.Count > 0);
         }
+
+        public RelayCommand Command_PrintReward
+        {
+            get => new RelayCommand(obj =>
+            {
+                IPrintTemplate temp = null;
+                if (IsShowNodes)
+                {
+                    temp = new RewardPrintTemplate(this.Result_search_nodes);
+                }
+                else
+                {
+                    List<DanceNode> nodes = new List<DanceNode>();
+                    foreach(DanceNomination nomination in this.Result_search_nomination)
+                    {
+                        nodes.AddRange(nomination.Nominants);
+                    }
+                    temp = new RewardPrintTemplate(nodes);
+                }
+                App.PrintPages("Печать грамот", temp);
+            });
+        }
+
+        
         #endregion
     }
 }
