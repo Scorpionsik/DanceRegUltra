@@ -252,6 +252,7 @@ namespace DanceRegUltra.Models
             nomination.Command_editSelectNomination = this.Command_editSelectNomination;
             nomination.Command_ChangeBlockForNomination = this.Command_ChangeBlockForNomination;
             nomination.Command_NodeSetScore = this.Command_SetScore;
+            nomination.Command_PrintWewardForNomination = this.Command_PrintWewardForNomination;
             int index = 0;
             while (index < this.HideNominations.Value.Count && this.SchemeEvent.Compare(this.HideNominations.Value[index], nomination) != 1) index++;
 
@@ -286,6 +287,7 @@ namespace DanceRegUltra.Models
                     this.HideNominations.Value[index].Command_editSelectNomination = null;
                     this.HideNominations.Value[index].Command_ChangeBlockForNomination = null;
                     this.HideNominations.Value[index].Command_NodeSetScore = null;
+                    this.HideNominations.Value[index].Command_PrintWewardForNomination = null;
                     this.HideNominations.Value.RemoveAt(index);
                     break;
                 }
@@ -316,6 +318,7 @@ namespace DanceRegUltra.Models
             newNode.Command_deleteNode = this.Command_deleteNode;
             newNode.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
             newNode.Command_SetScore = this.Command_SetScore;
+            newNode.Command_PrintRewardForNode = this.Command_PrintRewardForNode;
             newNode.Position = position;
             newNode.Event_UpdateDanceNode += this.UpdateDanceNode;
             newNode.SetScores(scores);
@@ -370,6 +373,7 @@ namespace DanceRegUltra.Models
                 newNode.Position = position;
                 newNode.Command_deleteNode = this.Command_deleteNode;
                 newNode.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
+                newNode.Command_PrintRewardForNode = this.Command_PrintRewardForNode;
                 this.AddNominationMember(newNode);
                 this.AddSchool(newNode.Member.School);
                 await DanceRegDatabase.ExecuteNonQueryAsync("insert into event_nodes values (" + this.IdEvent + ", " + newNode.NodeId + ", " + newNode.Member.MemberId + ", " + isGroup + ", " + newNode.Platform.Id + ", " + newNode.LeagueId + ", " + newNode.Block.Id + ", " + newNode.AgeId + ", " + newNode.StyleId + ", '', 0, 0, " + position + ")");
@@ -389,6 +393,7 @@ namespace DanceRegUltra.Models
                 node.Event_UpdateDanceNode -= this.UpdateDanceNode;
                 node.Command_ChangeBlockForNode = null;
                 node.Command_deleteNode = null;
+                node.Command_PrintRewardForNode = null;
                 this.HideNodes.Value.RemoveAt(position);
                 await DanceRegDatabase.ExecuteNonQueryAsync("delete from event_nodes where Id_event=" + this.IdEvent + " and Id_node=" + node.NodeId);
                 //if (position < this.HideNodes.Value.Count - 1) await this.UpdateNodePosition(position, this.HideNodes.Value.Count - 1, true);
@@ -737,6 +742,28 @@ namespace DanceRegUltra.Models
             {
                 this.command_SetScore = value;
                 this.OnPropertyChanged("Command_SetScore");
+            }
+        }
+
+        private RelayCommand<DanceNode> command_PrintRewardForNode;
+        public RelayCommand<DanceNode> Command_PrintRewardForNode
+        {
+            get => this.command_PrintRewardForNode;
+            set
+            {
+                this.command_PrintRewardForNode = value;
+                this.OnPropertyChanged("Command_PrintRewardForNode");
+            }
+        }
+
+        private RelayCommand<DanceNomination> command_PrintWewardForNomination;
+        public RelayCommand<DanceNomination> Command_PrintWewardForNomination
+        {
+            get => this.command_PrintWewardForNomination;
+            set
+            {
+                this.command_PrintWewardForNomination = value;
+                this.OnPropertyChanged("Command_PrintWewardForNomination");
             }
         }
 

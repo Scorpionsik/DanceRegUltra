@@ -489,6 +489,8 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_ChangeBlockForNode = this.Command_ChangeBlockForNode;
             this.EventInWork.Command_ChangeBlockForNomination = this.Command_ChangeBlockForNomination;
             this.EventInWork.Command_SetScore = this.Command_SetScore;
+            this.EventInWork.Command_PrintRewardForNode = this.Command_PrintRewardForNode;
+            this.EventInWork.Command_PrintWewardForNomination = this.Command_PrintWewardForNomination;
 
             this.Find_Callback = new TimerCallback(this.StartSearchMethod);
             this.eventEditTitle = this.EventInWork.Title;
@@ -647,6 +649,7 @@ namespace DanceRegUltra.ViewModels
             this.EventInWork.Command_ChangeBlockForNode = null;
             this.EventInWork.Command_ChangeBlockForNomination = null;
             this.EventInWork.Command_SetScore = null;
+            this.EventInWork.Command_PrintRewardForNode = null;
             DanceRegCollections.UnloadEvent(this.EventInWork);
             return base.CloseMethod();
         }
@@ -1024,7 +1027,23 @@ namespace DanceRegUltra.ViewModels
             });
         }
 
-        
+        public RelayCommand<DanceNomination> Command_PrintWewardForNomination
+        {
+            get => new RelayCommand<DanceNomination>(nomination =>
+            {
+                App.PrintPages("Печать грамот для номинации", new RewardPrintTemplate(nomination.Nominants));
+            },
+                (nomination) => nomination != null);
+        }
+
+        public RelayCommand<DanceNode> Command_PrintRewardForNode
+        {
+            get => new RelayCommand<DanceNode>(node =>
+            {
+                App.PrintPages("Печать грамот для узла", new RewardPrintTemplate(node));
+            },
+                (node) => node != null);
+        }
         #endregion
     }
 }

@@ -196,6 +196,8 @@
                                             <MenuItem Header="Редактировать номинацию..." Command="{Binding Path=Command_editSelectNomination}" CommandParameter="{Binding}"/>
                                             <MenuItem Header="Изменить блок для всей номинации..." Command="{Binding Path=Command_ChangeBlockForNomination}" CommandParameter="{Binding}"/>
                                             <Separator/>
+                                            <MenuItem Header="Печатать грамоты для всех участников номинации..." Command="{Binding Path=Command_PrintWewardForNomination}" CommandParameter="{Binding}"/>
+                                            <Separator/>
                                             <MenuItem Header="Добавить танцора в эту номинацию..." Command="{Binding Path=Command_AddDancerUseNomination}" CommandParameter="{Binding}"/>
                                             <MenuItem Header="Добавить группу в эту номинацию..." Command="{Binding Path=Command_AddGroupUseNomination}" CommandParameter="{Binding}"/>
                                             <Separator/>
@@ -244,6 +246,8 @@
                                                             </MenuItem.Header>
                                                         </MenuItem>
                                                         <MenuItem Command="{Binding Path=Command_ChangeBlockForNode}" Header="Изменить блок для этого номинанта..." CommandParameter="{Binding}"/>
+                                                        <Separator/>
+                                                        <MenuItem Header="Печатать грамоту с выбранной номинацией для этого участника..." Command="{Binding Path=Command_PrintRewardForNode}" CommandParameter="{Binding}"/>
                                                         <Separator/>
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Редактировать данные танцора..." Command="{Binding Path=Member.Command_EditDancer}" CommandParameter="{Binding Path=Member}"/>
                                                         <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Редактировать данные группы..." Command="{Binding Path=Member.Command_EditGroup}" CommandParameter="{Binding Path=Member}"/>
@@ -353,6 +357,8 @@
                                                 </MenuItem.Header>
                                             </MenuItem>
                                             <MenuItem Command="{Binding Path=Command_ChangeBlockForNode}" Header="Изменить блок для этого номинанта..." CommandParameter="{Binding}"/>
+                                            <Separator/>
+                                            <MenuItem Header="Печатать грамоту с выбранной номинацией для этого участника..." Command="{Binding Path=Command_PrintRewardForNode}" CommandParameter="{Binding}"/>
                                             <Separator/>
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}, ConverterParameter=inverse}" Header="Редактировать данные танцора..." Command="{Binding Path=Member.Command_EditDancer}" CommandParameter="{Binding Path=Member}"/>
                                             <MenuItem Visibility="{Binding Path=IsGroup, Converter={StaticResource BoolVisibility}}" Header="Редактировать данные группы..." Command="{Binding Path=Member.Command_EditGroup}" CommandParameter="{Binding Path=Member}"/>

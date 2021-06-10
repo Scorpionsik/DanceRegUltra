@@ -346,6 +346,17 @@ namespace DanceRegUltra.Models
             }
         }
 
+        private RelayCommand<DanceNomination> command_PrintWewardForNomination;
+        public RelayCommand<DanceNomination> Command_PrintWewardForNomination
+        {
+            get => this.command_PrintWewardForNomination;
+            set
+            {
+                this.command_PrintWewardForNomination = value;
+                this.OnPropertyChanged("Command_PrintWewardForNomination");
+            }
+        }
+
         private RelayCommand<DanceNode> command_NodeSetScore;
         public RelayCommand<DanceNode> Command_NodeSetScore
         {

@@ -256,5 +256,16 @@ namespace DanceRegUltra.Models
                 this.OnPropertyChanged("Command_SetScore");
             }
         }
+
+        private RelayCommand<DanceNode> command_PrintRewardForNode;
+        public RelayCommand<DanceNode> Command_PrintRewardForNode
+        {
+            get => this.command_PrintRewardForNode;
+            set
+            {
+                this.command_PrintRewardForNode = value;
+                this.OnPropertyChanged("Command_PrintRewardForNode");
+            }
+        }
     }
 }
