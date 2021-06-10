@@ -157,7 +157,7 @@ namespace DanceRegUltra.Models.PrintTempletes
             {
                 memberType = group.GroupType;
                 description = group.GroupMembersString;
-                if (description.Length > 25) description = description.Remove(24);
+                if (description.Length > 25) description = description.Remove(24) + "...";
             }
             else if(node.Member is MemberDancer dancer)
             {

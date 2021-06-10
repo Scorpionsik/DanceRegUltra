@@ -40,7 +40,9 @@
             </ToolBar>
             <ToolBar Band="1">
                 <Button Content="Печать номеров участников" Command="{Binding Command_PrintMemberNumbers}"/>
-                <Button Content="Печать отображаемого списка номинантов" Command="{Binding Command_PrintNominantList}"/>
+                <Button Content="Печать текущего списка номинантов" Command="{Binding Command_PrintNominantList}"/>
+                <Button Content="Печать текущих бегунков" Command="{Binding Command_PrintJudgeList}"/>
+                
                 
             </ToolBar>
         </ToolBarTray>

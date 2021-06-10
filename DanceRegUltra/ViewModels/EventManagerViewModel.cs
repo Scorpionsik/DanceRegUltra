@@ -984,9 +984,22 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand(obj =>
             {
-
+                IPrintTemplate temp = null;
+                if (this.IsShowNodes)
+                {
+                    Dictionary<DanceNomination, List<DanceNode>> dictionary = new Dictionary<DanceNomination, List<DanceNode>>();
+                    foreach(DanceNode node in this.Result_search_nodes)
+                    {
+                        DanceNomination nomination = this.EventInWork.GetNominationByNode(node);
+                        if (dictionary.ContainsKey(nomination)) dictionary[nomination].Add(node);
+                        else dictionary.Add(nomination, new List<DanceNode> { node });
+                    }
+                    temp = new JudgeListPrintTemplate(this.EventInWork.Title, dictionary);
+                }
+                else temp = new JudgeListPrintTemplate(this.EventInWork.Title, this.Result_search_nomination);
+                App.PrintPages("Печать бегунков", temp);
             },
-                (obj) => !this.IsShowNodes);
+                (obj) => this.EventInWork.Nodes.Count > 0);
         }
         #endregion
     }
