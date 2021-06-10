@@ -59,7 +59,7 @@ namespace DanceRegUltra.Models.Categories
             this.Title = "";
             this.Values = new List<IdCheck>();
             this.ScoreType = JudgeType.ThreeD;
-            this.JudgeCount = 0;
+            this.JudgeCount = 1;
         }
 
         public JsonSchemeArray(SchemeArray sArray) : this()
