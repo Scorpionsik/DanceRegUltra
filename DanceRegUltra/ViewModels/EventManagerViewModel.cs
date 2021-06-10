@@ -604,7 +604,7 @@ namespace DanceRegUltra.ViewModels
                 IdTitle tmp_platform = new IdTitle(row.GetInt32("Id_platform"), this.EventInWork.SchemeEvent.GetTypeTitleById(row.GetInt32("Id_platform"), SchemeType.Platform));
                 IdTitle tmp_block = new IdTitle(row.GetInt32("Id_block"), this.EventInWork.SchemeEvent.GetTypeTitleById(row.GetInt32("Id_block"), SchemeType.Block));
 
-                this.EventInWork.AddNode(row.GetInt32("Id_node"), tmp_member, isGroup, tmp_platform, row.GetInt32("Id_league"), tmp_block, row.GetInt32("Id_age"), row.GetInt32("Id_style"), row["Json_scores"].ToString(), row.GetInt32("Position"), row.GetInt32("Prize_place"));
+                this.EventInWork.AddNode(row.GetInt32("Id_node"), tmp_member, isGroup, tmp_platform, row.GetInt32("Id_league"), tmp_block, row.GetInt32("Id_age"), row.GetInt32("Id_style"), row["Json_scores"].ToString(), row.GetInt32("Position"), row.GetInt32("Prize_place"), row.GetBoolean("Is_print_prize"));
             }
         }
 
@@ -691,7 +691,7 @@ namespace DanceRegUltra.ViewModels
         private async void DeleteNodeMethod(DanceNode deleteNode)
         {
             int position = await this.EventInWork.DeleteNodeAsync(deleteNode);
-            if (position > -1) await this.EventInWork.UpdateNodePosition(position, this.EventInWork.Nodes.Count - 1, true);
+            if (position > -1 && position < this.EventInWork.Nodes.Count) await this.EventInWork.UpdateNodePosition(position, this.EventInWork.Nodes.Count - 1, true);
         }
 
         private async void DeleteRangeNodeMethod(IEnumerable<DanceNode> nodes)
@@ -1009,21 +1009,34 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand(obj =>
             {
+                List<DanceNode> nodes = new List<DanceNode>();
                 IPrintTemplate temp = null;
                 if (IsShowNodes)
                 {
-                    temp = new RewardPrintTemplate(this.Result_search_nodes);
-                }
-                else
-                {
-                    List<DanceNode> nodes = new List<DanceNode>();
-                    foreach(DanceNomination nomination in this.Result_search_nomination)
+                    foreach(DanceNode node in this.Result_search_nodes)
                     {
-                        nodes.AddRange(nomination.Nominants);
+                        if (node.Status != NodeStatus.Default) nodes.Add(node);
                     }
                     temp = new RewardPrintTemplate(nodes);
                 }
-                App.PrintPages("Печать грамот", temp);
+                else
+                {
+                    foreach(DanceNomination nomination in this.Result_search_nomination)
+                    {
+                        foreach (DanceNode node in nomination.Nominants)
+                        {
+                            if (node.Status != NodeStatus.Default) nodes.Add(node);
+                        }
+                    }
+                    temp = new RewardPrintTemplate(nodes);
+                }
+                if(App.PrintPages("Печать грамот", temp))
+                {
+                    foreach(DanceNode node in nodes)
+                    {
+                        node.Print();
+                    }
+                }
             });
         }
 
@@ -1031,7 +1044,18 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceNomination>(nomination =>
             {
-                App.PrintPages("Печать грамот для номинации", new RewardPrintTemplate(nomination.Nominants));
+                List<DanceNode> nodes = new List<DanceNode>();
+                foreach(DanceNode node in nomination.Nominants)
+                {
+                    if (node.Status != NodeStatus.Default) nodes.Add(node);
+                }
+                if(App.PrintPages("Печать грамот для номинации", new RewardPrintTemplate(nodes)))
+                {
+                    foreach(DanceNode node in nodes)
+                    {
+                        node.Print();
+                    }
+                }
             },
                 (nomination) => nomination != null);
         }
@@ -1040,9 +1064,12 @@ namespace DanceRegUltra.ViewModels
         {
             get => new RelayCommand<DanceNode>(node =>
             {
-                App.PrintPages("Печать грамот для узла", new RewardPrintTemplate(node));
+                if(App.PrintPages("Печать грамот для узла", new RewardPrintTemplate(node)))
+                {
+                    node.Print();
+                }
             },
-                (node) => node != null);
+                (node) => node != null && node.Status != NodeStatus.Default);
         }
         #endregion
     }

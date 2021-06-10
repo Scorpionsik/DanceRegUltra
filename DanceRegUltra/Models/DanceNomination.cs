@@ -122,6 +122,7 @@ namespace DanceRegUltra.Models
                 int index = 0;
                 while (index < this.Nominants.Count && this.Nominants[index].Position < nominant.Position) index++;
                 this.Nominants.Insert(index, nominant);
+                
             }
         }
 
@@ -178,7 +179,10 @@ namespace DanceRegUltra.Models
             {
                 double average = node.GetAverage(this.JudgeIgnore, this.Type);
                 if (average <= 0) node.SetPrizePlace(0);
-                else averages.Add(node, average);
+                else
+                {
+                    averages.Add(node, average);
+                }
             }
 
             List<DanceNode> tmp_nominants = new List<DanceNode>(averages.Keys);

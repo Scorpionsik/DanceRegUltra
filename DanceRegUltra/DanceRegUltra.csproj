@@ -128,6 +128,7 @@
     <Compile Include="Utilites\Converters\CategoryNameByIdConvert.cs" />
     <Compile Include="Utilites\Converters\DancerTimeConvert.cs" />
     <Compile Include="Utilites\Converters\JudgeTypeConvert.cs" />
+    <Compile Include="Utilites\Converters\NodeStatusConvert.cs" />
     <Compile Include="Utilites\Converters\VisibilityBoolConvert.cs" />
     <Compile Include="Utilites\FindDancer.cs" />
     <Compile Include="Utilites\LazyString.cs" />

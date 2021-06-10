@@ -14,6 +14,7 @@
     <window:WindowExt.Resources>
         <convert:VisibilityBoolConvert x:Key="BoolVisibility"/>
         <convert:CategoryNameByIdConvert x:Key="CategoryName"/>
+        <convert:NodeStatusConvert x:Key="NodeStatus"/>
     </window:WindowExt.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -274,6 +275,7 @@
                                                     <ColumnDefinition Width="200"/>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition Width="50"/>
+                                                    <ColumnDefinition Width="50"/>
                                                 </Grid.ColumnDefinitions>
                                                 <GroupBox Header="ID" Grid.Column="0">
                                                     <TextBox TextAlignment="Center" Text="{Binding Path=NodeId, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" FontWeight="Bold"/>
@@ -314,6 +316,9 @@
                                                 </GroupBox>
                                                 <GroupBox Header="Место" Grid.Column="3">
                                                     <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=PrizePlace}"/>
+                                                </GroupBox>
+                                                <GroupBox Header="Статус" Grid.Column="4">
+                                                    <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=Status, Converter={StaticResource NodeStatus}, ConverterParameter=string}"/>
                                                 </GroupBox>
                                             </Grid>
                                             <!--конец Визуал нодов номинации-->
@@ -389,6 +394,7 @@
                                         <ColumnDefinition Width="200"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="50"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                                         <TextBlock Text="Блок: "/>
@@ -442,6 +448,9 @@
                                     </GroupBox>
                                     <GroupBox Header="Место" Grid.Row="1" Grid.Column="3">
                                         <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=PrizePlace}"/>
+                                    </GroupBox>
+                                    <GroupBox Header="Статус" Grid.Row="1" Grid.Column="4">
+                                        <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=Status, Converter={StaticResource NodeStatus}, ConverterParameter=string}"/>
                                     </GroupBox>
                                 </Grid>
                                 <!--конец Визуал нодов-->
